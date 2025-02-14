@@ -23,7 +23,7 @@ import { Card } from '../ui/card'
 import { LucideLock, LucideMail, LucideArrowLeft } from 'lucide-react'
 
 const AuthSchema = z.object({
- email: z.string().email(),
+ email: z.string().email({ message: 'Please enter a valid email address' }),
  password: z.string().min(8, { message: 'Password must be at least 8 characters long' }),
 })
 
@@ -45,7 +45,7 @@ const LoginForm = () => {
 
  return (
     <Form {...form}>
-     <div className='flex flex-col items-center justify-center gap-y-6 py-10 p-4 backdrop-blur-sm border rounded-xl w-full max-w-[500px]'>
+     <div className='flex flex-col items-center justify-center gap-y-6 py-12 p-4 backdrop-blur-sm border rounded-xl w-full max-w-[500px]'>
 
         <div className='flex flex-col gap-y-12 w-full justify-between'>
          <div className='flex flex-col items-center gap-y-4 w-full'>
@@ -62,7 +62,7 @@ const LoginForm = () => {
                  name={'email'}
                  render={({ field }) => (
                     <FormItem>
-                     <FormLabel className="flex items-center justify-between my-1.5 font-bold hidden">
+                     <FormLabel className="items-center justify-between my-1.5 font-bold hidden">
                         Email
                      </FormLabel>
                      <FormControl>
@@ -83,13 +83,13 @@ const LoginForm = () => {
                  name={'password'}
                  render={({ field }) => (
                     <FormItem>
-                     <FormLabel className="flex items-center justify-between my-1.5 font-bold hidden">
+                     <FormLabel className="items-center justify-between my-1.5 font-bold hidden">
                         Password
                      </FormLabel>
                      <FormControl>
                         <Input 
                          type="password"
-                         className='h-12 w-full'
+                         className='h-14 w-full'
                          placeholder='Enter your password'
                          {...field}
                         />
@@ -124,7 +124,10 @@ const LoginForm = () => {
                     type="button"
                     variant="default"
                     size="lg"
-                    onClick={() => setStep(2)}
+                    onClick={e => {
+                        e.preventDefault()
+                        setStep(2)
+                    }}
                 >
                     Next
                 </Button>
