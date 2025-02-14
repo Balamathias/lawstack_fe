@@ -1,10 +1,16 @@
 import LoginForm from '@/components/auth/login-form'
-import Logo from '@/components/logo'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import Link from 'next/link'
+import { Metadata } from 'next'
 import React from 'react'
+
+export const metadata: Metadata = {
+  title: 'Login | LawStack',
+  description: 'Login to your account. Don\'t have an account? Register.',
+  openGraph: {
+    images: [
+      '/static/images/og/register.jpg',
+    ]
+  }
+}
 
 const Page = () => {
   return (

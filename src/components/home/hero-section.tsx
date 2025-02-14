@@ -38,16 +38,16 @@ const HeroSection = () => {
             features.map((feature, index) => (
             <div
                 key={index}
-                className="group p-6 rounded-2xl backdrop-blur-md dark:bg-white/5 border dark:border-white/10 transition-all duration-300 hover:bg-white/20 hover:scale-105 text-center flex flex-col justify-between items-center bg-black/5 border-black/10"
+                className="group p-6 rounded-2xl backdrop-blur-md dark:bg-white/5 border dark:border-white/10 transition-all duration-300 hover:bg-white/20 hover:scale-105 flex flex-col justify-between bg-black/5 border-black/10"
             >
                 <h3 className="text-xl font-semibold mb-2">
-                {feature.title}
+                  {feature.title}
                 </h3>
                 <p className="text-muted-foreground">
-                {feature.description}
+                  {feature.description}
                 </p>
                 <Button className="mt-4 rounded-full w-fit cursor-pointer px-4">
-                {feature.buttonText}
+                  {feature.buttonText}
                 </Button>
             </div>
             ))

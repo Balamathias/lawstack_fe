@@ -40,7 +40,7 @@ const LoginForm = () => {
     })
 
     async function onSubmit(values: z.infer<typeof AuthSchema>) {
-        // Handle form submission
+        console.log(values)
     }
 
  return (
