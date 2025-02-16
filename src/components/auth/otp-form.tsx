@@ -22,6 +22,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../ui/input-otp'
 import { useResendOTP, useVerifyOTP } from '@/services/client/auth'
 import { LucideLoader } from 'lucide-react'
+import { toast } from 'sonner'
 
 const AuthSchema = z.object({
  otp: z.string().min(6, { message: 'Enter a valid OTP.' }),
@@ -43,7 +44,7 @@ const OTPForm = () => {
         },
     })
 
-    const [countdown, setCountdown] = useState(60)
+    const [countdown, setCountdown] = useState(90)
     const [canResend, setCanResend] = useState(false)
 
     useEffect(() => {
@@ -65,6 +66,8 @@ const OTPForm = () => {
 
                 form.reset()
 
+                toast.success('Email verified successfully. Redirecting...')
+
                 if (next) {
                     router.replace(next)
                 } else {
@@ -75,8 +78,20 @@ const OTPForm = () => {
     }
 
     const handleResendOTP = () => {
-        resendOTP({ email: email! })
-        setCountdown(60)
+        resendOTP({ email: email! }, {
+            onSuccess: (data) => {
+                if (data.error) {
+                    form.setError('otp', { message: data.message })
+                    return
+                }
+
+                toast.success('OTP sent successfully. Please check your email.')
+
+                setCountdown(90)
+                setCanResend(false)
+            }
+        })
+        setCountdown(90)
         setCanResend(false)
     }
 
