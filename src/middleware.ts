@@ -2,6 +2,15 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getUser } from './services/server/auth';
 
+const authRoutes = [
+  '/sign-in',
+  '/sign-up',
+  '/verify-email',
+  '/forgot-password',
+  '/verification-email-sent',
+  '/reset-password',
+];
+
 export async function middleware(request: NextRequest) {
   const { data: user } = await getUser();
   const currentPath = request.nextUrl.pathname;
@@ -10,7 +19,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?next=' + currentPath, request.url));
   }
 
-  if (user && (currentPath.startsWith('/login') || currentPath.startsWith('/register'))) {
+  if (user && (authRoutes.includes(currentPath))) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
