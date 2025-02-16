@@ -1,5 +1,5 @@
 import React from 'react'
-import { LucideSidebarOpen } from 'lucide-react'
+import { LucideSidebarOpen, Sidebar } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '../ui/button'
 import Logo from '../logo'
@@ -7,6 +7,7 @@ import { getUser } from '@/services/server/auth'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Skeleton } from '../ui/skeleton'
 import NavDropdown from './nav-dropdown'
+import MobileSidebar from './sidebar.mobile'
 
 const Navbar = async () => {
 
@@ -24,7 +25,7 @@ const Navbar = async () => {
         </section>
 
         <div className='flex items-center gap-x-4 md:hidden'>
-            <LucideSidebarOpen size={24} className='cursor-pointer' />
+            <MobileSidebar user={user} />
         </div>
 
         <div className='items-center gap-x-4 hidden md:flex'>
@@ -67,7 +68,7 @@ export const NavbarSkeleton = () => {
         </section>
 
         <div className='flex items-center gap-x-4 md:hidden'>
-            <LucideSidebarOpen size={24} className='cursor-pointer' />
+            <LucideSidebarOpen size={24} className='cursor-pointer opacity-70' />
         </div>
 
         <div className='items-center gap-x-4 hidden md:flex'>

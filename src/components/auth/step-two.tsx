@@ -16,7 +16,7 @@ const StepTwo = () => {
             <h2 className='text-xl md:text-2xl text-center'>
                 We fancy usernames too!
             </h2>
-            <p className='text-muted-foreground'>
+            <p className='text-muted-foreground max-sm:text-center my-2'>
                 Sometimes, we just want to be known by a special name. Some call it &quot;alias&quot;, while others call it &quot;nickname&quot;. What should we call you?
             </p>
 
@@ -37,7 +37,7 @@ const StepTwo = () => {
                 />
 
                 <Button
-                    className='rounded-xl'
+                    className=''
                 >
                     Update My Details
                 </Button>

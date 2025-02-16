@@ -16,7 +16,7 @@ const StepOne = () => {
             <h2 className='text-xl md:text-2xl text-center'>
                 It all starts with your name!
             </h2>
-            <p className='text-muted-foreground'>
+            <p className='text-muted-foreground max-sm:text-center my-2'>
                 Let&apos;s begin with your full name... A good name they say, is better than riches, right?
             </p>
 
@@ -36,7 +36,7 @@ const StepOne = () => {
                 />
 
                 <Button
-                    className='rounded-xl'
+                    className=''
                 >
                     Save My Name
                 </Button>
