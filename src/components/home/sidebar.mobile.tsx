@@ -42,11 +42,6 @@ const features = [
         title: 'Pricing',
         description: 'View our pricing plans'
     },
-    {
-        icon: <LogOutIcon />,
-        title: 'Logout',
-        description: 'Sign out of your account'
-    }
 ]
 
 interface Props {
@@ -62,7 +57,7 @@ const MobileSidebar = ({ user }: Props) => {
             </SheetTrigger>
 
             <SheetContent className='bg-background/70 backdrop-blur-sm'>
-                <SheetHeader>
+                <SheetHeader className='border-b'>
                     <SheetTitle>
                         <Logo />
                     </SheetTitle>
@@ -104,9 +99,12 @@ const MobileSidebar = ({ user }: Props) => {
                         ): (
                             <Button
                                 className='w-full'
+                                asChild
                             >
-                                <LogOutIcon />
-                                Log In
+                                <Link href={'/login'}>
+                                    <LogOutIcon />
+                                    Log In
+                                </Link>
                             </Button>
                         )
                     }
