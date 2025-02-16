@@ -18,9 +18,10 @@ import {
 } from "@/components/ui/form"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
-import { Card } from '../ui/card'
-import { LucideLock, LucideMail, LucideArrowLeft } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { LucideArrowLeft, LucideLoader2 } from 'lucide-react'
+import { useLogin } from '@/services/client/auth'
+import { toast } from 'sonner'
 
 const AuthSchema = z.object({
  email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -30,6 +31,9 @@ const AuthSchema = z.object({
 const LoginForm = () => {
     const router = useRouter()
     const [step, setStep] = useState(1)
+    const searchParams = useSearchParams()
+
+    const { mutate: login, isPending } = useLogin()
 
     const form = useForm<z.infer<typeof AuthSchema>>({
         resolver: zodResolver(AuthSchema),
@@ -40,7 +44,31 @@ const LoginForm = () => {
     })
 
     async function onSubmit(values: z.infer<typeof AuthSchema>) {
-        console.log(values)
+        if (step === 1) {
+            setStep(2)
+            return
+        }
+
+        login(values, {
+            onSuccess: (data) => {
+                toast.success(data?.message || 'Login successful')
+
+                const next = searchParams?.get('next')
+
+                form.reset()
+                
+                if (next) {
+                    router.push(next)
+                } else {
+                    router.push('/')
+                }
+            },
+            onError: (error) => {
+                toast.error(error?.message || 'An error occurred')
+                form.setError('email', { message: error?.message || 'An error occurred' })
+                form.setError('password', { message: error?.message || 'An error occurred' })
+            }
+        })
     }
 
  return (
@@ -136,8 +164,10 @@ const LoginForm = () => {
                     type="submit"
                     variant="default"
                     size="lg"
+                    disabled={isPending}
                 >
-                    Login
+                    {isPending && <LucideLoader2 className={`w-6 h-6 ${isPending ? "animate-spin" : ""}`} />}
+                    {isPending ? "Loading..." : "Login"}
                 </Button>
                 )}
             </div>

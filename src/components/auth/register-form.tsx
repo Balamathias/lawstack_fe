@@ -18,9 +18,10 @@ import {
 } from "@/components/ui/form"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
-import { Card } from '../ui/card'
-import { LucideLock, LucideMail, LucideArrowLeft } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { LucideArrowLeft, LucideLoader2 } from 'lucide-react'
+import { useRegister } from '@/services/client/auth'
+import { toast } from 'sonner'
 
 const AuthSchema = z.object({
  email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -30,6 +31,9 @@ const AuthSchema = z.object({
 const RegisterForm = () => {
     const router = useRouter()
     const [step, setStep] = useState(1)
+    const searchParams = useSearchParams()
+
+    const { mutate: register, isPending } = useRegister()
 
     const form = useForm<z.infer<typeof AuthSchema>>({
         resolver: zodResolver(AuthSchema),
@@ -40,8 +44,26 @@ const RegisterForm = () => {
     })
 
     async function onSubmit(values: z.infer<typeof AuthSchema>) {
-        console.log(values)
-        router.replace('/verify-email?email=' + encodeURIComponent(values.email))
+        register(values, {
+            onSuccess: (data) => {
+                toast.success('Account created successfully. Please verify your email address with the verification code sent to your email.', { duration: 10000 })
+
+                const next = searchParams?.get('next')
+
+                form.reset()
+                
+                if (next) {
+                    router.replace('/verify-email?email=' + encodeURIComponent(values.email) + '&next=' + encodeURIComponent(next))
+                } else {
+                    router.replace('/verify-email?email=' + encodeURIComponent(values.email))
+                }
+            },
+            onError: (error) => {
+                toast.error(error?.message || 'An error occurred')
+                form.setError('email', { message: error?.message || 'An error occurred' })
+                form.setError('password', { message: error?.message || 'An error occurred' })
+            }
+        })
     }
 
  return (
@@ -133,13 +155,15 @@ const RegisterForm = () => {
                     Next
                 </Button>
                 ) : (
-                <Button
-                    type="submit"
-                    variant="default"
-                    size="lg"
-                >
-                    Register
-                </Button>
+                    <Button
+                        type="submit"
+                        variant="default"
+                        size="lg"
+                        disabled={isPending}
+                    >
+                        {isPending && <LucideLoader2 className={`w-6 h-6 ${isPending ? "animate-spin" : ""}`} />}
+                        {isPending ? "Loading..." : "Register"}
+                    </Button>
                 )}
             </div>
 

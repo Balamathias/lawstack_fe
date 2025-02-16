@@ -3,6 +3,8 @@ import { Delius } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { TanstackQueryProvider } from "@/lib/tanstack.query";
 
 const delius = Delius({weight: ['400', '400'], subsets: ['latin']});
 
@@ -22,14 +24,22 @@ export default function RootLayout({
         className={cn(`antialiased selection:bg-sky-600/20 selection:text-sky-600`, delius.className)}
         suppressHydrationWarning
       >
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-          {children}
-        </ThemeProvider>
+        <TanstackQueryProvider>
+          <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+            {children}
+          </ThemeProvider>
+          
+          <Toaster
+            position="top-right"
+            richColors
+            duration={5000}
+          />
+        </TanstackQueryProvider>
       </body>
     </html>
   );

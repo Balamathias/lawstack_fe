@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Logo from '../logo'
 import { Input } from '../ui/input'
 import Link from 'next/link'
@@ -20,6 +20,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../ui/input-otp'
+import { useResendOTP, useVerifyOTP } from '@/services/client/auth'
+import { LucideLoader } from 'lucide-react'
 
 const AuthSchema = z.object({
  otp: z.string().min(6, { message: 'Enter a valid OTP.' }),
@@ -29,6 +31,10 @@ const OTPForm = () => {
     const router = useRouter()
 
     const email = useSearchParams().get('email')
+    const next = useSearchParams().get('next')
+
+    const { mutate: verifyOTP, isPending } = useVerifyOTP()
+    const { mutate: resendOTP, isPending: resending } = useResendOTP()
 
     const form = useForm<z.infer<typeof AuthSchema>>({
         resolver: zodResolver(AuthSchema),
@@ -37,8 +43,41 @@ const OTPForm = () => {
         },
     })
 
+    const [countdown, setCountdown] = useState(60)
+    const [canResend, setCanResend] = useState(false)
+
+    useEffect(() => {
+        if (countdown > 0) {
+            const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
+            return () => clearTimeout(timer)
+        } else {
+            setCanResend(true)
+        }
+    }, [countdown])
+
     async function onSubmit(values: z.infer<typeof AuthSchema>) {
-        console.log(values)
+        verifyOTP({ email: email!, otp: values.otp }, {
+            onSuccess: (data) => {
+                if (data.error) {
+                    form.setError('otp', { message: data.message })
+                    return
+                }
+
+                form.reset()
+
+                if (next) {
+                    router.replace(next)
+                } else {
+                    router.replace('/')
+                }
+            }
+        })
+    }
+
+    const handleResendOTP = () => {
+        resendOTP({ email: email! })
+        setCountdown(60)
+        setCanResend(false)
     }
 
  return (
@@ -84,23 +123,35 @@ const OTPForm = () => {
                     />
                 </div>
             <div className='flex w-full justify-between items-center mt-5'>
+                <Button
+                    type="button"
+                    variant="secondary"
+                    size="lg"
+                    className='rounded-xl'
+                    onClick={handleResendOTP}
+                    disabled={!canResend || resending || isPending}
+                >
+                    {resending ? (
+                        <>
+                            <LucideLoader className="mr-2 h-4 w-4 animate-spin" />
+                            Loading...
+                        </>
+                    ) : canResend ? 'Resend' : `Resend in ${countdown}s`}
+                </Button>
                 
                 <Button
                     type="submit"
                     variant="default"
                     size="lg"
                     className='rounded-xl'
+                    disabled={isPending || resending}
                 >
-                    {'Verify Email'}
-                </Button>
-
-                <Button
-                    type="submit"
-                    variant="secondary"
-                    size="lg"
-                    className='rounded-xl'
-                >
-                    {'Resend'}
+                    {isPending ? (
+                        <>
+                            <LucideLoader className="mr-2 h-4 w-4 animate-spin" />
+                            Loading...
+                        </>
+                    ) : 'Verify Email'}
                 </Button>
             </div>
             </form>
