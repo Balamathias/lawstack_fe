@@ -75,7 +75,7 @@ const RegisterForm = () => {
             <Logo />
 
             <h2 className='text-lg text-center'>
-             {step === 1 ? "Hi, join us at LawStack and learn and become a pro." : "Set a password... You'd be able to use it to login."}
+             {step === 1 ? "Hi, join us at LawStack and learn to become a pro." : "Set a password... You'd be able to use it to login."}
             </h2>
 
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 w-full">

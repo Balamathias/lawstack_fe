@@ -1,17 +1,23 @@
-'use client'
-
 import React from 'react'
 import StepOne from './step-one'
-import { useSearchParams } from 'next/navigation'
 import StepTwo from './step-two'
+import { getUser } from '@/services/server/auth'
+import StepThree from './step-three'
 
-const FinishUpForm = () => {
-  const step = Number(useSearchParams().get('step'))
+interface FinishUpFormProps {
+    searchParams: Record<string, any>    
+}
+
+const FinishUpForm = async ({ searchParams }: FinishUpFormProps) => {
+  const { data: user } = await getUser()
+
+  const step = Number(searchParams?.['step'])
 
   return (
     <div className='w-full flex flex-col gap-y-5'>
         {(!step || (step === 1)) && <StepOne />}
-        {((step === 2)) && <StepTwo />}
+        {((step === 2)) && <StepTwo user={user} />}
+        {((step === 3)) && <StepThree user={user} />}
     </div>
   )
 }

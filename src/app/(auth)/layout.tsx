@@ -1,4 +1,3 @@
-import Navbar from '@/components/home/navbar'
 import Logo from '@/components/logo'
 import React, { PropsWithChildren } from 'react'
 

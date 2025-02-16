@@ -77,7 +77,7 @@ export async function login(email: string, password: string): Promise<StackRespo
       data: null,
       message: error?.response?.data?.detail,
       status: error?.status,
-      error: error?.response?.data
+      error: { detail: error?.response?.data?.message || error?.response?.data?.detail }
     }
   }
 }
@@ -177,7 +177,7 @@ export async function register({email, password, username}: { email: string; pas
       data: null,
       message: error?.response?.data?.message || error?.response?.data?.detail,
       status: error?.status,
-      error: error?.response?.data
+      error: { detail: error?.response?.data?.message || error?.response?.data?.detail }
     }
   }
 }
@@ -187,14 +187,33 @@ export async function register({email, password, username}: { email: string; pas
  * `first_name, last_name and avatar`,
  * @returns 
  */
-export async function updateUser(input: PartialUserUpdate) {
-  const { data, status } = await stackbase.put(`/auth/update-user/`, input)
+export async function updateUser(input: Partial<User>): Promise<StackResponse<User | null>> {
+  try {
+    const { data, status } = await stackbase.put(`/auth/update-user/`, input)
 
-  if (data) {
-    return data as User
+    if (data) {
+      return {
+        data: data as User,
+        status: status,
+        message: "User updated successfully",
+        error: null
+      }
+    }
+
+    else return {
+      data: null,
+      status: status,
+      message: "An unknown error has occured.",
+      error: { detail: "An unknown error has occured." }
+    }
+  } catch (error: any) {
+    return {
+      data: null,
+      message: error?.response?.data?.message || error?.response?.data?.detail,
+      status: error?.status,
+      error: error?.response?.data
+    }
   }
-
-  else return { status, data: null }
 }
 
 /**

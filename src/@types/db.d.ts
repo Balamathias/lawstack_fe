@@ -8,6 +8,8 @@ export interface User {
     is_staff?: boolean,
     is_superuser?: boolean,
     avatar: string | null,
+    phone: string | null,
+    created_at: string,
   }
   
   export interface Thumbnail { image?: string | null, images?: string[] | null }
@@ -63,4 +65,5 @@ export interface User {
     first_name: string,
     last_name: string,
     avatar: string,
+
   }

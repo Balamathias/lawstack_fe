@@ -106,7 +106,7 @@ const OTPForm = () => {
             </div>
 
 
-            <h2 className='text-lg'>
+            <h2 className='text-lg text-center'>
                 Hi <b className='font-semibold'>{ email }</b>, please verify your email.
             </h2>
 
@@ -123,12 +123,12 @@ const OTPForm = () => {
                             <FormControl className='flex items-center justify-center'>
                                 <InputOTP maxLength={6} {...field}>
                                     <InputOTPGroup className="flex justify-between gap-2">
-                                        <InputOTPSlot index={0} className="w-14 h-14 text-center border rounded-lg" />
-                                        <InputOTPSlot index={1} className="w-14 h-14 text-center border rounded-lg" />
-                                        <InputOTPSlot index={2} className="w-14 h-14 text-center border rounded-lg" />
-                                        <InputOTPSlot index={3} className="w-14 h-14 text-center border rounded-lg" />
-                                        <InputOTPSlot index={4} className="w-14 h-14 text-center border rounded-lg" />
-                                        <InputOTPSlot index={5} className="w-14 h-14 text-center border rounded-lg" />
+                                        <InputOTPSlot index={0} className="sm:w-14 sm:h-14 text-center border rounded-lg" />
+                                        <InputOTPSlot index={1} className="sm:w-14 sm:h-14 text-center border rounded-lg" />
+                                        <InputOTPSlot index={2} className="sm:w-14 sm:h-14 text-center border rounded-lg" />
+                                        <InputOTPSlot index={3} className="sm:w-14 sm:h-14 text-center border rounded-lg" />
+                                        <InputOTPSlot index={4} className="sm:w-14 sm:h-14 text-center border rounded-lg" />
+                                        <InputOTPSlot index={5} className="sm:w-14 sm:h-14 text-center border rounded-lg" />
                                     </InputOTPGroup>
                                 </InputOTP>
                             </FormControl>

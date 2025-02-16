@@ -71,7 +71,7 @@ const NavDropdown = ({trigger }: NavDropdownProps) => {
 
             <Button 
                 variant='destructive'
-                className='cursor-pointer'
+                className='cursor-pointer mt-2'
                 onClick={() => logout(undefined, {
                     onSuccess: (data) => {
                         if (data?.error) {

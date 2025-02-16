@@ -1,6 +1,7 @@
 import FinishUpForm from '@/components/auth/finish-up-form'
+import LoadingOverlay from '@/components/loading-overlay'
 import { Metadata } from 'next'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 export const metadata: Metadata = {
   title: 'Finish up | LawStack',
@@ -12,10 +13,20 @@ export const metadata: Metadata = {
   }
 }
 
-const Page = () => {
+interface Props {
+    searchParams: Promise<Record<string, any>>,
+    params: Promise<Record<string, any>>
+}
+
+const Page = async ({ searchParams: asyncSearchParams }: Props) => {
+
+  const searchParams = await asyncSearchParams
+
   return (
     <div className='p-2.5 sm:p-8 container mx-auto max-w-7xl flex flex-col items-center justify-center gap-y-5 py-10 h-full'>
-        <FinishUpForm />
+        <Suspense fallback={<LoadingOverlay />}>
+            <FinishUpForm searchParams={searchParams} />
+        </Suspense>
     </div>
   )
 }

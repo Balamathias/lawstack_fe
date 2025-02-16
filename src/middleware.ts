@@ -10,11 +10,16 @@ const authRoutes = [
   '/verification-email-sent',
 ];
 
+const protectedRoutes = [
+  '/dashboard',
+  '/finish-up',
+];
+
 export async function middleware(request: NextRequest) {
   const { data: user } = await getUser();
   const currentPath = request.nextUrl.pathname;
 
-  if (!user && currentPath.startsWith('/dashboard')) {
+  if (!user && (protectedRoutes.includes(currentPath))) {
     return NextResponse.redirect(new URL('/login?next=' + currentPath, request.url));
   }
 
@@ -30,5 +35,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login', '/register'],
+  matcher: [
+    '/dashboard/:path*', 
+    '/login', 
+    '/register', 
+    '/finish-up/:path*',
+    '/verify-email',
+    '/forgot-password',
+  ],
 };
