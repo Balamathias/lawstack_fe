@@ -26,11 +26,6 @@ export const useLogin = () => useMutation({
 export const useLogout = () => useMutation({
   mutationKey: ['logout'],
   mutationFn: logout,
-  onSuccess: (data) => {
-    if (data.error) {
-      throw new Error(data.message)
-    }
-  }
 })
 
 export const useUpdateUser = () => useMutation({

@@ -6,6 +6,7 @@ import Logo from '../logo'
 import { getUser } from '@/services/server/auth'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Skeleton } from '../ui/skeleton'
+import NavDropdown from './nav-dropdown'
 
 const Navbar = async () => {
 
@@ -29,12 +30,16 @@ const Navbar = async () => {
         <div className='items-center gap-x-4 hidden md:flex'>
             {
               user ? (
-                <Link href={'#'}>
-                  <Avatar className='w-10 h-10 cursor-pointer transition-all hover:opacity-70'>
-                    <AvatarImage src={user.avatar!} />
-                    <AvatarFallback className='uppercase'>{user.username?.at(0) || user?.email?.at(0)}</AvatarFallback>
-                  </Avatar>
-                </Link>
+                <NavDropdown 
+                  trigger={
+                    <Link href={'#'}>
+                      <Avatar className='w-10 h-10 cursor-pointer transition-all hover:opacity-70'>
+                        <AvatarImage src={user.avatar!} />
+                        <AvatarFallback className='uppercase'>{user.username?.at(0) || user?.email?.at(0)}</AvatarFallback>
+                      </Avatar>
+                    </Link>
+                  }
+               />
               ): (
                 <Button asChild variant={'secondary'} className='rounded-full cursor-pointer transition-all hover:opacity-70'>
                   <Link href={`/login`}>

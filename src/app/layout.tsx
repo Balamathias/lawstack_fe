@@ -9,7 +9,7 @@ import { TanstackQueryProvider } from "@/lib/tanstack.query";
 const delius = Delius({weight: ['400', '400'], subsets: ['latin']});
 
 export const metadata: Metadata = {
-  title: "legalX",
+  title: "LawStack",
   description: "A legal tech platform",
 };
 
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(`antialiased selection:bg-sky-600/20 selection:text-sky-600`, delius.className)}
+        className={cn(`antialiased selection:bg-green-600/20 selection:text-green-600`, delius.className)}
         suppressHydrationWarning
       >
         <TanstackQueryProvider>
@@ -33,7 +33,7 @@ export default function RootLayout({
             >
             {children}
           </ThemeProvider>
-          
+
           <Toaster
             position="top-right"
             richColors

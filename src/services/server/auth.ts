@@ -17,7 +17,7 @@ export async function getUser(): Promise<StackResponse<User | null>> {
     return data
   } catch (error: any) {
     return {
-        message: error?.response?.data?.detail,
+        message: error?.response?.data?.message || error?.response?.data?.detail,
         data: null,
         error: error?.response?.data,
         status: error?.status
@@ -175,7 +175,7 @@ export async function register({email, password, username}: { email: string; pas
   } catch (error: any) {
     return {
       data: null,
-      message: error?.response?.data?.detail,
+      message: error?.response?.data?.message || error?.response?.data?.detail,
       status: error?.status,
       error: error?.response?.data
     }
@@ -245,12 +245,12 @@ export async function verifyOTP(email: string, otp: string): Promise<StackRespon
       }
     }
 
-  } catch (err: any) {
+  } catch (error: any) {
     return {
       data: null,
-      message: err?.response?.data?.detail,
-      status: err?.status,
-      error: err?.response?.data
+      message: error?.response?.data?.message || error?.response?.data?.detail,
+      status: error?.status,
+      error: error?.response?.data
     }
   }
 }
@@ -283,12 +283,12 @@ export async function resendOTP(email: string): Promise<StackResponse<ResendOTPR
       }
     }
 
-  } catch (err: any) {
+  } catch (error: any) {
     return {
       data: null,
-      message: err?.response?.data?.detail,
-      status: err?.status,
-      error: err?.response?.data
+      message: error?.response?.data?.message || error?.response?.data?.detail,
+      status: error?.status,
+      error: error?.response?.data
     }
   }
 }

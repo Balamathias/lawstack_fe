@@ -3,12 +3,11 @@ import type { NextRequest } from 'next/server';
 import { getUser } from './services/server/auth';
 
 const authRoutes = [
-  '/sign-in',
-  '/sign-up',
+  '/login',
+  '/register',
   '/verify-email',
   '/forgot-password',
   '/verification-email-sent',
-  '/reset-password',
 ];
 
 export async function middleware(request: NextRequest) {
