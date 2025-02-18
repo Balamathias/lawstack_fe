@@ -15,6 +15,7 @@ export interface User {
 export interface Question {
     id: string,
     text: string,
+    text_plain: string | null,
     year: string,
     course: string,
     level: string,

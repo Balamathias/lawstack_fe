@@ -1,7 +1,6 @@
+import BackButton from '@/components/back-button';
 import LoadingOverlay from '@/components/loading-overlay';
 import QuestionDetail from '@/components/past-questions/question-detail';
-import { getQuestion } from '@/services/server/questions';
-import { ChevronLeft } from 'lucide-react';
 import React, { Suspense } from 'react'
 
 interface Props {
@@ -19,10 +18,8 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchPar
         <div className='flex flex-col gap-y-5'>
             <h1 className='text-3xl font-bold hidden'>Past Questions</h1>
             
-            <button className='flex items-center flex-row gap-x-1 mb-3'>
-                <ChevronLeft />
-                <span className='text-muted-foreground'>Back</span>
-            </button>
+            <BackButton />
+
             <Suspense fallback={<LoadingOverlay />}>
                 <QuestionDetail id={params.id} />
             </Suspense>

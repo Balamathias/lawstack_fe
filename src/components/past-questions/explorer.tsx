@@ -25,7 +25,7 @@ const Explorer = async () => {
                         className="group p-4 rounded-lg border border-secondary hover:border-primary/50 transition-all hover:shadow-md bg-secondary/50 hover:bg-secondary/100 backdrop-blur-md flex flex-col gap-4 justify-between"
                     >
                         <div className="flex justify-between items-start">
-                            <p className="font-medium line-clamp-2 hover:text-green-500">{question.text}</p>
+                            <p className="font-medium line-clamp-2 hover:text-green-500">{question?.text_plain || question.text}</p>
                             <ArrowUpRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </div>
 

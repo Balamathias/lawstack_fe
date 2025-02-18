@@ -9,7 +9,7 @@ const Search = () => {
             placeholder='Search past questions by text, course, or year, session, etc...'
             className='w-full h-full focus-within:outline-none bg-transparent focus:border-none focus:outline-none'
         />
-        <SlidersHorizontal className='text-gray-500' size={20} />
+        <SlidersHorizontal className='text-gray-500 hover:text-green-500 cursor-pointer transition-all' size={20} />
     </div>
   )
 }
