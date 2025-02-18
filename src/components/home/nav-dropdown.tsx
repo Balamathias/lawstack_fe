@@ -17,6 +17,7 @@ import { toast } from 'sonner'
 
 import { Oval } from 'react-loader-spinner'
 import { Button } from '../ui/button'
+import LoadingOverlay from '../loading-overlay'
 
 interface NavDropdownProps {
     trigger: React.ReactNode
@@ -30,6 +31,9 @@ const NavDropdown = ({trigger }: NavDropdownProps) => {
 
   return (
     <>
+    {
+        loggingOut && (<LoadingOverlay />)
+    }
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         {trigger}

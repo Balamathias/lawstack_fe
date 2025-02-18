@@ -19,18 +19,19 @@ import {
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { LucideArrowLeft, LucideLoader2 } from 'lucide-react'
+import { LucideLoader2 } from 'lucide-react'
 import { useRegister } from '@/services/client/auth'
 import { toast } from 'sonner'
+import LoadingOverlay from '../loading-overlay'
 
 const AuthSchema = z.object({
- email: z.string().email({ message: 'Please enter a valid email address' }),
- password: z.string().min(8, { message: 'Password must be at least 8 characters long' }),
+    email: z.string().email({ message: 'Please enter a valid email address' }),
+    password: z.string().min(8, { message: 'Password must be at least 8 characters long' }),
+    confirm_password: z.string().min(8, { message: 'Password must be at least 8 characters long' }),
 })
 
 const RegisterForm = () => {
     const router = useRouter()
-    const [step, setStep] = useState(1)
     const searchParams = useSearchParams()
 
     const { mutate: register, isPending } = useRegister()
@@ -39,11 +40,16 @@ const RegisterForm = () => {
         resolver: zodResolver(AuthSchema),
         defaultValues: {
             email: "",
-            password: ""
+            password: "",
+            confirm_password: "",
         },
     })
 
     async function onSubmit(values: z.infer<typeof AuthSchema>) {
+        if (values.password !== values.confirm_password) {
+            return form.setError('confirm_password', { message: 'Passwords do not match' })
+        }
+
         register(values, {
             onSuccess: (data) => {
                 toast.success('Account created successfully. Please verify your email address with the verification code sent to your email.', { duration: 10000 })
@@ -61,13 +67,15 @@ const RegisterForm = () => {
             onError: (error) => {
                 toast.error(error?.message || 'An error occurred')
                 form.setError('email', { message: error?.message || 'An error occurred' })
-                form.setError('password', { message: error?.message || 'An error occurred' })
             }
         })
     }
 
  return (
     <Form {...form}>
+        {
+            isPending && (<LoadingOverlay />)
+        }
      <div className='flex flex-col items-center justify-center gap-y-6 py-12 p-4 backdrop-blur-sm border rounded-xl w-full max-w-[500px]'>
 
         <div className='flex flex-col gap-y-12 w-full justify-between'>
@@ -75,17 +83,16 @@ const RegisterForm = () => {
             <Logo />
 
             <h2 className='text-lg text-center'>
-             {step === 1 ? "Hi, join us at LawStack and learn to become a pro." : "Set a password... You'd be able to use it to login."}
+             Hi, join us at LawStack and learn law with <span className='text-green-500'>style</span>.
             </h2>
 
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 w-full">
-             {step === 1 && (
                 <FormField
                  control={form.control}
                  name={'email'}
                  render={({ field }) => (
                     <FormItem>
-                     <FormLabel className="items-center justify-between my-1.5 font-bold hidden">
+                     <FormLabel className="items-center justify-between my-1.5 font-bold">
                         Email
                      </FormLabel>
                      <FormControl>
@@ -99,14 +106,12 @@ const RegisterForm = () => {
                     </FormItem>
                  )}
                 />
-             )}
-             {step === 2 && (
                 <FormField
                  control={form.control}
                  name={'password'}
                  render={({ field }) => (
                     <FormItem>
-                     <FormLabel className="items-center justify-between my-1.5 font-bold hidden">
+                     <FormLabel className="items-center justify-between my-1.5 font-bold">
                         Password
                      </FormLabel>
                      <FormControl>
@@ -121,52 +126,46 @@ const RegisterForm = () => {
                     </FormItem>
                  )}
                 />
-             )}
 
-            <div className='flex w-full justify-between items-center'>
-                {step === 1 ? (
-                <Link
-                    href={`/login`}
-                    className='hover:text-muted-foreground transition-all'
-                >
-                    Log In
-                </Link>
-                ) : (
+                <FormField
+                 control={form.control}
+                 name={'confirm_password'}
+                 render={({ field }) => (
+                    <FormItem>
+                     <FormLabel className="items-center justify-between my-1.5 font-bold">
+                        Confirm Password
+                     </FormLabel>
+                     <FormControl>
+                        <Input 
+                         type="password"
+                         className='h-14 w-full'
+                         placeholder='Confirm your password'
+                         {...field}
+                        />
+                     </FormControl>
+                     <FormMessage className='text-red-500/70' />
+                    </FormItem>
+                 )}
+                />
+
                 <Button
-                    type="button"
-                    variant="ghost"
-                    size="lg"
-                    onClick={() => setStep(1)}
-                >
-                    <LucideArrowLeft className="mr-2" />
-                    Previous
-                </Button>
-                )}
-                {step === 1 ? (
-                <Button
-                    type="button"
+                    type="submit"
                     variant="default"
                     size="lg"
-                    onClick={e => {
-                        e.preventDefault()
-                        setStep(2)
-                    }}
+                    disabled={isPending}
+                    className='w-full'
                 >
-                    Next
+                    {isPending && <LucideLoader2 className={`w-6 h-6 ${isPending ? "animate-spin" : ""}`} />}
+                    {isPending ? "Loading..." : "Register"}
                 </Button>
-                ) : (
-                    <Button
-                        type="submit"
-                        variant="default"
-                        size="lg"
-                        disabled={isPending}
-                    >
-                        {isPending && <LucideLoader2 className={`w-6 h-6 ${isPending ? "animate-spin" : ""}`} />}
-                        {isPending ? "Loading..." : "Register"}
-                    </Button>
-                )}
-            </div>
 
+                <div className='flex w-full justify-between items-center'>
+                    <span
+                        className='text-muted-foreground transition-all'
+                    >
+                        {'Already have an account?'} <Link href={`/login`} className='text-primary hover:text-green-500'>Login</Link>.
+                    </span>
+                </div>
             </form>
          </div>
         </div>

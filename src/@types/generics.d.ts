@@ -9,6 +9,7 @@ export interface PaginatedStackResponse <T> {
     count: number
     next: string
     previous: string
+    message: string
     data: T
     status: number
     error: { message?: string, details?: any } | string | Array | null

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from '../ui/button'
+import Link from 'next/link'
 
 const features = [
     {
@@ -46,8 +47,10 @@ const HeroSection = () => {
                 <p className="text-muted-foreground">
                   {feature.description}
                 </p>
-                <Button className="mt-4 rounded-full w-fit cursor-pointer px-4">
-                  {feature.buttonText}
+                <Button className="mt-4 rounded-full w-fit cursor-pointer px-4"  asChild>
+                  <Link href={feature.href}>
+                    {feature.buttonText}
+                  </Link>
                 </Button>
             </div>
             ))

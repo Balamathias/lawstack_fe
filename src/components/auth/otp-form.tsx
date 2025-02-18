@@ -69,9 +69,9 @@ const OTPForm = () => {
                 toast.success('Email verified successfully. Redirecting...')
 
                 if (next) {
-                    router.replace(next)
+                    router.replace(`/finish-up?step=1&next=${next}`)
                 } else {
-                    router.replace('/')
+                    router.replace('/finish-up?step=1')
                 }
             }
         })

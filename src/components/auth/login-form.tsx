@@ -22,6 +22,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { LucideArrowLeft, LucideLoader2 } from 'lucide-react'
 import { useLogin } from '@/services/client/auth'
 import { toast } from 'sonner'
+import LoadingOverlay from '../loading-overlay'
 
 const AuthSchema = z.object({
  email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -44,10 +45,6 @@ const LoginForm = () => {
     })
 
     async function onSubmit(values: z.infer<typeof AuthSchema>) {
-        if (step === 1) {
-            setStep(2)
-            return
-        }
 
         login(values, {
             onSuccess: (data) => {
@@ -66,13 +63,15 @@ const LoginForm = () => {
             onError: (error) => {
                 toast.error(error?.message || 'An error occurred')
                 form.setError('email', { message: error?.message || 'An error occurred' })
-                form.setError('password', { message: error?.message || 'An error occurred' })
             }
         })
     }
 
  return (
     <Form {...form}>
+        {
+            isPending && (<LoadingOverlay />)
+        }
      <div className='flex flex-col items-center justify-center gap-y-6 py-12 p-4 backdrop-blur-sm border rounded-xl w-full max-w-[500px]'>
 
         <div className='flex flex-col gap-y-12 w-full justify-between'>
@@ -80,17 +79,16 @@ const LoginForm = () => {
             <Logo />
 
             <h2 className='text-lg text-center'>
-             {step === 1 ? "Hi, Welcome back! Let's get you in." : "Enter your password to continue."}
+             {"Hi, Welcome back! Let's get you in."}
             </h2>
 
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 w-full">
-             {step === 1 && (
                 <FormField
                  control={form.control}
                  name={'email'}
                  render={({ field }) => (
                     <FormItem>
-                     <FormLabel className="items-center justify-between my-1.5 font-bold hidden">
+                     <FormLabel className="items-center justify-between my-1.5 font-bold">
                         Email
                      </FormLabel>
                      <FormControl>
@@ -104,14 +102,12 @@ const LoginForm = () => {
                     </FormItem>
                  )}
                 />
-             )}
-             {step === 2 && (
                 <FormField
                  control={form.control}
                  name={'password'}
                  render={({ field }) => (
                     <FormItem>
-                     <FormLabel className="items-center justify-between my-1.5 font-bold hidden">
+                     <FormLabel className="items-center justify-between my-1.5 font-bold">
                         Password
                      </FormLabel>
                      <FormControl>
@@ -126,52 +122,25 @@ const LoginForm = () => {
                     </FormItem>
                  )}
                 />
-             )}
 
-            <div className='flex w-full justify-between items-center'>
-                {step === 1 ? (
-                <Link
-                    href={`/register`}
-                    className='hover:text-muted-foreground transition-all'
-                >
-                    Create Account
-                </Link>
-                ) : (
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="lg"
-                    onClick={() => setStep(1)}
-                >
-                    <LucideArrowLeft className="mr-2" />
-                    Previous
-                </Button>
-                )}
-                {step === 1 ? (
-                <Button
-                    type="button"
-                    variant="default"
-                    size="lg"
-                    onClick={e => {
-                        e.preventDefault()
-                        setStep(2)
-                    }}
-                >
-                    Next
-                </Button>
-                ) : (
                 <Button
                     type="submit"
                     variant="default"
                     size="lg"
                     disabled={isPending}
+                    className='w-full'
                 >
                     {isPending && <LucideLoader2 className={`w-6 h-6 ${isPending ? "animate-spin" : ""}`} />}
                     {isPending ? "Loading..." : "Login"}
                 </Button>
-                )}
-            </div>
 
+                <div className='flex w-full justify-between items-center'>
+                    <span
+                        className='text-muted-foreground transition-all'
+                    >
+                        {'Don\'t have an account?'} <Link href={`/register`} className='text-primary hover:text-green-500'>Create Account</Link>
+                    </span>
+                </div>
             </form>
          </div>
         </div>

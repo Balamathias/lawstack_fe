@@ -11,6 +11,38 @@ export interface User {
     phone: string | null,
     created_at: string,
   }
+
+export interface Question {
+    id: string,
+    text: string,
+    year: string,
+    course: string,
+    level: string,
+    session: string | null,
+    marks: number,
+    semester: string,
+    course_name: string,
+    institution: string,
+    institution_name: string,
+    type: string,
+    tags: string[],
+    created_at: string,
+    updated_at: string | null,
+    uploaded_by: string | User,
+}
+
+export interface Course {
+    id: string,
+    institution: string[],
+    name: string,
+    code: string,
+    description: string,
+    level: string,
+    duration: string,
+    credit_units: number,
+    created_at: string,
+    updated_at: string
+}
   
   export interface Thumbnail { image?: string | null, images?: string[] | null }
   
