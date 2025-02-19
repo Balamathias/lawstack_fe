@@ -1,11 +1,33 @@
 import { SlidersHorizontal } from 'lucide-react'
-import React from 'react'
+import React, { Suspense } from 'react'
+import DynamicModal from '../dynamic-modal'
+import { FilterByYear } from './filters/years'
+import { FilterBySession } from './filters/session'
+import { FilterByLevel } from './filters/level'
+import { FilterBySemester } from './filters/semester'
+import { FilterByCourse, FilterByCourseSkeleton } from './filters/course'
+import LoadingOverlay from '../loading-overlay'
+import { getCourses } from '@/services/server/courses'
 
 const Filters = () => {
   return (
-    <button className='flex items-center justify-center bg-transparent backdrop-blur-md hover:text-green-600 cursor-pointer'>
-        <SlidersHorizontal className='text-gray-500' size={20} />
-    </button>
+    <DynamicModal
+      trigger={
+        <SlidersHorizontal className='text-gray-500 hover:text-green-500 cursor-pointer transition-all' size={20} />
+      }
+      title="Filter Options"
+      dialogClassName='w-full max-w-3xl rounded-[1.8rem]'
+    >
+      <div className="flex flex-col max-h-[700px] overflow-y-auto gap-3 p-2.5 pb-4">
+        <FilterByYear />
+        <FilterBySession />
+        <FilterByLevel />
+        <FilterBySemester />
+        <Suspense fallback={<FilterByCourseSkeleton />}>
+          <FilterByCourse getCourses={getCourses()} />
+        </Suspense>
+      </div>
+    </DynamicModal>
   )
 }
 

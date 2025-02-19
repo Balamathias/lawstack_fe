@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Delius } from "next/font/google";
+import { Delius, Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TanstackQueryProvider } from "@/lib/tanstack.query";
 
-const delius = Delius({weight: ['400', '400'], subsets: ['latin']});
+const delius = Inter({weight: ['400', '400'], subsets: ['latin']});
 
 export const metadata: Metadata = {
   title: "LawStack",
