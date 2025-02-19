@@ -12,7 +12,7 @@ const GlobeSection = () => {
         </h2>
         
         <div className='bg-secondary/70 backdrop-blur p-6 rounded-xl flex flex-col gap-y-4 justify-between'>
-            <h3 className='text-2xl font-semibold text-white'>
+            <h3 className='text-2xl font-semibold'>
                 Access Anywhere, Anytime
             </h3>
             <p className='text-lg text-muted-foreground'>

@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TanstackQueryProvider } from "@/lib/tanstack.query";
 
-const delius = Inter({weight: ['400', '400'], subsets: ['latin']});
+const inter = Inter({weight: ['300', '400', '500', '600'], subsets: ['latin'], variable: '--font-inter'});
 
 export const metadata: Metadata = {
   title: "LawStack",
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(`antialiased selection:bg-green-600/20 selection:text-green-600`, delius.className)}
+        className={cn(`antialiased selection:bg-green-600/20 selection:text-green-600 font-inter`, inter.className,)}
         suppressHydrationWarning
       >
         <TanstackQueryProvider>

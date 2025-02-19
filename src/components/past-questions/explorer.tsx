@@ -3,11 +3,18 @@ import { ScrollText, Clock, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-const Explorer = async () => {
+interface Props {
+    params?: Promise<{[key: string]: any}>,
+    searchParams: Promise<{[key: string]: any}>
+}
+
+const Explorer = async ({ searchParams: _searchParams }: Props) => {
+    const searchParams = await _searchParams
     const { data } = await getQuestions({
         params: {
             page_size: 6,
             ordering: 'created_at',
+            ...searchParams
         }
     })
 
@@ -35,7 +42,7 @@ const Explorer = async () => {
                                 <time>{new Date(question.created_at).toLocaleDateString()}</time>
                             </div>
 
-                            <span className="text-xs text-muted-foreground px-2.5 py-1.5 bg-secondary/10 border rounded-full">{question.course_name}</span>
+                            <span className="text-xs text-muted-foreground border-green-500/50 px-2.5 py-1.5 bg-green-500/10 border rounded-full">{question.course_name}</span>
                         </div>
                     </Link>
                 ))}

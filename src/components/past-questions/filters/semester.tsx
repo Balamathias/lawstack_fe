@@ -1,13 +1,19 @@
 'use client'
 
-import { cn } from "@/lib/utils"
+import { addQueryParams, cn } from "@/lib/utils"
+import { useRouter, useSearchParams } from "next/navigation"
 import React from "react"
 
 export const FilterBySemester = () => {
-    const [selectedSemester, setSelectedSemester] = React.useState<string | null>(null)
+    const searchParams = useSearchParams()
+    const router = useRouter()
+
+    const selectedSemester = (searchParams?.get('semester') ? searchParams?.get('semester') : null)
 
     const handleSemesterFilter = (semester: string) => {
-      setSelectedSemester(semester)
+      const qs = searchParams.toString()
+      const url = addQueryParams(qs, { semester: semester })
+      router.replace(url)
     }
   
     // Define semesters based on the levels
@@ -28,7 +34,7 @@ export const FilterBySemester = () => {
               key={semester.value} 
               className={cn(
                 "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+                "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
                 semester.value === selectedSemester && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
               )}
               onClick={() => handleSemesterFilter(semester.value)}

@@ -53,6 +53,25 @@ export enum status {
   HTTP_104_CHECKPOINT = 104,
 }
 
+export const addQueryParams = (qs: string, params: Record<string, string | number | undefined>): string => {
+  const urlParams = new URLSearchParams(qs);
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') {
+      urlParams.delete(key);
+    } else {
+      const existingValue = urlParams.get(key);
+      if (existingValue === value.toString()) {
+        urlParams.delete(key);
+      } else {
+        urlParams.set(key, value.toString());
+      }
+    }
+  });
+
+  return `?${urlParams.toString()}`;
+};
+
 export const clipString = (text: string, by=50) => {
   if (text.length <= by) return text
   else return text.slice(0, by) + '...'

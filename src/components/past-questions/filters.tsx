@@ -13,7 +13,7 @@ const Filters = () => {
   return (
     <DynamicModal
       trigger={
-        <SlidersHorizontal className='text-gray-500 hover:text-green-500 cursor-pointer transition-all' size={20} />
+        <SlidersHorizontal className='text-muted-foreground hover:text-green-500 cursor-pointer transition-all' size={20} />
       }
       title="Filter Options"
       dialogClassName='w-full max-w-3xl rounded-[1.8rem]'

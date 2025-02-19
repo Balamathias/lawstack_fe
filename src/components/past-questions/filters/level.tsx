@@ -2,14 +2,21 @@
 
 import DynamicModal from "@/components/dynamic-modal"
 import { DialogClose } from "@/components/ui/dialog"
-import { cn } from "@/lib/utils"
+import { addQueryParams, cn } from "@/lib/utils"
+import { useRouter, useSearchParams } from "next/navigation"
 import React from "react"
 
 export const FilterByLevel = () => {
-    const [selectedLevel, setSelectedLevel] = React.useState<string | null>(null)
+    const searchParams = useSearchParams()
+    const router = useRouter()
+
+    const selectedLevel = (searchParams?.get('level') ? searchParams?.get('level') : null)
+
+    const qs = searchParams?.toString()
 
     const handleLevelFilter = (level: string) => {
-      setSelectedLevel(level)
+      const url = addQueryParams(qs, { level: level })
+      router.replace(url)
     }
   
     // Define levels from 100 to 500
@@ -24,7 +31,7 @@ export const FilterByLevel = () => {
               key={level} 
               className={cn(
                 "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+                "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
                 level === selectedLevel && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
               )}
               onClick={() => handleLevelFilter(level)}

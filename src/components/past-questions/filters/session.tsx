@@ -2,14 +2,20 @@
 
 import DynamicModal from "@/components/dynamic-modal"
 import { DialogClose } from "@/components/ui/dialog"
-import { cn } from "@/lib/utils"
+import { addQueryParams, cn } from "@/lib/utils"
+import { useRouter, useSearchParams } from "next/navigation"
 import React from "react"
 
 export const FilterBySession = () => {
-    const [selectedSession, setSelectedSession] = React.useState<string | null>(null)
+    const searchParams = useSearchParams()
+    const router = useRouter()
+
+    const selectedSession = (searchParams?.get('session') ? searchParams?.get('session') : null)
+    const qs = searchParams?.toString()
 
     const handleSessionFilter = (session: string) => {
-      setSelectedSession(session)
+      const url = addQueryParams(qs, { session })
+      router.replace(url)
     }
   
     // Generate sessions from 2009/2010 to current year
@@ -33,7 +39,7 @@ export const FilterBySession = () => {
               key={session} 
               className={cn(
                 "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+                "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
                 session === selectedSession && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
               )}
               onClick={() => handleSessionFilter(session)}
@@ -47,7 +53,7 @@ export const FilterBySession = () => {
                     <button 
                     className={cn(
                         "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                        "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+                        "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
                         selectedSession && sessions.slice(5)?.includes(selectedSession) && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
                     )}
                     >
@@ -64,7 +70,7 @@ export const FilterBySession = () => {
                             <button 
                                 className={cn(
                                 "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                                "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+                                "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
                                 session === selectedSession && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
                                 )}
                                 onClick={() => handleSessionFilter(session)}

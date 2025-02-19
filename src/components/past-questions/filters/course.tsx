@@ -4,21 +4,26 @@ import { Course } from "@/@types/db"
 import { PaginatedStackResponse } from "@/@types/generics"
 import DynamicModal from "@/components/dynamic-modal"
 import { DialogClose, DialogTitle } from "@/components/ui/dialog"
-import { cn } from "@/lib/utils"
+import { addQueryParams, cn } from "@/lib/utils"
 import React, { use } from "react"
 
 import { Skeleton } from "@/components/ui/skeleton"
 import { Input } from "@/components/ui/input"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export const FilterByCourse = ({ getCourses }: { getCourses: Promise<PaginatedStackResponse<Course[]>> }) => {
+  const searchParams = useSearchParams()
+  const router = useRouter()
 
   const { data: courses } = use(getCourses)
 
-  const [selectedCourse, setSelectedCourse] = React.useState<Course | null>(null)
+  const selectedCourse = (courses.find(course => course.id === searchParams.get('course')) || null)
   const [searchQuery, setSearchQuery] = React.useState<string>('')
 
   const handleSelectCourse = (course: Course) => {
-    setSelectedCourse(course)
+    const qs = searchParams.toString()
+    const url = addQueryParams(qs, { course: course.id })
+    router.replace(url)
   }
 
   const filteredCourses = courses.filter(course => 
@@ -35,7 +40,7 @@ export const FilterByCourse = ({ getCourses }: { getCourses: Promise<PaginatedSt
         key={course.id} 
         className={cn(
         "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-        "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+        "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
         course === selectedCourse && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
         )}
         onClick={() => handleSelectCourse(course)}
@@ -49,7 +54,7 @@ export const FilterByCourse = ({ getCourses }: { getCourses: Promise<PaginatedSt
           <button 
           className={cn(
             "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-            "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+            "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
             selectedCourse && courses.slice(3)?.includes(selectedCourse) && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
           )}
           >
@@ -76,13 +81,13 @@ export const FilterByCourse = ({ getCourses }: { getCourses: Promise<PaginatedSt
               <button 
                 className={cn(
                 "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                "flex flex-col gap-2",
-                "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+                "flex flex-col gap-2 items-start justify-start",
+                "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
                 course === selectedCourse && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
                 )}
                 onClick={() => handleSelectCourse(course)}
               >
-                <span className="font-semibold">{course.code}</span>
+                <span className="font-semibold text-left">{course.code}</span>
                 <span className="text-left">{course.name}</span>
               </button>
             </DialogClose>

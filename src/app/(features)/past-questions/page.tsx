@@ -4,7 +4,12 @@ import Explorer from '@/components/past-questions/explorer'
 import React, { Suspense } from 'react'
 import BackButton from '@/components/back-button'
 
-const Page = () => {
+interface Props {
+  params: Promise<{[key: string]: any}>,
+  searchParams: Promise<{[key: string]: any}>
+}
+
+const Page = async ({ searchParams }: Props) => {
   return (
     <div className='w-full flex flex-col gap-y-10 max-w-7xl mx-auto p-3 sm:p-8'>
         <div className='flex flex-col gap-y-5'>
@@ -15,7 +20,7 @@ const Page = () => {
             <AccessSection />
 
             <Suspense fallback={<LoadingOverlay />}>
-                <Explorer />
+                <Explorer searchParams={searchParams} />
             </Suspense>
         </div>
     </div>

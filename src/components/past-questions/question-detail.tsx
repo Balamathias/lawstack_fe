@@ -23,7 +23,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
   return (
     <div className='flex flex-col gap-4'>
         <div className='flex flex-col gap-2'>
-            <h1 className='text-2xl text-muted-foreground'>{data.text}</h1>
+            <h1 className='text-lg sm:text-xl text-muted-foreground antialiased leading-relaxed font-serif'>{data.text}</h1>
             <Separator />
         </div>
         <div className='flex items-center flex-wrap gap-2 text-xs'>

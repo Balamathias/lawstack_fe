@@ -2,20 +2,27 @@
 
 import DynamicModal from "@/components/dynamic-modal"
 import { DialogClose } from "@/components/ui/dialog"
-import { cn } from "@/lib/utils"
+import { addQueryParams, cn } from "@/lib/utils"
 import React from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export const FilterByYear = () => {
-    const [selectedYear, setSelectedYear] = React.useState<number | null>(null)
+    const searchParams = useSearchParams()
+    const router = useRouter()
+
+    const selectedYear = (searchParams?.get('year') ? parseInt(searchParams?.get('year') as string) : null)
+    const qs = searchParams?.toString()
 
     const handleYearFilter = (year: number) => {
-      setSelectedYear(year)
+      const url = addQueryParams(qs, { year })
+      router.replace(url)
     }
   
     const years = Array.from(
       { length: new Date().getFullYear() - 2009 },
       (_, i) => new Date().getFullYear() - i
     )
+
     return (
       <div className="flex flex-col gap-1.5">
         <h3 className="text-lg font-semibold">Year</h3>
@@ -25,7 +32,7 @@ export const FilterByYear = () => {
               key={year} 
               className={cn(
                 "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+                "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
                 year === selectedYear && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
               )}
               onClick={() => handleYearFilter(year)}
@@ -39,7 +46,7 @@ export const FilterByYear = () => {
                     <button 
                     className={cn(
                         "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                        "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+                        "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
                         selectedYear && years.slice(4)?.includes(selectedYear) && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
                     )}
                     >
@@ -56,7 +63,7 @@ export const FilterByYear = () => {
                             <button 
                                 className={cn(
                                 "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                                "bg-secondary/50 text-gray-500 hover:text-green-500 hover:bg-green-500/10",
+                                "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
                                 year === selectedYear && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
                                 )}
                                 onClick={() => handleYearFilter(year)}
