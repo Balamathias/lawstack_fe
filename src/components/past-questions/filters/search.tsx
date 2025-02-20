@@ -68,6 +68,7 @@ const SearchModal = ({ trigger }: Props) => {
         trigger={trigger}
         dialogClassName='sm:w-full sm:max-w-3xl'
         drawerClassName=''
+        hideDrawerCancel
         title={
             <DialogTitle className='flex items-center gap-2 h-10 px-3'>
                 <LucideSearch size={20} className='text-muted-foreground' />
@@ -81,7 +82,7 @@ const SearchModal = ({ trigger }: Props) => {
             </DialogTitle>
         }
     >
-      <div className='md:max-h-[80vh] overflow-y-auto'>
+      <div className='md:max-h-[80vh] min-h-[400px] overflow-y-auto'>
         {renderSuggestions()}
       </div>
     </DynamicModal>
