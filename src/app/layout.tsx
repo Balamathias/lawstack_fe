@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TanstackQueryProvider } from "@/lib/tanstack.query";
+import ModeToggle from "@/components/mode-toggle";
 
 const inter = Inter({weight: ['300', '400', '500', '600'], subsets: ['latin'], variable: '--font-inter'});
 
@@ -32,6 +33,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
             {children}
+            {/* <ModeToggle /> */}
           </ThemeProvider>
 
           <Toaster
