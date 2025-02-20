@@ -48,7 +48,7 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
         <div className='max-h-[500px] md:max-h-[400px] overflow-y-auto'>
             {
                 isPending ? (
-                    <p className='text-center animate-pulse bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 py-6'>
+                    <p className='text-center animate-pulse bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-amber-500 py-6'>
                         AI is thinking...
                     </p>
                 ) : (
