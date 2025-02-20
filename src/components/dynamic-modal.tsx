@@ -38,7 +38,8 @@ interface DynamicModalProps {
     showDrawerCancel?: boolean,
     hideDrawerCancel?: boolean,
     title?: string | React.ReactNode,
-    blurHeader?: boolean
+    blurHeader?: boolean,
+    hideDrawerCancelIcon?: boolean
 }
 const DynamicModal = ({
   children, 
@@ -55,7 +56,8 @@ const DynamicModal = ({
   closeModal,
   title,
   hideDrawerCancel,
-  blurHeader=false
+  blurHeader=false,
+  hideDrawerCancelIcon=false
 }: DynamicModalProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
   if ((isDesktop || dialogOnly) && !drawerOnly) {

@@ -68,10 +68,9 @@ const SearchModal = ({ trigger }: Props) => {
         trigger={trigger}
         dialogClassName='sm:w-full sm:max-w-3xl'
         drawerClassName=''
-        hideDrawerCancel
+        hideDrawerCancelIcon
         title={
             <DialogTitle className='flex items-center gap-2 h-10 px-3'>
-                <LucideSearch size={20} className='text-muted-foreground' />
                 <input 
                     placeholder='Search past questions by text, course, or year, session, etc...'
                     className='w-full h-full focus-within:outline-none bg-transparent focus:border-none focus:outline-none'
@@ -79,6 +78,7 @@ const SearchModal = ({ trigger }: Props) => {
                     onChange={handleChange}
                     autoFocus
                 />
+                <LucideSearch size={20} className='text-muted-foreground' />
             </DialogTitle>
         }
     >
