@@ -73,7 +73,7 @@ const SearchModal = ({ trigger }: Props) => {
             <DialogTitle className='flex items-center gap-2 h-10 px-3'>
                 <input 
                     placeholder='Search past questions by text, course, or year, session, etc...'
-                    className='w-full h-full focus-within:outline-none bg-transparent focus:border-none focus:outline-none'
+                    className='w-full h-full focus-within:outline-none bg-transparent focus:border-none focus:outline-none ml-2 sm:ml-0'
                     value={query}
                     onChange={handleChange}
                     autoFocus
