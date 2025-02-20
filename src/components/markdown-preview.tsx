@@ -71,11 +71,27 @@ export default function MarkdownPreview({
 						/>
 					);
 				},
-				p: ({ node, ...props }) => {
+				ul: ({ node, ...props }) => {
 					return (
-						<p
+						<ul
 							{...props}
-							className="my-4 text-normal text-muted-foreground leading-relaxed"
+							className="my-4 text-normal leading-relaxed marker:inside list-disc"
+						/>
+					);
+				},
+				ol: ({ node, ...props }) => {
+					return (
+						<ol
+							{...props}
+							className="my-4 text-normal leading-relaxed marker:inside list-decimal"
+						/>
+					);
+				},
+				li: ({ node, ...props }) => {
+					return (
+						<li
+							{...props}
+							className="my-4 text-normal leading-relaxed marker:inside list-disc"
 						/>
 					);
 				},
