@@ -69,13 +69,14 @@ const SearchModal = ({ trigger }: Props) => {
         dialogClassName='sm:w-full sm:max-w-3xl'
         drawerClassName=''
         title={
-            <DialogTitle className='flex items-center gap-2 h-10 px-3 bg-transparent backdrop-blur-md'>
+            <DialogTitle className='flex items-center gap-2 h-10 px-3'>
                 <LucideSearch size={20} className='text-muted-foreground' />
                 <input 
                     placeholder='Search past questions by text, course, or year, session, etc...'
                     className='w-full h-full focus-within:outline-none bg-transparent focus:border-none focus:outline-none'
                     value={query}
                     onChange={handleChange}
+                    autoFocus
                 />
             </DialogTitle>
         }
