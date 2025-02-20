@@ -67,7 +67,7 @@ const SearchModal = ({ trigger }: Props) => {
     <DynamicModal
         trigger={trigger}
         dialogClassName='sm:w-full sm:max-w-3xl'
-        drawerClassName='min-h-[90vh]'
+        drawerClassName=''
         title={
             <DialogTitle className='flex items-center gap-2 h-10 px-3 bg-transparent backdrop-blur-md'>
                 <LucideSearch size={20} className='text-muted-foreground' />
