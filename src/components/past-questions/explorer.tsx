@@ -29,10 +29,10 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
                     <Link
                         href={`/past-questions/${question.id}`}
                         key={question.id}
-                        className="group p-4 rounded-lg border border-secondary hover:border-primary/50 transition-all hover:shadow-md bg-secondary/50 hover:bg-secondary/100 backdrop-blur-md flex flex-col gap-4 justify-between"
+                        className="group p-4 rounded-lg border border-secondary hover:border-secondary/50 transition-all hover:shadow-md bg-secondary/20 backdrop-blur-md hover:bg-secondary/80 flex flex-col gap-4 justify-between"
                     >
                         <div className="flex justify-between items-start">
-                            <p className="font-medium line-clamp-2 hover:text-green-500">{question?.text_plain || question.text}</p>
+                            <p className="font-medium line-clamp-2 hover:text-muted-foreground transition-all">{question?.text_plain || question.text}</p>
                             <ArrowUpRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </div>
 
@@ -42,7 +42,7 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
                                 <time>{new Date(question.created_at).toLocaleDateString()}</time>
                             </div>
 
-                            <span className="text-xs text-muted-foreground border-green-500/50 px-2.5 py-1.5 bg-green-500/10 border rounded-full">{question.course_name}</span>
+                            <span className="text-xs text-muted-foreground border-green-secondary/50 px-2.5 py-1.5 bg-green-secondary/10 border rounded-full">{question.course_name}</span>
                         </div>
                     </Link>
                 ))}

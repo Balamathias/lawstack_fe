@@ -1,6 +1,6 @@
 'use server'
 
-import { Question } from '@/@types/db'
+import { Question, QuestionSuggestion } from '@/@types/db'
 import { PaginatedStackResponse, StackResponse } from '@/@types/generics'
 import { stackbase } from '../server.entry'
 
@@ -21,6 +21,20 @@ export const getQuestions = async (payload?: QuestionPayload): Promise<Paginated
             count: 0,
             next: '',
             previous: ''
+        }
+    }
+}
+
+export const getTypingSuggestions = async (payload?: { params: { q: string }}): Promise<StackResponse<QuestionSuggestion[]>> => {
+    try {
+        const { data } = await stackbase.get('/past-questions/suggestions/', { ...payload })
+        return data
+    } catch (error: any) {
+        return {
+            message: error?.response?.data?.message || error.response?.data?.detail,
+            error: error?.response?.data,
+            data: [],
+            status: error?.response?.status,
         }
     }
 }

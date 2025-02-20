@@ -11,5 +11,7 @@ export enum QUERY_KEYS {
     explore_posts = 'explore_posts',
     follow_unfollow_user = 'follow_unfollow_user',
     profile_user_posts = 'profile_user_posts',
+
+    get_questions = 'get_questions',
     
   }

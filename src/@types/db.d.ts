@@ -32,6 +32,16 @@ export interface Question {
     uploaded_by: string | User,
 }
 
+export interface QuestionSuggestion {
+  id: string,
+  text: string,
+  year: string,
+  course: string,
+  semester: string,
+  institution: string,
+  tags: string[],
+}
+
 export interface Course {
     id: string,
     institution: string[],
