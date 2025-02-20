@@ -60,7 +60,7 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
                 )
             }
 
-            <ul className='flex flex-col gap-4 mt-4'>
+            <ul className='grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4'>
                 {quickPrompts.map((prompt, index) => (
                     <li key={index} className='flex items-center gap-2 bg-secondary/70 hover:opacity-90 transition-all p-3 py-2.5 rounded-lg cursor-pointer' role='button' onClick={() => handlePromptClick(prompt.prompt)}>
                         {prompt.icon}
