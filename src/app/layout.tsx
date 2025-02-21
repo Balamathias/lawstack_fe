@@ -10,8 +10,8 @@ import ModeToggle from "@/components/mode-toggle";
 const inter = Inter({weight: ['300', '400', '500', '600'], subsets: ['latin'], variable: '--font-inter'});
 
 export const metadata: Metadata = {
-  title: "LawStack",
-  description: "A legal tech platform",
+  title: "Law Stack",
+  description: "A simplistic law stack for learning law and legal practices. Gain access to past questions, notes, and more.",
 };
 
 export default function RootLayout({

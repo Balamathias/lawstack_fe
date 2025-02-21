@@ -26,10 +26,10 @@ const features = [
 const HeroSection = () => {
   return (
     <section className="flex flex-col gap-y-5 items-center justify-center">
-        <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-green-500 to-yellow-500 bg-clip-text text-transparent mb-6 text-center">
-        Law Stack
+        <h2 className="text-5xl sm:text-6xl font-bold py-4 text-center leading-snug font-delius">
+          Law Stack
         </h2>
-        <p className="text-lg text-muted-foreground text-center">
+        <p className="text-xl font-semibold text-muted-foreground text-center">
           Your next-generation legal tech platform powered by cutting-edge technology. Learn Law the smart way.
         </p>
 

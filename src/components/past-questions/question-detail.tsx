@@ -6,6 +6,8 @@ import { Separator } from '../ui/separator';
 import { cn } from '@/lib/utils';
 import AIModal from './ai-modal';
 import { getUser } from '@/services/server/auth';
+import MarkdownPreview from '../markdown-preview';
+import PleaseSignIn from '../please-signin';
 
 interface Props {
     id: string;
@@ -28,7 +30,9 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
     <div className='flex flex-col gap-4 justify-between h-full'>
         <div className='flex flex-col gap-4 mb-14'>
             <div className='flex flex-col gap-2'>
-                <h1 className='text-lg sm:text-xl antialiased leading-relaxed font-serif py-2'>{data.text}</h1>
+                <h1 className='text-lg sm:text-xl antialiased leading-relaxed font-serif py-2'>
+                    <MarkdownPreview content={data?.text} />
+                </h1>
                 <Separator />
             </div>
 
@@ -50,8 +54,8 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
             </div>
         </div>
 
-        <footer className='w-full max-lg:left-0 flex justify-center items-center fixed bottom-0 max-w-7xl border-t backdrop-blur-md'>
-            <div className='flex items-center justify-between py-2 gap-8 md:gap-12 lg:w-full max-w-3xl mx-auto left-0 right-0'>
+        <footer className='w-full max-lg:left-0 flex justify-center items-center fixed bottom-0 max-w-7xl max-md:border-t backdrop-blur-md z-10'>
+            <div className='flex items-center justify-between py-2 gap-8 md:gap-12  max-w-3xl mx-auto left-0 right-0'>
                 <button className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
                 'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white',
                 {
@@ -67,20 +71,37 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
                     <LucideBookmark size={18} />
                 </button>
 
-                <AIModal
-                    user={user!}
-                    question={data}
-                    trigger={
-                        <button
-                            disabled={!user}
-                            className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
-                        'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white animate-pulse', {
-                            'bg-sky-500/20 text-sky-500 hover:bg-sky-500/40 hover:text-white': true,
-                        })}>
-                            <LucideSparkle size={18} />
-                        </button>
-                    }
-                />
+                {
+                    user ? (
+                        <AIModal
+                            user={user!}
+                            question={data}
+                            trigger={
+                                <button
+                                    disabled={!user}
+                                    className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
+                                'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white animate-pulse', {
+                                    'bg-sky-500/20 text-sky-500 hover:bg-sky-500/40 hover:text-white': true,
+                                })}>
+                                    <LucideSparkle size={18} />
+                                </button>
+                            }
+                        />
+                    ): (
+                        <PleaseSignIn
+                            message='You have to login to use this feature. This is a feature that allows you to get insights on the question you are viewing using AI.'
+                            trigger={
+                                <button
+                                    className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
+                                'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white animate-pulse', {
+                                    'bg-sky-500/20 text-sky-500 hover:bg-sky-500/40 hover:text-white': true,
+                                })}>
+                                    <LucideSparkle size={18} />
+                                </button>
+                            }
+                        />
+                    )
+                }
             </div>
         </footer>
     </div>
