@@ -64,9 +64,9 @@ export const ExplorerSkeleton = () => {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {[1, 2, 3, 4, 5, 6,7,8,9,10,11,12].map((_, index) => (
                     <div key={index} className="p-4 rounded-lg border border-secondary bg-secondary/20 backdrop-blur-md flex flex-col gap-4 justify-between">
-                        <div className='flex flex-col gap-y-1.5'>
-                            <Skeleton className="h-6 w-32" />
-                            <Skeleton className="h-6 w-24" />
+                        <div className='flex flex-col gap-y-2'>
+                            <Skeleton className="h-5 w-32" />
+                            <Skeleton className="h-5 w-24" />
                         </div>
                         <div className="flex items-center gap-2 mt-3 justify-between">
                             <Skeleton className="h-4 w-24" />
