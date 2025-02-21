@@ -1,6 +1,6 @@
 import LoadingOverlay from '@/components/loading-overlay'
 import AccessSection from '@/components/past-questions/access-section'
-import Explorer from '@/components/past-questions/explorer'
+import Explorer, { ExplorerSkeleton } from '@/components/past-questions/explorer'
 import React, { Suspense } from 'react'
 import BackButton from '@/components/back-button'
 
@@ -19,7 +19,7 @@ const Page = async ({ searchParams }: Props) => {
 
             <AccessSection />
 
-            <Suspense fallback={<LoadingOverlay />}>
+            <Suspense fallback={<ExplorerSkeleton />}>
                 <Explorer searchParams={searchParams} />
             </Suspense>
         </div>
