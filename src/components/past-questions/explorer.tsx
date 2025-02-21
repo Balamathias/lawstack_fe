@@ -3,7 +3,10 @@ import { ScrollText, Clock, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
+import { cn } from '@/lib/utils'
+
 import { Skeleton } from '../ui/skeleton'
+import SwitchDisplay from './switch-display'
 
 interface Props {
     params?: Promise<{[key: string]: any}>,
@@ -12,6 +15,8 @@ interface Props {
 
 const Explorer = async ({ searchParams: _searchParams }: Props) => {
     const searchParams = await _searchParams
+    const view = searchParams.view || 'grid'
+
     const { data } = await getQuestions({
         params: {
             page_size: 12,
@@ -21,11 +26,17 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
 
     return (
         <div className="space-y-4 mt-10">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-                <ScrollText className="h-6 w-6" />
-                Recent Questions
-            </h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className='flex items-center gap-2 justify-between py-2'>
+                <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+                    <ScrollText className="h-6 w-6" />
+                    Recent Questions
+                </h2>
+                <SwitchDisplay />
+            </div>
+            <div className={cn("gap-4", {
+                "grid md:grid-cols-2 lg:grid-cols-3": view === 'grid',
+                "flex flex-col": view === 'list'
+            })}>
                 {data.map((question) => (
                     <Link
                         href={`/past-questions/${question.id}`}
