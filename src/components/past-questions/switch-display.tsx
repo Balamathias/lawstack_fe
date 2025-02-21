@@ -20,11 +20,11 @@ const SwitchDisplay = () => {
 
   return (
     <div className='flex items-center gap-x-2.5'>
-        <button className={cn('cursor-pointer', { 'text-sky-500': view === 'grid' })} aria-label="Grid view" onClick={() => toggleView('grid')}>
-            <Grid2X2 className='h-5 w-5' />
-        </button>
         <button className={cn('cursor-pointer', { 'text-sky-500': view === 'list' })} aria-label="List view" onClick={() => toggleView('list')}>
             <List className='h-5 w-5' />
+        </button>
+        <button className={cn('cursor-pointer', { 'text-sky-500': view === 'grid' })} aria-label="Grid view" onClick={() => toggleView('grid')}>
+            <Grid2X2 className='h-5 w-5' />
         </button>
     </div>
   )

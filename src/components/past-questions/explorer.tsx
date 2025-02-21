@@ -68,12 +68,15 @@ export default Explorer
 export const ExplorerSkeleton = () => {
     return (
         <div className="space-y-4 mt-10">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-                <ScrollText className="h-6 w-6" />
-                Recent Questions
-            </h2>
+            <div className='flex items-center gap-2 justify-between py-2'>
+                <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+                    <ScrollText className="h-6 w-6" />
+                    Recent Questions
+                </h2>
+                <SwitchDisplay />
+            </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {[1, 2, 3, 4, 5, 6,7,8,9,10,11,12].map((_, index) => (
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((_, index) => (
                     <div key={index} className="p-4 rounded-lg border border-secondary bg-secondary/20 backdrop-blur-md flex flex-col gap-4 justify-between">
                         <div className='flex flex-col gap-y-2'>
                             <Skeleton className="h-5 w-32" />
