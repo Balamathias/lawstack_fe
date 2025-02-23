@@ -14,5 +14,9 @@ export enum QUERY_KEYS {
 
     get_questions = 'get_questions',
     get_question_insights = 'get_question_insights',
-    
+
+    get_bookmarks = 'get_bookmarks',
+    get_bookmark = 'get_bookmark',
+    create_bookmark = 'create_bookmark',
+    delete_bookmark = 'delete_bookmark',
   }

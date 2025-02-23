@@ -54,6 +54,14 @@ export interface Course {
     created_at: string,
     updated_at: string
 }
+
+export interface Bookmark {
+    id: string,
+    user: string | User,
+    question: string | Question,
+    created_at: string,
+    updated_at: string | null,
+}
   
   export interface Thumbnail { image?: string | null, images?: string[] | null }
   
