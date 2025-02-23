@@ -19,7 +19,7 @@ const Page = async ({ searchParams }: Props) => {
 
             <AccessSection />
 
-            <Suspense fallback={<ExplorerSkeleton />}>
+            <Suspense fallback={<ExplorerSkeleton searchParams={{ view: (await searchParams).view }} />}>
                 <Explorer searchParams={searchParams} />
             </Suspense>
         </div>

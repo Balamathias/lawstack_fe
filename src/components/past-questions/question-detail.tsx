@@ -56,20 +56,55 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
 
         <footer className='w-full max-lg:left-0 flex justify-center items-center fixed bottom-0 max-w-7xl max-md:border-t backdrop-blur-md z-10'>
             <div className='flex items-center justify-between py-2 gap-8 md:gap-12  max-w-3xl mx-auto left-0 right-0'>
-                <button className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
-                'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white',
                 {
-                    'bg-pink-500/20 text-pink-500 hover:bg-pink-500/40 hover:text-white': false,
-                })}>
-                    <LucideHeart size={18} />
-                </button>
+                    user ? (
+                        <button className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
+                            'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
+                                'bg-pink-500/20 text-pink-500 hover:bg-pink-500/40 hover:text-white': true,
+                            })}>
+                            <LucideHeart size={18} />
+                        </button>
+                    ): (
+                        <PleaseSignIn
+                            message='You have to login to use this feature. This is a feature that allows you to like the question you are viewing.'
+                            icon={<LucideHeart size={16} />}
+                            trigger={
+                                <button
+                                    className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
+                                'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
+                                    'bg-pink-500/20 text-pink-500 hover:bg-pink-500/40 hover:text-white': true,
+                                })}>
+                                    <LucideHeart size={18} />
+                                </button>
+                            }
+                        />
+                    )
+                }
 
-                <button className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
-                'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
-                    'bg-amber-500/20 text-amber-500 hover:bg-amber-500/40 hover:text-white': true,
-                })}>
-                    <LucideBookmark size={18} />
-                </button>
+                {
+                    user ? (
+                        <button className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
+                            'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
+                                'bg-amber-500/20 text-amber-500 hover:bg-amber-500/40 hover:text-white': true,
+                            })}>
+                            <LucideBookmark size={18} />
+                        </button>
+                    ): (
+                        <PleaseSignIn
+                            message='You have to login to use this feature. This is a feature that allows you to bookmark the question you are viewing.'
+                            icon={<LucideBookmark size={16} />}
+                            trigger={
+                                <button
+                                    className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
+                                'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
+                                    'bg-amber-500/20 text-amber-500 hover:bg-amber-500/40 hover:text-white': true,
+                                })}>
+                                    <LucideBookmark size={18} />
+                                </button>
+                            }
+                        />
+                    )
+                }
 
                 {
                     user ? (
@@ -90,6 +125,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
                     ): (
                         <PleaseSignIn
                             message='You have to login to use this feature. This is a feature that allows you to get insights on the question you are viewing using AI.'
+                            icon={<LucideSparkle size={16} />}
                             trigger={
                                 <button
                                     className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',

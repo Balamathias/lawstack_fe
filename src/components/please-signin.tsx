@@ -6,9 +6,12 @@ import { ArrowRight, InfoIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import DynamicModal from './dynamic-modal';
+import { usePathname } from 'next/navigation';
 
-const PleaseSignIn = ({ trigger, message }: { trigger: ReactNode, message?: string }) => {
-    const [open, setOpen] = useState(false)
+const PleaseSignIn = ({ trigger, message, icon }: { trigger: ReactNode, message?: string, icon?: React.ReactNode }) => {
+  const [open, setOpen] = useState(false)
+  const currentPath = usePathname()
+
   return (
     <DynamicModal trigger={trigger} open={open} setOpen={setOpen} hideDrawerCancel>
       <div className="flex flex-col items-center gap-y-6 p-6">
@@ -18,7 +21,7 @@ const PleaseSignIn = ({ trigger, message }: { trigger: ReactNode, message?: stri
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 100, damping: 10 }}
         >
-          <PleaseSignInIcon />
+          {icon || <PleaseSignInIcon />}
         </motion.div>
 
         <motion.h1
@@ -39,7 +42,7 @@ const PleaseSignIn = ({ trigger, message }: { trigger: ReactNode, message?: stri
           {message || `You have to be signed in to be able to complete this action.!`}
         </motion.p>
 
-        <Link href="/login" className='w-full'>
+        <Link href={`/login?next=${currentPath}`} className='w-full'>
 
         <Button
             className='rounded-xl bg-primary flex items-center gap-1 w-full'

@@ -55,9 +55,9 @@ const LoginForm = () => {
                 form.reset()
                 
                 if (next) {
-                    router.push(next)
+                    router.replace(next)
                 } else {
-                    router.push('/')
+                    router.replace('/')
                 }
             },
             onError: (error) => {

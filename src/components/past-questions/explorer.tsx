@@ -65,7 +65,10 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
 
 export default Explorer
 
-export const ExplorerSkeleton = () => {
+export const ExplorerSkeleton = ({ searchParams }: { searchParams: { view: string } }) => {
+
+    const view = searchParams.view || 'grid'
+
     return (
         <div className="space-y-4 mt-10">
             <div className='flex items-center gap-2 justify-between py-2'>
@@ -75,7 +78,12 @@ export const ExplorerSkeleton = () => {
                 </h2>
                 <SwitchDisplay />
             </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className={
+                cn("gap-4", {
+                    "grid md:grid-cols-2 lg:grid-cols-3": view === 'grid',
+                    "flex flex-col": view === 'list'
+                })
+            }>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((_, index) => (
                     <div key={index} className="p-4 rounded-lg border border-secondary bg-secondary/20 backdrop-blur-md flex flex-col gap-4 justify-between">
                         <div className='flex flex-col gap-y-2'>

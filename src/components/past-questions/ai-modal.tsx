@@ -12,7 +12,7 @@ import { DialogTitle } from '../ui/dialog';
 interface Props {
     trigger: React.ReactNode;
     user: User,
-    question: Question
+    question: Question,
 }
 
 const quickPrompts = [
