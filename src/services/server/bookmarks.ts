@@ -73,6 +73,7 @@ export const isBookmarked = async (question_id: string): Promise<StackResponse<{
         const { data } = await stackbase.get(`/bookmarks/is_bookmarked/`, { params: { past_question_id: question_id } })
         return data
     } catch (error: any) {
+        console.log(error?.response?.data)
         return {
             message: error?.response?.data?.message || error.response?.data?.detail,
             error: error?.response?.data,

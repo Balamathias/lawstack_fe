@@ -87,7 +87,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
 
                 {
                     user ? (
-                        <Bookmark isbookmarked={isbookmarked?.bookmarked || false} />
+                        <Bookmark isbookmarked={isbookmarked?.bookmarked || false} question_id={id} />
                     ): (
                         <PleaseSignIn
                             message='You have to login to use this feature. This is a feature that allows you to bookmark the question you are viewing.'
