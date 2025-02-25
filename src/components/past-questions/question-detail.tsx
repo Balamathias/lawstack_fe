@@ -34,9 +34,9 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
     <div className='flex flex-col gap-4 justify-between h-full'>
         <div className='flex flex-col gap-4 mb-14'>
             <div className='flex flex-col gap-2'>
-                <h1 className='text-lg sm:text-xl antialiased leading-relaxed font-serif py-2'>
+                <div className='text-lg sm:text-xl flex flex-col gap-y-2.5 antialiased leading-relaxed font-serif py-2'>
                     <MarkdownPreview content={data?.text} />
-                </h1>
+                </div>
                 <Separator />
             </div>
 

@@ -19,13 +19,14 @@ const Filters = () => {
       dialogClassName='w-full max-w-3xl rounded-[1.8rem]'
     >
       <div className="flex flex-col max-h-[700px] overflow-y-auto gap-3 p-2.5 pb-4">
-        <FilterByYear />
-        <FilterBySession />
-        <FilterByLevel />
         <FilterBySemester />
         <Suspense fallback={<FilterByCourseSkeleton />}>
           <FilterByCourse getCourses={getCourses()} />
         </Suspense>
+        
+        <FilterByYear />
+        <FilterBySession />
+        <FilterByLevel />
       </div>
     </DynamicModal>
   )

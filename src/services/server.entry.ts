@@ -4,7 +4,7 @@ import axios from 'axios';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-const API_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_API_URL : 'http://localhost:8000/api/v1';
+const API_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_API_URL : 'http://lawstack-ms.vercel.app/api/v1';
 
 const serverClient = axios.create({
   baseURL: API_URL,
