@@ -3,6 +3,7 @@ import MarkdownPreview from '@/components/markdown-preview'
 import { getQuestions } from '@/services/server/questions'
 import React from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
+import Link from 'next/link'
 
 interface Props {
     courseId: string
@@ -24,11 +25,11 @@ const CourseQuestions = async ({ courseId }: Props) => {
 
 const QuestionItem = ({ question }: { question: Question }) => {
   return (
-    <div className='flex flex-col gap-y-2'>
+    <Link href={`/past-questions/${question.id}`} className='flex flex-col gap-y-2'>
         <div className='sm:text-lg flex flex-col gap-y-2.5 antialiased leading-relaxed py-3 border-b'>
             <MarkdownPreview content={question?.text} />
         </div>
-    </div>
+    </Link>
   )
 }
 
