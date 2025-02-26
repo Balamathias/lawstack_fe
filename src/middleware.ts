@@ -11,7 +11,6 @@ const authRoutes = [
 ];
 
 const protectedRoutes = [
-  '/dashboard',
   '/finish-up',
 ];
 
@@ -27,7 +26,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  if (user && currentPath.startsWith('/dashboard') && !user.is_superuser) {
+  if (user && currentPath.startsWith('/dashboard') && !user.is_active) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
