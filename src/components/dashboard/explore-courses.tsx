@@ -2,6 +2,7 @@ import { getCourses } from '@/services/server/courses'
 import React from 'react'
 import { Skeleton } from '../ui/skeleton'
 import { Card } from '../ui/card'
+import Link from 'next/link'
 
 const ExploreCourses = async () => {
   const { data: courses } = await getCourses()
@@ -9,12 +10,15 @@ const ExploreCourses = async () => {
     <div>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
             {courses?.map((course) => (
-                <Card key={course.id} className='relative p-5 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg flex flex-col just-between border hover:opacity-70 transition-all hover:bg-green-600/20 hover:text-green-600 cursor-pointer'>
-                    <h2 className='text-xl font-semibold line-clamp-1'>{course.name} ({course.code})</h2>
-                    <p className='text-muted-foreground line-clamp-2'>{course.description}</p>
-                </Card>
+                <Link key={course.id} href={`/dashboard/courses/${course.id}`}>
+                  <Card className='relative p-5 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg flex flex-col justify-between border hover:opacity-70 transition-all hover:bg-green-600/20 hover:text-green-600 cursor-pointer'>
+                      <h2 className='text-xl font-semibold line-clamp-1'>{course.name} ({course.code})</h2>
+                      <p className='text-muted-foreground line-clamp-2'>{course.description}</p>
+                  </Card>
+                </Link>
             ))}
         </div>
+        {courses && courses.length === 0 && <p>No courses available.</p>}
     </div>
   )
 }

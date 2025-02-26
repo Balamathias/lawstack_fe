@@ -5,7 +5,7 @@ import { getUser } from '@/services/server/auth'
 import ExploreCourses, { ExploreCoursesSkeleton } from '@/components/dashboard/explore-courses'
 
 export const metadata: Metadata = {
-  title: 'Home | Law Stack',
+  title: 'Dashboard | Law Stack',
   description: 'Law Stack'
 }
 
@@ -16,7 +16,7 @@ const Page = async () => {
         <h2 className='sr-only'>Hi, Welcome</h2>
         <div className='flex items-center justify-between'>
           <h1 className='text-2xl font-semibold text-muted-foreground py-2'>
-            Hi, <span className='bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text'>{user?.username || user?.first_name || user?.email}</span>.
+            Hi, <span className='text-primary'>{user?.username || user?.first_name || user?.email}</span>.
           </h1>
         </div>
 
