@@ -34,7 +34,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
     <div className='flex flex-col gap-4 justify-between h-full'>
         <div className='flex flex-col gap-4 mb-14'>
             <div className='flex flex-col gap-2'>
-                <div className='text-lg sm:text-xl flex flex-col gap-y-2.5 antialiased leading-relaxed font-serif py-2'>
+                <div className='text-lg sm:text-xl flex flex-col gap-y-2.5 antialiased dark:text-foreground/80 leading-relaxed font-serif py-2'>
                     <MarkdownPreview content={data?.text} />
                 </div>
                 <Separator />
@@ -58,7 +58,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
             </div>
         </div>
 
-        <footer className='w-full max-lg:left-0 flex justify-center items-center fixed bottom-0 max-w-7xl max-md:border-t backdrop-blur-md z-10'>
+        <footer className='w-full max-lg:left-0 flex justify-center items-center fixed bottom-0 max-w-5xl max-md:border-t backdrop-blur-md z-10'>
             <div className='flex items-center justify-between py-2 gap-8 md:gap-12  max-w-3xl mx-auto left-0 right-0'>
                 {
                     user ? (

@@ -6,10 +6,13 @@ import { FilterBySession } from './filters/session'
 import { FilterByLevel } from './filters/level'
 import { FilterBySemester } from './filters/semester'
 import { FilterByCourse, FilterByCourseSkeleton } from './filters/course'
-import LoadingOverlay from '../loading-overlay'
 import { getCourses } from '@/services/server/courses'
 
-const Filters = () => {
+interface Props {
+  isPQ?: boolean
+}
+
+const Filters: React.FC<Props> = ({ isPQ=true }) => {
   return (
     <DynamicModal
       trigger={
@@ -20,13 +23,13 @@ const Filters = () => {
     >
       <div className="flex flex-col max-h-[700px] overflow-y-auto gap-3 p-2.5 pb-4">
         <FilterBySemester />
-        <Suspense fallback={<FilterByCourseSkeleton />}>
+        {isPQ && <Suspense fallback={<FilterByCourseSkeleton />}>
           <FilterByCourse getCourses={getCourses()} />
-        </Suspense>
-        
-        <FilterByYear />
+        </Suspense>}
         <FilterBySession />
-        <FilterByLevel />
+        
+        {isPQ && <FilterByYear />}
+        {isPQ && <FilterByLevel />}
       </div>
     </DynamicModal>
   )
