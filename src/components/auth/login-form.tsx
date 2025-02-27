@@ -57,7 +57,7 @@ const LoginForm = () => {
                 if (next) {
                     router.replace(next)
                 } else {
-                    router.replace('/')
+                    router.replace('/dashboard')
                 }
             },
             onError: (error) => {

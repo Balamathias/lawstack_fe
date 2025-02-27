@@ -15,8 +15,8 @@ const Page = async () => {
     <div className='max-w-7xl flex flex-col space-y-2.5 sm:space-y-4 md:py-12 py-4 md:mx-auto w-full px-4'>
         <h2 className='sr-only'>Hi, Welcome</h2>
         <div className='flex items-center justify-between'>
-          <h1 className='text-2xl font-semibold text-muted-foreground py-2'>
-            Hi, <span className='text-primary'>{user?.username || user?.first_name || user?.email}</span>.
+          <h1 className='text-2xl font-semibold text-muted-foreground py-4'>
+            Hi, <span className='text-primary'>{user?.username || user?.first_name || user?.email || 'Guest'}</span>.
           </h1>
         </div>
 

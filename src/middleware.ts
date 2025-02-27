@@ -12,6 +12,7 @@ const authRoutes = [
 
 const protectedRoutes = [
   '/finish-up',
+  '/dashboard',
 ];
 
 export async function middleware(request: NextRequest) {

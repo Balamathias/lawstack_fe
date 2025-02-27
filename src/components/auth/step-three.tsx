@@ -53,7 +53,7 @@ const StepThree = ({ user }: Props) => {
           }
   
           toast.success('Avatar saved successfully. You are all set!')
-          router.replace('/?rel=welcome')
+          router.replace('/dashboard?rel=welcome')
         },
         onError: (error) => {
           toast.error('An error occurred. Please try again.')
