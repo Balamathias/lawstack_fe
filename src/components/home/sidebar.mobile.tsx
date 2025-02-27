@@ -108,6 +108,17 @@ const MobileSidebar = ({ user }: Props) => {
                             </Button>
                         )
                     }
+
+                    <Button
+                        className='w-full'
+                        asChild
+                        variant={'outline'}
+                    >
+                        <Link href={'/dashboard'}>
+                            <LogOutIcon />
+                            Dashboard
+                        </Link>
+                    </Button>
                 </SheetFooter>
             </SheetContent>
         </Sheet>
