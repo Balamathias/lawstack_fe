@@ -38,13 +38,13 @@ const Bottombar = () => {
     const pathname = usePathname()
 
   return (
-    <nav className="h-14 bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-md md:hidden max-lg:py-1 py-5 max-lg:px-4 px-9 sticky max-md:fixed bottom-0 w-full flex flex-row items-center justify-around z-30">
+    <nav className="h-14 bg-white/80 dark:bg-black/20 backdrop-blur-md max-lg:py-1 py-5 fixed lg:hidden bottom-0 w-full flex flex-row items-center justify-around z-30">
       {
          navLinks.map((link, idx) => (
             <div key={idx} className=' flex flex-row gap-4'>
-                <Link href={link?.href} className={` flex flex-col items-center justify-center`}>
-                    <link.icon size={pathname === link?.href ? 24 : 25} strokeWidth={2} className={cn( "text-green-800 text-s hover:p-1 hover:bg-green-500/75 dark:hover:bg-green/80 hover:rounded-md hover:transition-all hover:duration-500", {
-                      "p-1 rounded-md text-green-600 hover:transition-all hover:opacity-80": pathname === link.href
+                <Link href={link?.href} className={` flex flex-col md:flex-row md:gap-2.5 items-center justify-center`}>
+                    <link.icon size={pathname === link?.href ? 18 : 19} strokeWidth={2} className={cn( "hover:p-1 hover:bg-green-500/75 dark:hover:bg-green-500/80 hover:rounded-md hover:transition-all hover:duration-500", {
+                      "rounded-md text-green-600 bg-green-600/15 hover:transition-all hover:opacity-80": pathname === link.href
                     })} />
                     <span className={cn('text-xs md:text-sm', {
                       'text-green-500': pathname === link.href
