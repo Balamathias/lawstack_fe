@@ -25,21 +25,22 @@ export async function middleware(request: NextRequest) {
   if (user && (authRoutes.includes(currentPath))) {
     return NextResponse.redirect(new URL('/', request.url));
   }
+  
+  if (!user && currentPath.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/login?next=' + currentPath, request.url));
+  }
 
   if (user && currentPath.startsWith('/dashboard') && !user.is_active) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  if (!user && currentPath.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/login?next=' + currentPath, request.url));
-  }
 
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    // '/dashboard/:path*', 
+    '/dashboard/:path*', 
     '/login', 
     '/register', 
     '/finish-up/:path*',
