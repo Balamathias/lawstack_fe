@@ -6,7 +6,7 @@ const Layout = ({ children }: PropsWithChildren) => {
     return (
         <div className='dark:bg-black bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-800 via-amber-900 to-black w-full min-h-screen'>
             <Sidebar />
-            <main className='lg:ml-[210px] mb-14'>
+            <main className='lg:ml-[210px] pb-16'>
                 {children}
             </main>
             <Bottombar />

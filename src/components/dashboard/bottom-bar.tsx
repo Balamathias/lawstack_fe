@@ -12,11 +12,11 @@ export const navLinks = [
       href: "/dashboard",
       icon: Home,
     },
-    // {
-    //   tooltip: "Questions",
-    //   href: "/dashboard/questions",
-    //   icon: HelpCircleIcon,
-    // },
+    {
+      tooltip: "Questions",
+      href: "/past-questions",
+      icon: HelpCircleIcon,
+    },
     {
       tooltip: "Bookmarks",
       href: "/dashboard/bookmarks",
