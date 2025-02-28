@@ -4,12 +4,20 @@ import { Clock, Bookmark, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { format } from 'date-fns';
+import Empty from '@/components/empty';
 
 const BookmarksList = async () => {
     const { data, error } = await getBookmarks();
 
-    if (error) {
-        return <div className="text-center text-muted-foreground">An error occurred, {error?.message || `please try again later`}</div>;
+    if (error || !data?.length) {
+        return (
+            <Empty
+                title="No bookmarks available"
+                content="You have not bookmarked any past questions yet."
+                color='amber'
+                icon={<Bookmark className="h-12 w-12 text-amber-500" />}
+            />
+        )
     }
 
     return (
