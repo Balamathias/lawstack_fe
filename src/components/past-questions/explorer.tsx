@@ -71,7 +71,7 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
 export default Explorer;
 
 export const ExplorerSkeleton = ({ searchParams }: { searchParams: { view: string } }) => {
-    const view = searchParams.view || 'grid';
+    const view = searchParams.view || 'list';
 
     return (
         <div className="space-y-6 mt-10">
