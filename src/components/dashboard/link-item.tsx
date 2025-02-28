@@ -10,7 +10,7 @@ const LinkItem = ({ link }: { link: {href: string, icon: LucideIcon, tooltip: st
     const pathname = usePathname()
 
     const isActive = useMemo(() => {
-        if (pathname.startsWith(link.href) && link.href !== '/admin') {
+        if (pathname.startsWith(link.href) && link.href !== '/dashboard') {
             return true
         }
         return pathname === link.href

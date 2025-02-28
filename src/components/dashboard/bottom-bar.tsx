@@ -14,7 +14,7 @@ export const navLinks = [
     },
     {
       tooltip: "Questions",
-      href: "/past-questions",
+      href: "/dashboard/past-questions",
       icon: HelpCircleIcon,
     },
     {
@@ -22,11 +22,6 @@ export const navLinks = [
       href: "/dashboard/bookmarks",
       icon: Bookmark,
     },
-    // {
-    //   tooltip: "Favorites",
-    //   href: "/dashboard/favorites",
-    //   icon: Heart,
-    // },
     {
       tooltip: "AI",
       href: "/dashboard/chat",
@@ -35,7 +30,13 @@ export const navLinks = [
   ]
 
 const Bottombar = () => {
-    const pathname = usePathname()
+  const pathname = usePathname()
+
+  const patternMatch = pathname.match(/\/dashboard\/past-questions\/(.+)/)
+
+  if (patternMatch) {
+    return null
+  }
 
   return (
     <nav className="h-14 bg-white/80 dark:bg-black/20 backdrop-blur-md max-lg:py-1 py-5 fixed lg:hidden bottom-0 w-full flex flex-row items-center justify-around z-30">
@@ -58,3 +59,10 @@ const Bottombar = () => {
 }
 
 export default Bottombar
+
+
+// {
+    //   tooltip: "Favorites",
+    //   href: "/dashboard/favorites",
+    //   icon: Heart,
+    // },

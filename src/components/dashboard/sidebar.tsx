@@ -14,7 +14,7 @@ export const navLinks = [
     },
     {
       tooltip: "Questions",
-      href: "/dashboard/questions",
+      href: "/dashboard/past-questions",
       icon: HelpCircleIcon,
     },
     {

@@ -9,7 +9,7 @@ const SwitchDisplay = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
-  const [optimisticView, setOptimisticView] = useState(searchParams.get('view') || 'grid')
+  const [optimisticView, setOptimisticView] = useState(searchParams.get('view') || 'list')
 
   const qs = searchParams.toString()
 

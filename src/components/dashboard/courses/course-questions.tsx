@@ -47,8 +47,8 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
   
   const QuestionItem = ({ question }: { question: Question }) => {
     return (
-      <Link href={`/past-questions/${question.id}`} className="flex flex-col">
-        <div className="p-4 bg-white dark:bg-secondary/25 rounded-lg shadow hover:shadow-lg transition-all duration-300 hover:bg-green-600/15 hover:text-green-600 cursor-pointer">
+      <Link href={`/dashboard/past-questions/${question.id}`} className="flex flex-col" passHref>
+        <div className="p-4 bg-white dark:bg-secondary/25 rounded-lg shadow hover:shadow-lg transition-all duration-300 hover:bg-green-600/15 hover:text-muted-foreground cursor-pointer">
           <MarkdownPreview content={question.text + (question?.session ? ` **(${question.session})**` : '')} />
         </div>
       </Link>
