@@ -13,7 +13,7 @@ const BookmarksList = async () => {
     }
 
     return (
-        <div className="space-y-6 mt-10">
+        <div className="space-y-6">
             <div className='flex items-center justify-between py-3 border-b border-muted/50'>
                 <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
                     <Bookmark className="h-6 w-6 text-amber-500" />
@@ -34,11 +34,11 @@ const BookmarksList = async () => {
                             <Bookmark className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                         </div>
                         <div className="flex items-center justify-between text-sm text-muted-foreground mt-3">
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-1 text-xs md:text-base">
                                 <Clock className="h-4 w-4" />
                                 <time>{format(new Date(bookmark.created_at), 'PPP')}</time>
                             </div>
-                            <span className="text-sm font-medium text-primary">
+                            <span className="text-xs md:text-sm font-medium text-primary">
                                 {bookmark.past_question.course_name}
                             </span>
                         </div>
