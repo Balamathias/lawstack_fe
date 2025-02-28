@@ -80,8 +80,10 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
 
             <ul className='grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4'>
                 {quickPrompts.map((prompt, index) => (
-                    <button disabled={isPending} key={index} className='flex items-center gap-2 bg-secondary/70 hover:opacity-90 transition-all p-3 py-2.5 rounded-lg cursor-pointer data-[disabled]:opacity-60 data-[disabled]:cursor-not-allowed' role='button' onClick={() => handlePromptClick(prompt.prompt)}>
-                        {prompt.icon}
+                    <button disabled={isPending} key={index} className='flex items-center gap-2 bg-secondary/40 hover:opacity-90 transition-all p-3 py-2.5 rounded-xl cursor-pointer data-[disabled]:opacity-60 data-[disabled]:cursor-not-allowed' role='button' onClick={() => handlePromptClick(prompt.prompt)}>
+                        <span className='text-green-600'>
+                            {prompt.icon}
+                        </span>
                         <span className='text-sm'>{prompt.prompt}</span>
                     </button>
                 ))}

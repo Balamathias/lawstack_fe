@@ -27,7 +27,8 @@ export const getQuestionInsights = async (prompt: string, question: Question, us
     model: "gemini-1.5-flash",
     messages: [
       {"role": "system", "content": `You a "LawStack Assistant". You are versed in the concepts of law, and you are able to provide insights on questions asked by any user on points of law. You are also able to provide explanations on legal concepts and principles.`},
-      {"role": "assistant", "content": `You are a helpful assistant for user: ${user.username}.`},
+      {"role": "assistant", "content": `You are a helpful assistant for user: ${user.username}. You are versed in the affairs of law in Nigeria, and you are able to provide insights on questions asked by any user on points of law. You are also able to provide explanations on legal concepts and principles. You may proceed into other jurisdictions, but you are most comfortable with the Nigerian legal system.`},
+      {"role": "assistant", "content": `Answers or responses to legal questions must be scoped to the course ${question?.course_name}. This user might probably be a student of ${question?.course_name} from ${question.institution_name}. Responses must be relevant and solidly grounded in the principles of law.`},
       {"role": "user", "content": `${prompt} for the question "${question.text}"`},
     ],
   });
