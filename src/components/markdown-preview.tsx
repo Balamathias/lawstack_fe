@@ -21,11 +21,11 @@ export default function MarkdownPreview({
 			rehypePlugins={[rehypeHighlight]}
 			components={{
 				h1: ({ node, ...props }) => {
-					return <h1 {...props} className="text-2xl font-bold text-primary hover:underline transition-all" />;
+					return <h1 {...props} className="text-3xl font-bold text-primary hover:underline transition-all" />;
 				},
 				h2: ({ node, ...props }) => {
 					return (
-						<h1
+						<h2
 							{...props}
 							className="text-2xl font-bold my-4 text-primary hover:underline transition-all"
 						/>
@@ -33,7 +33,7 @@ export default function MarkdownPreview({
 				},
 				h3: ({ node, ...props }) => {
 					return (
-						<h1
+						<h3
 							{...props}
 							className="text-xl font-bold my-4 text-primary hover:underline transition-all"
 						/>
@@ -92,6 +92,14 @@ export default function MarkdownPreview({
 						<li
 							{...props}
 							className="my-4 text-normal leading-relaxed marker:inside list-disc"
+						/>
+					);
+				},
+				p: ({ node, ...props }) => {
+					return (
+						<p
+							{...props}
+							className="text-normal leading-relaxed"
 						/>
 					);
 				},

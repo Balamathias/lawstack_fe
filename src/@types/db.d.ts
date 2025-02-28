@@ -58,7 +58,7 @@ export interface Course {
 export interface Bookmark {
     id: string,
     user: string | User,
-    question: string | Question,
+    past_question: Question,
     created_at: string,
     updated_at: string | null,
 }
