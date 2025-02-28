@@ -37,7 +37,7 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
             })}>
                 {data.map((question) => (
                     <Link
-                        href={`/past-questions/${question.id}`}
+                        href={`/dashboard/past-questions/${question.id}`}
                         key={question.id}
                         className="group p-5 rounded-xl border transition-all shadow-lg bg-secondary/30 backdrop-blur-md hover:opacity-80 translate-all flex flex-col gap-2.5 justify-between"
                     >
