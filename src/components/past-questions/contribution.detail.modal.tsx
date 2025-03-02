@@ -11,7 +11,7 @@ interface Props {
     question: Question
 }
 
-const ContributionDetailModal = ({ contribution }: Props) => {
+const ContributionDetailModal = ({ contribution, question }: Props) => {
   return (
     <div>
         <DynamicModal
