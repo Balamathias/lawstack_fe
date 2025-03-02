@@ -9,6 +9,7 @@ import { DialogTitle } from '../ui/dialog'
 import { Textarea } from '../ui/textarea'
 import { Button } from '../ui/button'
 import { useCreateContribution } from '@/services/client/contributions'
+import { useRouter } from 'next/navigation'
 
 interface Props {
     trigger: React.ReactNode;
@@ -21,6 +22,8 @@ const HeartModal: React.FC<Props> = ({ trigger, user, question }) => {
     const [error, setError] = React.useState<string | null>(null)
     const textareaRef = React.useRef<HTMLTextAreaElement>(null)
     const [isOpen, setIsOpen] = React.useState(false)
+
+    const router = useRouter()
 
     const { mutate: shareThought, isPending: isSubmitting } = useCreateContribution()
 
@@ -65,6 +68,8 @@ const HeartModal: React.FC<Props> = ({ trigger, user, question }) => {
                     setError(data.error);
                     return;
                 }
+
+                router.refresh()
 
                 setIsOpen(false);
                 setText('');

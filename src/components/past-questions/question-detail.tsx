@@ -85,7 +85,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
                         />
                     ): (
                         <PleaseSignIn
-                            message='You have to login to use this feature. This is a feature that allows you to like the question you are viewing.'
+                            message='You have to login to use this feature. This is a feature that allows you to share your thoughts for the question you are viewing.'
                             icon={<LucideHeart size={16} />}
                             trigger={
                                 <button
