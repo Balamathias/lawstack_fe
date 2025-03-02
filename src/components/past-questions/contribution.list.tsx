@@ -9,6 +9,7 @@ import Empty from '../empty'
 import DynamicModal from '../dynamic-modal'
 import MarkdownPreview from '../markdown-preview'
 import { DialogTitle } from '../ui/dialog'
+import ContributionDetailModal from './contribution.detail.modal'
 
 interface Props {
     past_question: Question,
@@ -92,20 +93,7 @@ const ContributionList: React.FC<Props> = async ({ past_question }) => {
                   </div>
                   
                   <div className="mt-2">
-                    <DynamicModal
-                        dialogClassName='sm:max-w-3xl'
-                        title={
-                            <DialogTitle className="flex items-center gap-2 px-2.5">
-                                <LucideMessageCircle size={18} className="text-pink-500" />
-                                <span className="bg-gradient-to-l from-pink-500 to-red-500 text-transparent bg-clip-text font-semibold text-lg">Contribution by {contribution.contributor?.username || 'Lawstacean'}</span>
-                            </DialogTitle>
-                        }
-                        trigger={<p className="text-sm line-clamp-4 hover:cursor-pointer hover:opacity-80 transition-all">{contribution.text}</p>}
-                    >
-                        <div className='max-h-[500px] md:max-h-[400px] overflow-y-auto p-2.5 leading-relaxed'>
-                            <MarkdownPreview content={contribution.text} />
-                        </div>
-                    </DynamicModal>
+                    <ContributionDetailModal contribution={contribution} />
                   </div>
                   
                   <div className="mt-3 flex items-center gap-4">

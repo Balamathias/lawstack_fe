@@ -109,7 +109,17 @@ const HeartModal: React.FC<Props> = ({ trigger, user, question }) => {
                         <p className="text-sm text-red-500">{error}</p>
                     )}
                     
-                    <div className="flex justify-end mt-2">
+                    <div className="flex items-center gap-4 w-full mt-2 sm:justify-end">
+
+                        <Button 
+                            onClick={() => setIsOpen(false)}
+                            size={'lg'}
+                            className="rounded-xl max-sm:basis-[48%]"
+                            variant="secondary"
+                        >
+                            Close
+                        </Button>
+
                         <Button 
                             onClick={handleSubmit}
                             disabled={isSubmitting}
