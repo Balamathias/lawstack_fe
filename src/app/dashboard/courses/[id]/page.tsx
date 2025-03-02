@@ -1,11 +1,31 @@
 import CourseDetail from '@/components/dashboard/courses/course.detail'
 import LoadingOverlay from '@/components/loading-overlay'
 import { getCourse } from '@/services/server/courses'
+import { Metadata, ResolvingMetadata } from 'next'
 import React, { Suspense } from 'react'
 
 interface Props {
     params: Promise<{ id: string }>,
     searchParams: Promise<any>
+}
+
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const id = (await params).id
+ 
+  const { data: course } = await getCourse(id)
+ 
+  const previousImages = (await parent).openGraph?.images || []
+ 
+  return {
+    title: course?.name || 'Course',
+    description: course?.description || 'Course',
+    openGraph: {
+      images: [...previousImages],
+    },
+  }
 }
 
 const Page: React.FC<Props> = async ({ params: _params, searchParams }) => {

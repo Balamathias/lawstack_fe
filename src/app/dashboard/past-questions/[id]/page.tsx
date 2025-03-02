@@ -1,11 +1,32 @@
 import BackButton from '@/components/back-button';
 import LoadingOverlay from '@/components/loading-overlay';
 import QuestionDetail from '@/components/past-questions/question-detail';
+import { getQuestion } from '@/services/server/questions';
+import { Metadata, ResolvingMetadata } from 'next';
 import React, { Suspense } from 'react'
 
 interface Props {
     params: Promise<{[key: string]: any}>,
     searchParams: Promise<{[key: string]: any}>,
+}
+
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const id = (await params).id
+ 
+  const { data: question } = await getQuestion(id)
+ 
+  const previousImages = (await parent).openGraph?.images || []
+ 
+  return {
+    title: question?.text || 'Question',
+    description: question?.text || 'Question',
+    openGraph: {
+      images: [...previousImages],
+    },
+  }
 }
 
 const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchParams }) => {
