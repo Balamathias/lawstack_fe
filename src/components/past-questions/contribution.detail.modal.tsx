@@ -21,9 +21,9 @@ const ContributionDetailModal = ({ contribution }: Props) => {
                         <span className="bg-gradient-to-l from-pink-500 to-red-500 text-transparent bg-clip-text font-semibold text-xs sm:text-lg line-clamp-1">Contribution by {contribution.contributor?.username || 'Lawstacean'}</span>
                     </div>
 
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-sky-500 cursor-pointer">
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-full text-white bg-gradient-to-br  from-sky-500 to-blue-600 cursor-pointer">
                         <LucideStars />
-                        <span className="font-semibold text-sm md:text-lg">Insights</span>
+                        <span className="text-sm md:text-lg">Insights</span>
                     </button>
                 </DialogTitle>
             }
