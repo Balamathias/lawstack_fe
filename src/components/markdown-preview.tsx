@@ -59,7 +59,7 @@ export default function MarkdownPreview({
 					return (
 						<blockquote
 							{...props}
-							className="my-4 hover:underline transition-all p-4 border rounded-md"
+							className="my-4 rounded-none border-l-4 border-green-500 bg-secondary/45 p-4"
 						/>
 					);
 				},
@@ -91,7 +91,7 @@ export default function MarkdownPreview({
 					return (
 						<li
 							{...props}
-							className="my-4 text-normal leading-relaxed marker:inside list-disc"
+							className="my-4 ml-4 text-normal leading-relaxed marker:inside list-disc"
 						/>
 					);
 				},
