@@ -93,7 +93,7 @@ const ContributionList: React.FC<Props> = async ({ past_question }) => {
                   </div>
                   
                   <div className="mt-2">
-                    <ContributionDetailModal contribution={contribution} />
+                    <ContributionDetailModal contribution={contribution} question={past_question} />
                   </div>
                   
                   <div className="mt-3 flex items-center gap-4">

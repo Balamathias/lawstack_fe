@@ -3,10 +3,12 @@ import DynamicModal from '../dynamic-modal'
 import { DialogTitle } from '../ui/dialog'
 import { LucideMessageCircle, LucideStars } from 'lucide-react'
 import MarkdownPreview from '../markdown-preview'
-import { Contribution, User } from '@/@types/db'
+import { Contribution, Question, User } from '@/@types/db'
+import ContributionInsights from './contribution.insights'
 
 interface Props {
-    contribution: Contribution
+    contribution: Contribution,
+    question: Question
 }
 
 const ContributionDetailModal = ({ contribution }: Props) => {
@@ -21,10 +23,15 @@ const ContributionDetailModal = ({ contribution }: Props) => {
                         <span className="bg-gradient-to-l from-pink-500 to-red-500 text-transparent bg-clip-text font-semibold text-xs sm:text-lg line-clamp-1">Contribution by {contribution.contributor?.username || 'Lawstacean'}</span>
                     </div>
 
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-full text-white bg-gradient-to-br  from-sky-500 to-blue-600 cursor-pointer">
-                        <LucideStars />
-                        <span className="text-sm md:text-lg">Insights</span>
-                    </button>
+                    <ContributionInsights trigger={
+                            <button className="flex items-center gap-2 px-4 py-2 rounded-full text-white bg-gradient-to-br  from-sky-500 to-blue-600 cursor-pointer">
+                            <LucideStars />
+                            <span className="text-sm md:text-lg">Insights</span>
+                        </button>
+                        }
+                        contribution={contribution}
+                        question={question}
+                    />
                 </DialogTitle>
             }
             trigger={<p className="text-sm line-clamp-4 hover:cursor-pointer hover:opacity-80 transition-all">{contribution.text}</p>}
