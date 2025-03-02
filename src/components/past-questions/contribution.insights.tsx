@@ -18,27 +18,27 @@ interface Props {
 
 const quickPrompts = [
     {
-        prompt: 'Analyze this question for me.',
+        prompt: 'Analyze this contribution for me.',
         icon: <LucideSearch size={16} />,
     },
     {
-        prompt: 'Criticize this question for me.',
+        prompt: 'Evaluate the quality of this contribution.',
         icon: <LucideLaptopMinimalCheck size={16} />,
     },
     {
-        prompt: 'Summarize this question for me.',
+        prompt: 'Summarize this contribution for me.',
         icon: <LucideLightbulb size={16} />,
     },
     {
-        prompt: 'What are the key points in this question?',
+        prompt: 'What are the key points in this contribution?',
         icon: <LucideList size={16} />,
     },
     {
-        prompt: 'What\'s the answer to this question?',
+        prompt: 'How does this contribution address the question?',
         icon: <LucideSparkle size={16} />,
     },
     {
-        prompt: 'Simplify this question for me.',
+        prompt: 'Suggest improvements for this contribution.',
         icon: <LucideAxe size={16} />,
     }
 ]
