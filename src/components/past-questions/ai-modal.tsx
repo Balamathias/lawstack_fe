@@ -2,7 +2,7 @@
 
 import React from 'react'
 import DynamicModal from '../dynamic-modal';
-import { LucideAxe, LucideLaptopMinimalCheck, LucideLightbulb, LucideList, LucideSearch, LucideSparkle, LucideSparkles } from 'lucide-react';
+import { LucideAxe, LucideLaptopMinimalCheck, LucideLightbulb, LucideList, LucideSearch, LucideSparkle, LucideSparkles, LucideStar } from 'lucide-react';
 import { useQuestionInsights } from '@/services/client/question';
 import { Question, User } from '@/@types/db';
 import MarkdownPreview from '../markdown-preview';
@@ -53,18 +53,18 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
     <DynamicModal
         trigger={trigger}
         title={
-            <DialogTitle className='flex items-center gap-2 w-full justify-center'>
-                <LucideLightbulb size={18} />
-                <span>{isPending ? 'Thinking...' : 'AI Insights'}</span>
+            <DialogTitle className="flex items-center gap-2 p-2.5">
+                <LucideStar size={18} className='text-sky-500' />
+                <span className='bg-gradient-to-l from-sky-500 to-blue-500 text-transparent bg-clip-text font-semibold text-lg'>Insights</span>
             </DialogTitle>
         }
         dialogClassName='sm:max-w-3xl'
         >
-        <div className='max-h-[500px] md:max-h-[400px] overflow-y-auto'>
+        <div className='max-h-[500px] md:max-h-[400px] overflow-y-auto px-2.5'>
             {
                 isPending ? (
-                    <div className='text-center animate-pulse bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-amber-500 py-6 flex items-center justify-center gap-x-2 w-full'>
-                        <LucideSparkle className='animate-spin text-muted-foreground' size={18} />
+                    <div className='text-center animate-pulse bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-blue-500 py-6 flex items-center justify-center gap-x-2 w-full'>
+                        <LucideSparkle className='animate-spin text-sky-500' size={18} />
                         <span>Thinking...</span>
                     </div>
                 ) : (
@@ -80,8 +80,8 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
 
             <ul className='grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4'>
                 {quickPrompts.map((prompt, index) => (
-                    <button disabled={isPending} key={index} className='flex items-center gap-2 bg-secondary/40 hover:opacity-90 transition-all p-3 py-2.5 rounded-xl cursor-pointer data-[disabled]:opacity-60 data-[disabled]:cursor-not-allowed' role='button' onClick={() => handlePromptClick(prompt.prompt)}>
-                        <span className='text-green-600'>
+                    <button disabled={isPending} key={index} className='flex items-center gap-2 bg-sky-200/5 hover:opacity-90 transition-all p-3 py-2.5 rounded-xl cursor-pointer data-[disabled]:opacity-60 data-[disabled]:cursor-not-allowed' role='button' onClick={() => handlePromptClick(prompt.prompt)}>
+                        <span className='text-sky-600'>
                             {prompt.icon}
                         </span>
                         <span className='text-sm'>{prompt.prompt}</span>

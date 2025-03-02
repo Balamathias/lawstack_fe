@@ -62,7 +62,40 @@ export interface Bookmark {
     created_at: string,
     updated_at: string | null,
 }
+
+export interface Contribution {
+    id: string,
+    text: string,
+    past_question: string,
+    contributor: User,
+    upvotes_count: number,
+    downvotes_count: number,
+    created_at: string,
+    updated_at: string | null,
+}
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   export interface Thumbnail { image?: string | null, images?: string[] | null }
   
   export interface Tag {

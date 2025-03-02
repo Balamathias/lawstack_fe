@@ -19,4 +19,12 @@ export enum QUERY_KEYS {
     get_bookmark = 'get_bookmark',
     create_bookmark = 'create_bookmark',
     delete_bookmark = 'delete_bookmark',
+
+    get_contributions = 'get_contributions',
+    get_contribution = 'get_contribution',
+    create_contribution = 'create_contribution',
+    update_contribution = 'update_contribution',
+    delete_contribution = 'delete_contribution',
+
+    
   }

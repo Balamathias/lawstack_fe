@@ -1,7 +1,7 @@
 import { getCourse } from '@/services/server/courses';
 import { getQuestion } from '@/services/server/questions';
 import { LucideBook, LucideBookmark, LucideCalendar, LucideHeart, LucideSparkle, LucideUser, LucideUserCircle } from 'lucide-react';
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Separator } from '../ui/separator';
 import { cn } from '@/lib/utils';
 import AIModal from './ai-modal';
@@ -10,6 +10,8 @@ import MarkdownPreview from '../markdown-preview';
 import PleaseSignIn from '../please-signin';
 import { isBookmarked } from '@/services/server/bookmarks';
 import Bookmark from './bookmark';
+import HeartModal from './heart.modal';
+import ContributionList, { ContributionListSkeleton } from './contribution.list';
 
 interface Props {
     id: string;
@@ -56,18 +58,36 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
                     <span className='font-medium'>{data?.session} ({data?.year}) (Semester {data?.semester})</span>
                 </div>
             </div>
+
+            <div className='flex flex-col gap-4'>
+                {/* <div className='flex items-center gap-2'>
+                    <LucideHeart size={24} className='text-pink-500' />
+                    <span className='font-semibold text-lg'>Thoughts</span>
+                </div>
+                <Separator /> */}
+
+                <Suspense fallback={<ContributionListSkeleton />}>
+                    <ContributionList past_question={data} />
+                </Suspense>
+            </div>
         </div>
 
         <footer className='w-full max-lg:left-0 flex justify-center items-center fixed bottom-0 max-w-5xl max-md:border-t backdrop-blur-md z-10'>
             <div className='flex items-center justify-between py-2 gap-8 md:gap-12  max-w-3xl mx-auto left-0 right-0'>
                 {
                     user ? (
-                        <button className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
-                            'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
-                                'bg-pink-500/20 text-pink-500 hover:bg-pink-500/40 hover:text-white': true,
-                            })}>
-                            <LucideHeart size={18} />
-                        </button>
+                        <HeartModal
+                            question={data}
+                            user={user} 
+                            trigger={
+                                <button className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
+                                    'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
+                                        'bg-pink-500/20 text-pink-500 hover:bg-pink-500/40 hover:text-white': true,
+                                    })}>
+                                    <LucideHeart size={18} />
+                                </button>
+                            }
+                        />
                     ): (
                         <PleaseSignIn
                             message='You have to login to use this feature. This is a feature that allows you to like the question you are viewing.'
