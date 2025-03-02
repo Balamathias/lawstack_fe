@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "./query-keys";
-import { Contribution } from '@/@types/db';
+import { Contribution, Question } from '@/@types/db';
 import { createContribution, deleteContribution, getContribution, getContributions, updateContribution } from "../server/contributions";
+import { getContributionInsights } from "../ai";
 
 interface ContributionPayload {
     params?: Record<string, string | number | boolean>;
@@ -51,3 +52,12 @@ export const useDeleteContribution = () => {
         },
     });
 };
+
+export const useContributionInsights = () => {
+    return useMutation({
+        mutationKey: [QUERY_KEYS.get_contribution_insights],
+        mutationFn: ({ question, contribution, prompt }: { question: Question, contribution: Contribution, prompt: string }) => {
+            return getContributionInsights({prompt, question, contribution});
+        },
+    });
+}

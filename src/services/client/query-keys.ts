@@ -25,6 +25,7 @@ export enum QUERY_KEYS {
     create_contribution = 'create_contribution',
     update_contribution = 'update_contribution',
     delete_contribution = 'delete_contribution',
+    get_contribution_insights = 'get_contribution_insights'
 
-    
+
   }
