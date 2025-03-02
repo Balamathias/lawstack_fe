@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import { useEffect } from 'react'
 
 export default function Error({
@@ -16,9 +17,9 @@ export default function Error({
  
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-black py-12 px-4 sm:px-6 lg:px-8 transition-colors">
-            <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md">
+            <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-lg shadow-md">
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-bold text-gray-900 dark:text-gray-100">
+                    <h2 className="mt-6 text-center text-xl font-bold text-gray-900 dark:text-gray-100">
                         Oops! Something went wrong
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
@@ -31,12 +32,12 @@ export default function Error({
                     )}
                 </div>
                 <div className="mt-8 flex justify-center">
-                    <button
+                    <Button
                         onClick={() => reset()}
-                        className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900 transition-colors"
+                        className="rounded-full"
                     >
                         Try again
-                    </button>
+                    </Button>
                 </div>
                 <div className="text-center mt-4">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
