@@ -60,11 +60,6 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
             </div>
 
             <div className='flex flex-col gap-4'>
-                {/* <div className='flex items-center gap-2'>
-                    <LucideHeart size={24} className='text-pink-500' />
-                    <span className='font-semibold text-lg'>Thoughts</span>
-                </div>
-                <Separator /> */}
 
                 <Suspense fallback={<ContributionListSkeleton />}>
                     <ContributionList past_question={data} />

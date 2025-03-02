@@ -101,7 +101,7 @@ const HeartModal: React.FC<Props> = ({ trigger, user, question }) => {
                         value={text}
                         onChange={handleTextChange}
                         placeholder='How did you answer this question in your exams? Share your thought to help others learn. 😊'
-                        className='min-h-[80px] w-full rounded-xl outline-none border ring-1 resize-none overflow-hidden'
+                        className='min-h-[80px] w-full rounded-xl outline-none border ring-1 resize-none overflow-auto'
                         disabled={isSubmitting}
                     />
                     
@@ -124,7 +124,7 @@ const HeartModal: React.FC<Props> = ({ trigger, user, question }) => {
                             onClick={handleSubmit}
                             disabled={isSubmitting}
                             size={'lg'}
-                            className="bg-gradient-to-l from-pink-500 to-red-500 text-white rounded-xl"
+                            className="bg-gradient-to-l from-pink-500 to-red-500 text-white rounded-xl max-sm:basis-[48%]"
                         >
                             {isSubmitting ? 'Sharing...' : 'Share Thought'}
                         </Button>

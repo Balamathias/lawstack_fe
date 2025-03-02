@@ -53,14 +53,14 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
     <DynamicModal
         trigger={trigger}
         title={
-            <DialogTitle className="flex items-center gap-2 p-2.5">
+            <DialogTitle className="flex items-center gap-2 p-3">
                 <LucideStar size={18} className='text-sky-500' />
                 <span className='bg-gradient-to-l from-sky-500 to-blue-500 text-transparent bg-clip-text font-semibold text-lg'>Insights</span>
             </DialogTitle>
         }
         dialogClassName='sm:max-w-3xl'
         >
-        <div className='max-h-[500px] md:max-h-[400px] overflow-y-auto px-2.5'>
+        <div className='max-h-[500px] md:max-h-[400px] overflow-y-auto px-3'>
             {
                 isPending ? (
                     <div className='text-center animate-pulse bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-blue-500 py-6 flex items-center justify-center gap-x-2 w-full'>
@@ -70,7 +70,7 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
                 ) : (
                     insight && (
                         <div className='leading-relaxed flex items-start gap-x-2.5'>
-                            <div>
+                            <div className='flex flex-col gap-2.5'>
                                 <MarkdownPreview content={insight} />
                             </div>
                         </div>
@@ -84,7 +84,7 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
                         <span className='text-sky-600'>
                             {prompt.icon}
                         </span>
-                        <span className='text-sm'>{prompt.prompt}</span>
+                        <span className='text-sm text-start'>{prompt.prompt}</span>
                     </button>
                 ))}
             </ul>

@@ -63,7 +63,7 @@ const ContributionList: React.FC<Props> = async ({ past_question }) => {
   
   return (
     <div className="space-y-6 mt-6">
-      <h3 className="text-xl font-semibold">Contributions ({contributions?.length || 0})</h3>
+      <h3 className="text-xl font-semibold">Contributions</h3>
       
       {contributions?.length === 0 ? (
         <Empty
