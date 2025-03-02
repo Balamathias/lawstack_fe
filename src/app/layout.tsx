@@ -33,7 +33,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
             {children}
-            {/* <ModeToggle /> */}
+            <ModeToggle />
           </ThemeProvider>
 
           <Toaster
