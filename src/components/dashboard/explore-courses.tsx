@@ -3,13 +3,23 @@ import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 import { Card } from '../ui/card';
 import Link from 'next/link';
-import { GraduationCap, Flag } from 'lucide-react';
+import { GraduationCap, Flag, LucideBookLock } from 'lucide-react';
+import Empty from '../empty';
 
 const ExploreCourses = async () => {
-  const { data: courses } = await getCourses();
+  const { data: courses, error } = await getCourses();
 
-  if (!courses || courses.length === 0) {
-    return <p className="text-center text-gray-500 dark:text-gray-400">No courses available.</p>;
+  if (!courses?.length || error) {
+    return (
+        <div className='flex flex-col gap-4'>
+            <Empty
+                title="Questions not found"
+                content={"Sorry, questions could not be retrieved at this point, please try again."}
+                icon={<LucideBookLock />}
+                color="amber"
+            />
+        </div>
+    )
   }
 
   return (

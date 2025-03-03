@@ -1,6 +1,6 @@
 import { getCourse } from '@/services/server/courses';
 import { getQuestion } from '@/services/server/questions';
-import { LucideBook, LucideBookmark, LucideCalendar, LucideHeart, LucideSparkle, LucideUser, LucideUserCircle } from 'lucide-react';
+import { LucideBook, LucideBookLock, LucideBookmark, LucideCalendar, LucideHeart, LucideSparkle, LucideUser, LucideUserCircle } from 'lucide-react';
 import React, { Suspense } from 'react'
 import { Separator } from '../ui/separator';
 import { cn } from '@/lib/utils';
@@ -12,6 +12,7 @@ import { isBookmarked } from '@/services/server/bookmarks';
 import Bookmark from './bookmark';
 import HeartModal from './heart.modal';
 import ContributionList, { ContributionListSkeleton } from './contribution.list';
+import Empty from '../empty';
 
 interface Props {
     id: string;
@@ -27,7 +28,12 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
   if (!data || error || !course || courseError) {
     return (
         <div className='flex flex-col gap-4'>
-            <h1>Question not found</h1>
+            <Empty
+                title="Questions not found"
+                content="Sorry, questions could not be retrieved at this point, please try again."
+                icon={<LucideBookLock />}
+                color="green"
+            />
         </div>
     )
   }

@@ -22,25 +22,22 @@ export default function Error({
                     <h2 className="mt-6 text-center text-xl font-bold text-muted-foreground">
                         Oops! Something went wrong
                     </h2>
-                    <p className="mt-2 text-center text-sm">
-                        We apologize for the inconvenience. An unexpected error has occurred.
-                    </p>
                     {error.digest && (
-                        <p className="mt-2 text-center text-xs">
+                        <p className="mt-2 text-center text-xs text-red-500">
                             Error ID: {error.digest}
                         </p>
                     )}
                 </div>
                 <div className="mt-8 flex justify-center">
                     <Button
-                        onClick={() => reset()}
+                        onClick={() => window.location.reload()}
                         className="rounded-full"
                     >
                         Try again
                     </Button>
                 </div>
                 <div className="text-center mt-4">
-                    <p className="text-sm ">
+                    <p className="text-sm text-muted-foreground/70">
                         If this issue persists, please contact our support team.
                     </p>
                 </div>

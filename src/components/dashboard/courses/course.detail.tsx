@@ -3,8 +3,9 @@ import { StackResponse } from '@/@types/generics'
 import BackButton from '@/components/back-button'
 import React, { Suspense, use } from 'react'
 import CourseQuestions, { CourseQuestionsSkeleton } from './course-questions'
-import { LucideStars, LucideWeight } from 'lucide-react'
+import { LucideBookLock, LucideStars, LucideWeight } from 'lucide-react'
 import Filters from '@/components/past-questions/filters'
+import Empty from '@/components/empty'
 
 interface Props {
     promisedCourse: Promise<StackResponse<Course | null>>,
@@ -14,6 +15,19 @@ interface Props {
 const CourseDetail = ({ promisedCourse, searchParams }: Props) => {
 
   const { data: course } = use(promisedCourse)
+
+  if (!course) {
+    return (
+      <div className='flex flex-col gap-4'>
+          <Empty
+              title="Course not found"
+              content="Sorry, Course could not be retrieved at this point, please try again."
+              icon={<LucideBookLock />}
+              color="blue"
+          />
+      </div>
+    )
+  }
   
   return (
     <div className='flex flex-col gap-2'>
