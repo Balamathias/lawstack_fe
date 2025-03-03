@@ -75,7 +75,7 @@ export default function MarkdownPreview({
 					return (
 						<ul
 							{...props}
-							className="my-4 text-normal leading-relaxed marker:inside list-disc"
+							className="my-2 px-4 text-normal leading-relaxed marker:inside list-disc"
 						/>
 					);
 				},
@@ -83,7 +83,7 @@ export default function MarkdownPreview({
 					return (
 						<ol
 							{...props}
-							className="my-4 text-normal leading-relaxed marker:inside list-decimal"
+							className="my-2 px-4 text-normal leading-relaxed marker:inside list-decimal"
 						/>
 					);
 				},
@@ -91,7 +91,7 @@ export default function MarkdownPreview({
 					return (
 						<li
 							{...props}
-							className="my-4 ml-4 text-normal leading-relaxed marker:inside list-disc"
+							className="text-normal leading-relaxed"
 						/>
 					);
 				},
