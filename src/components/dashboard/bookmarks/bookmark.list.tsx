@@ -24,8 +24,6 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
         }
     });
 
-    console.log("USER: ", user)
-
     if (user === null) {
         <div className="p-6">
             <div className="max-w-md mx-auto">

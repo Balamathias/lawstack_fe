@@ -3,7 +3,7 @@ import { getQuestion } from '@/services/server/questions';
 import { LucideBook, LucideBookLock, LucideBookmark, LucideCalendar, LucideHeart, LucideSparkle, LucideUser, LucideUserCircle } from 'lucide-react';
 import React, { Suspense } from 'react'
 import { Separator } from '../ui/separator';
-import { cn } from '@/lib/utils';
+import { cn, getSemester } from '@/lib/utils';
 import AIModal from './ai-modal';
 import { getUser } from '@/services/server/auth';
 import MarkdownPreview from '../markdown-preview';
@@ -41,25 +41,19 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
   return (
     <div className='flex flex-col gap-4 justify-between h-full'>
         <div className='flex flex-col gap-4 mb-14'>
+
+            <div className=''>
+                <div className='flex items-center gap-2 text-muted-foreground'>
+                    <h2 className='font-medium font-serif text-2xl py-2'>{course?.name} ({course?.code}) {data?.session} ({data?.year}) ({getSemester(data?.semester)})</h2>
+                </div>
+            </div>
+
             <div className='flex flex-col gap-2'>
                 <div className='text-lg sm:text-xl flex flex-col gap-y-2.5 antialiased dark:text-foreground/80 leading-relaxed font-serif py-2'>
                     <MarkdownPreview content={data?.text} />
                 </div>
             </div>
 
-            <div className='flex items-center flex-wrap gap-4 text-sm py-4 bg-secondary/60 rounded-lg shadow-md p-4 dark:bg-secondary/40'>
-
-                <div className='flex items-center gap-2 text-muted-foreground'>
-                    <LucideBook size={24} className='text-green-500' />
-                    <span className='font-medium'>{course?.name} ({course?.code})</span>
-                </div>
-
-                <div className='flex items-center gap-2 text-muted-foreground'>
-                    <LucideCalendar size={24} className='text-red-500' />
-                    <span className='font-medium'>{data?.session} ({data?.year}) (Semester {data?.semester})</span>
-                </div>
-            </div>
-            
             <Separator />
 
             <div className='flex flex-col gap-4'>
