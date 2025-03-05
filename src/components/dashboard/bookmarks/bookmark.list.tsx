@@ -2,14 +2,46 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getBookmarks } from '@/services/server/bookmarks';
 import { Clock, Bookmark, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { use } from 'react';
 import { format } from 'date-fns';
 import Empty from '@/components/empty';
+import Pagination from '@/components/pagination';
+import { StackResponse } from '@/@types/generics';
+import { User } from '@/@types/db';
+import { Button } from '@/components/ui/button';
 
-const BookmarksList = async () => {
-    const { data, error } = await getBookmarks();
+interface Props {
+    searchParams: Record<string, any>,
+    user: User | null
+}
 
-    if (error || !data?.length) {
+const BookmarksList = async ({ searchParams, user }: Props) => {
+
+    const { data, error, count } = await getBookmarks({
+        params: {
+            page_size: 10,
+            ...searchParams
+        }
+    });
+
+    console.log("USER: ", user)
+
+    if (user === null) {
+        <div className="p-6">
+            <div className="max-w-md mx-auto">
+            <h3 className="text-xl font-semibold mb-2">Bookmarks require an account</h3>
+            <p className="text-muted-foreground mb-4">Sign in to view and manage your bookmarked past questions.</p>
+            <Button asChild className="mt-2 bg-amber-500 hover:bg-amber-600 text-white">
+                <Link href="/auth/signin">
+                Sign in
+                <ArrowUpRight className="ml-2 h-4 w-4" />
+                </Link>
+            </Button>
+            </div>
+        </div>
+    }
+
+    if (!data?.length || error) {
         return (
             <Empty
                 title="No bookmarks available"
@@ -53,6 +85,11 @@ const BookmarksList = async () => {
                     </Link>
                 ))}
             </div>
+
+            <Pagination
+                totalPages={Math.ceil(count/10)}
+                className='mt-10'
+            />
         </div>
     );
 };

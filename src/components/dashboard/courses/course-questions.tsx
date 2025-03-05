@@ -5,6 +5,8 @@ import React from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import Link from 'next/link'
 import Empty from '@/components/empty'
+import { truncateString } from '@/lib/utils'
+import Pagination from '@/components/pagination'
 
 interface Props {
     courseId: string,
@@ -12,7 +14,7 @@ interface Props {
 }
 
 const CourseQuestions = async ({ courseId, searchParams }: Props) => {
-    const { data: questions } = await getQuestions({ params: { course: courseId, ...searchParams } })
+    const { data: questions, count } = await getQuestions({ params: { course: courseId, ...searchParams, page_size: 15 } })
 
     if (!questions?.length) {
         return (
@@ -41,6 +43,11 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
             </div>
           ))}
         </div>
+
+        <Pagination
+          totalPages={Math.ceil(count / 15)}
+          className="mt-8"
+        />
       </div>
     )
   }
@@ -49,7 +56,7 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
     return (
       <Link href={`/dashboard/past-questions/${question.id}`} className="flex flex-col" passHref>
         <div className="p-4 bg-white dark:bg-secondary/25 rounded-lg shadow hover:shadow-lg transition-all duration-300 hover:bg-green-600/15 hover:text-muted-foreground cursor-pointer flex flex-col gap-2.5">
-          <MarkdownPreview content={question.text + (question?.session ? ` **(${question.session})**` : '')} />
+          <MarkdownPreview content={truncateString(question.text, 420) + (question?.session ? ` **(${question.session})**` : '')} />
         </div>
       </Link>
     )

@@ -1,5 +1,6 @@
 import BackButton from '@/components/back-button';
 import BookmarksList, { BookmarksSkeleton } from '@/components/dashboard/bookmarks/bookmark.list';
+import { getUser } from '@/services/server/auth';
 import React, { Suspense } from 'react'
 
 interface Props {
@@ -9,6 +10,8 @@ interface Props {
 
 const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchParams }) => {
 
+  const searchParams = await _searchParams
+  const { data: user } = await getUser()
 
   return (
     <div className='w-full flex flex-col gap-y-10 max-w-5xl mx-auto p-4 sm:p-8'>
@@ -18,7 +21,7 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchPar
             <BackButton />
 
             <Suspense fallback={<BookmarksSkeleton />}>
-                <BookmarksList />
+                <BookmarksList searchParams={searchParams} user={user} />
             </Suspense>
         </div>
     </div>

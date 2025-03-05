@@ -2,9 +2,11 @@ import { getQuestions } from '@/services/server/questions';
 import { ScrollText, Clock, ArrowUpRight, GraduationCap, Building2 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, truncateString } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
 import SwitchDisplay from './switch-display';
+import Pagination from '../pagination';
+import MarkdownPreview from '../markdown-preview';
 
 interface Props {
     params?: Promise<{ [key: string]: any }>,
@@ -15,7 +17,7 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
     const searchParams = await _searchParams;
     const view = searchParams.view || 'list';
 
-    const { data } = await getQuestions({
+    const { data, count } = await getQuestions({
         params: {
             page_size: 12,
             ...searchParams
@@ -42,9 +44,9 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
                         className="group p-5 rounded-xl border transition-all shadow-lg bg-secondary/30 backdrop-blur-md hover:opacity-80 translate-all flex flex-col gap-2.5 justify-between"
                     >
                         <div className="flex justify-between items-start">
-                            <p className="font-medium line-clamp-2 text-primary transition-all group-hover:text-muted-foreground">
-                                {question?.text_plain || question.text}
-                            </p>
+                            <div className='line-clamp-2'>
+                                <MarkdownPreview content={(question?.text)} />
+                            </div>
                             <ArrowUpRight className="h-5 w-5 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
                         </div>
 
@@ -64,6 +66,11 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
                     </Link>
                 ))}
             </div>
+
+            <Pagination
+                totalPages={Math.ceil(count/12)}
+                className='mt-8'
+            />
         </div>
     );
 };

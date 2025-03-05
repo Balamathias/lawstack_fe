@@ -1,11 +1,13 @@
 'use client'
 
 import DynamicModal from '@/components/dynamic-modal'
+import MarkdownPreview from '@/components/markdown-preview'
 import { DialogTitle } from '@/components/ui/dialog'
 import { useDebounce } from '@/hooks/use-debounce'
+import { truncateString } from '@/lib/utils'
 import { useQuestionSuggestions } from '@/services/client/question'
 import { Loader, LucideSearch } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 import React from 'react'
 
 interface Props {
@@ -40,8 +42,11 @@ const SearchModal = ({ trigger }: Props) => {
           {suggestions.data.map((suggestion, index) => (
             <li key={index} className='cursor-pointer' role='button' onClick={() => router.push(`/past-questions/${suggestion.id}`)}>
               <div className='p-3 hover:bg-secondary/70 py-4 rounded-lg flex justify-center flex-col gap-2'>
-                <p className='line-clamp-2'>{suggestion.text}</p>
+                <div className=''>
+                  <MarkdownPreview content={truncateString(suggestion.text, 112)} />
+                </div>
                 <p className='text-xs text-muted-foreground'>{suggestion.course}</p>
+                <p className='text-xs text-muted-foreground'>{suggestion.year} - {suggestion.session}</p>
               </div>
             </li>
           ))}
@@ -82,7 +87,7 @@ const SearchModal = ({ trigger }: Props) => {
             </DialogTitle>
         }
     >
-      <div className='md:max-h-[80vh] min-h-[400px] overflow-y-auto'>
+      <div className='md:max-h-[80vh] min-h-[400px] overflow-y-auto p-3'>
         {renderSuggestions()}
       </div>
     </DynamicModal>

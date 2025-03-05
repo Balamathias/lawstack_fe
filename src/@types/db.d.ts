@@ -39,6 +39,7 @@ export interface QuestionSuggestion {
   course: string,
   semester: string,
   institution: string,
+  session: string | null,
   tags: string[],
 }
 

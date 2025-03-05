@@ -3,7 +3,8 @@
 import DynamicModal from "@/components/dynamic-modal"
 import { DialogClose } from "@/components/ui/dialog"
 import { addQueryParams, cn } from "@/lib/utils"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
+import { useRouter } from "nextjs-toploader/app"
 import React, { useState, useTransition } from "react"
 
 export const FilterByLevel = () => {

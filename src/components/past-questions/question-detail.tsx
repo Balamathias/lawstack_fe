@@ -45,14 +45,9 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
                 <div className='text-lg sm:text-xl flex flex-col gap-y-2.5 antialiased dark:text-foreground/80 leading-relaxed font-serif py-2'>
                     <MarkdownPreview content={data?.text} />
                 </div>
-                <Separator />
             </div>
 
-            <div className='_flex items-center flex-wrap gap-4 text-sm py-4 bg-secondary/60 rounded-lg shadow-md p-4 hidden'>
-                <div className='flex items-center gap-2 text-muted-foreground'>
-                    <LucideUserCircle size={24} className='text-blue-500' />
-                    <span className='font-medium'>{(typeof data?.uploaded_by === 'string') && data.uploaded_by}</span>
-                </div>
+            <div className='flex items-center flex-wrap gap-4 text-sm py-4 bg-secondary/60 rounded-lg shadow-md p-4 dark:bg-secondary/40'>
 
                 <div className='flex items-center gap-2 text-muted-foreground'>
                     <LucideBook size={24} className='text-green-500' />
@@ -64,6 +59,8 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
                     <span className='font-medium'>{data?.session} ({data?.year}) (Semester {data?.semester})</span>
                 </div>
             </div>
+            
+            <Separator />
 
             <div className='flex flex-col gap-4'>
 

@@ -2,7 +2,8 @@
 
 import { addQueryParams, cn } from '@/lib/utils'
 import { Grid2X2, List } from 'lucide-react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 import React, { useTransition, useState } from 'react'
 
 const SwitchDisplay = () => {

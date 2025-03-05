@@ -7,6 +7,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { TanstackQueryProvider } from "@/lib/tanstack.query";
 import ModeToggle from "@/components/mode-toggle";
 
+import NextTopLoader from "nextjs-toploader";
+
 const inter = Inter({weight: ['300', '400', '500', '600'], subsets: ['latin'], variable: '--font-inter'});
 
 export const metadata: Metadata = {
@@ -25,6 +27,10 @@ export default function RootLayout({
         className={cn(`antialiased selection:bg-green-600/20 selection:text-green-600 font-inter`, inter.className,)}
         suppressHydrationWarning
       >
+        <NextTopLoader 
+          showSpinner={false}
+          color="lightgreen"
+        />
         <TanstackQueryProvider>
           <ThemeProvider
               attribute="class"

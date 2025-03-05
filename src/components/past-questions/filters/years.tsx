@@ -4,7 +4,8 @@ import DynamicModal from "@/components/dynamic-modal"
 import { DialogClose } from "@/components/ui/dialog"
 import { addQueryParams, cn } from "@/lib/utils"
 import React, { useTransition, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
+import { useRouter } from "nextjs-toploader/app"
 
 export const FilterByYear = () => {
   const searchParams = useSearchParams()

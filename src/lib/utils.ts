@@ -145,3 +145,8 @@ export const setCookies = (cookies: any, token?: string | null, refreshToken?: s
     cookies.set('refreshToken', refreshToken)
   }
 }
+
+export const truncateString = (str: string, length: number) => {
+  if (str.length <= length) return str
+  return str.slice(0, length) + '...'
+}

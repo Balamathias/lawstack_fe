@@ -1,7 +1,8 @@
 'use client'
 
 import { addQueryParams, cn } from "@/lib/utils"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
+import { useRouter } from "nextjs-toploader/app"
 import React, { useTransition, useState } from "react"
 
 export const FilterBySemester = () => {

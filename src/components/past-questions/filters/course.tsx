@@ -9,7 +9,8 @@ import React, { use, startTransition, useOptimistic } from "react"
 
 import { Skeleton } from "@/components/ui/skeleton"
 import { Input } from "@/components/ui/input"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
+import { useRouter } from "nextjs-toploader/app"
 
 export const FilterByCourse = ({ getCourses }: { getCourses: Promise<PaginatedStackResponse<Course[]>> }) => {
   const searchParams = useSearchParams()
