@@ -31,7 +31,7 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
             <h3 className="text-xl font-semibold mb-2">Bookmarks require an account</h3>
             <p className="text-muted-foreground mb-4">Log in to view and manage your bookmarked past questions.</p>
             <Button asChild className="mt-2 rounded-full">
-                <Link href="/login">
+                <Link href="/login?next=/dashboard/bookmarks">
                 Log in
                 <ArrowUpRight className="ml-2 h-4 w-4" />
                 </Link>
