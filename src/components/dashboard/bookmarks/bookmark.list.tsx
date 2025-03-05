@@ -9,6 +9,7 @@ import Pagination from '@/components/pagination';
 import { StackResponse } from '@/@types/generics';
 import { User } from '@/@types/db';
 import { Button } from '@/components/ui/button';
+import MarkdownPreview from '@/components/markdown-preview';
 
 interface Props {
     searchParams: Record<string, any>,
@@ -24,19 +25,19 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
         }
     });
 
-    if (user === null) {
-        <div className="p-6">
-            <div className="max-w-md mx-auto">
+    if (!user) {
+        return (<div className="">
+            <div className="">
             <h3 className="text-xl font-semibold mb-2">Bookmarks require an account</h3>
-            <p className="text-muted-foreground mb-4">Sign in to view and manage your bookmarked past questions.</p>
-            <Button asChild className="mt-2 bg-amber-500 hover:bg-amber-600 text-white">
-                <Link href="/auth/signin">
-                Sign in
+            <p className="text-muted-foreground mb-4">Log in to view and manage your bookmarked past questions.</p>
+            <Button asChild className="mt-2 rounded-full">
+                <Link href="/login">
+                Log in
                 <ArrowUpRight className="ml-2 h-4 w-4" />
                 </Link>
             </Button>
             </div>
-        </div>
+        </div>)
     }
 
     if (!data?.length || error) {
@@ -66,9 +67,9 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
                         className="group block p-5 rounded-xl leading-relaxed transition-all bg-background hover:bg-secondary/10 shadow-sm"
                     >
                         <div className="flex justify-between items-center gap-4">
-                            <p className="font-medium line-clamp-3 text-primary transition-all group-hover:text-muted-foreground flex-1">
-                                {bookmark.past_question.text_plain || bookmark.past_question.text}
-                            </p>
+                            <div className='line-clamp-2'>
+                                <MarkdownPreview content={bookmark.past_question.text} />
+                            </div>
                             <Bookmark className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                         </div>
                         <div className="flex items-center justify-between text-sm text-muted-foreground mt-3">

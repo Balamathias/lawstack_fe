@@ -10,6 +10,7 @@ import { useRouter } from 'nextjs-toploader/app'
 
 interface PaginationProps {
     totalPages: number
+
     initialPage?: number
     className?: string
 }
@@ -43,7 +44,7 @@ const Pagination = ({ totalPages, initialPage = 1, className }: PaginationProps)
 
     // Generate page numbers to display
     const getPageNumbers = () => {
-        const maxPagesToShow = 5
+        const maxPagesToShow = 3
         let pages = []
         
         if (totalPages <= maxPagesToShow) {
