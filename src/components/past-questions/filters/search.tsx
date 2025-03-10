@@ -75,7 +75,7 @@ const SearchModal = ({ trigger }: Props) => {
         drawerClassName=''
         hideDrawerCancelIcon
         title={
-            <DialogTitle className='flex items-center gap-2 h-10 px-3'>
+            <DialogTitle className='flex items-center gap-2 h-10 px-3 mx-2 sm:mx-0'>
                 <input 
                     placeholder='Search past questions by text, course, or year, session, etc...'
                     className='w-full h-full focus-within:outline-none bg-transparent focus:border-none focus:outline-none ml-2 sm:ml-0'
@@ -87,7 +87,7 @@ const SearchModal = ({ trigger }: Props) => {
             </DialogTitle>
         }
     >
-      <div className='md:max-h-[80vh] min-h-[400px] overflow-y-auto p-3'>
+      <div className='max-h-[500px] md:max-h-[400px] overflow-y-auto px-3'>
         {renderSuggestions()}
       </div>
     </DynamicModal>

@@ -17,14 +17,6 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
     const { data: questions, count } = await getQuestions({ params: { course: courseId, ...searchParams, page_size: 15 } })
 
     const page = Number(searchParams?.page || 1)
-
-    if (!questions?.length) {
-        return (
-            <div className='flex flex-col gap-4'>
-                <Empty title='No questions found' content='There are currently no questions available for this course or filter.' color='blue' className='dark:bg-inherit' />
-            </div>
-        )
-    }
   
     return (
       <div className="relative">
@@ -45,6 +37,14 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
             </div>
           ))}
         </div>
+
+        {
+          questions?.length === 0 && (
+            <div className='flex flex-col gap-4'>
+                <Empty title='No questions found' content='There are currently no questions available for this course or filter.' color='blue' className='dark:bg-inherit' />
+            </div>
+          )
+        }
 
         <Pagination
           totalPages={Math.ceil(count / 15)}

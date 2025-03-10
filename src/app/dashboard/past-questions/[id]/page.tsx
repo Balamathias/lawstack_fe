@@ -21,8 +21,8 @@ export async function generateMetadata(
   const previousImages = (await parent).openGraph?.images || []
  
   return {
-    title: question?.text || 'Question',
-    description: question?.text || 'Question',
+    title: question?.text_plain || question?.text || 'Question',
+    description: question?.text_plain || question?.text || 'Question',
     openGraph: {
       images: [...previousImages],
     },
