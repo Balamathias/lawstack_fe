@@ -51,11 +51,7 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
                         </div>
 
                         <div className="flex items-center gap-3 mt-3 justify-between text-sm text-muted-foreground">
-                            <div className="flex items-center">
-                                <Clock className="h-4 w-4 mr-1" />
-                                <time>{new Date(question.created_at).toLocaleDateString()}</time>
-                            </div>
-                            <span className="text-xs px-3 py-1.5 bg-green-600/15 text-green-500 rounded-full">
+                            <span className="text-xs px-3 py-1.5 bg-green-600/15 text-green-500 rounded-xl">
                                 {question.course_name}
                             </span>
                         </div>

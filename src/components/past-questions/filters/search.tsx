@@ -74,6 +74,7 @@ const SearchModal = ({ trigger }: Props) => {
         dialogClassName='sm:w-full sm:max-w-3xl'
         drawerClassName=''
         hideDrawerCancelIcon
+        dialogOnly
         title={
             <DialogTitle className='flex items-center gap-2 h-10 px-3 mx-2 sm:mx-0'>
                 <input 
