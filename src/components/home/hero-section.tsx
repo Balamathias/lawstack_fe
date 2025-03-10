@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { Book, FileText, Scale, Search } from "lucide-react";
+import { ArrowRight, Book, FileText, Scale, Search } from "lucide-react";
 
 const features = [
   {
@@ -43,6 +43,15 @@ const HeroSection = () => {
       <p className="text-xl font-semibold text-muted-foreground max-w-3xl text-center">
         Your next-generation legal tech platform powered by cutting-edge technology. Learn Law the smart way.
       </p>
+
+      <Link href="/dashboard" className="mt-6">
+        <Button 
+          className="bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-500 hover:to-emerald-700 text-white px-8 py-6 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+          size="lg"
+        >
+          Get Started <ArrowRight className="w-5 h-5 ml-1 animate-pulse" />
+        </Button>
+      </Link>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10 w-full max-w-6xl">
         {features.map((feature, index) => (

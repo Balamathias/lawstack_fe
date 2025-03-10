@@ -16,6 +16,8 @@ interface Props {
 const CourseQuestions = async ({ courseId, searchParams }: Props) => {
     const { data: questions, count } = await getQuestions({ params: { course: courseId, ...searchParams, page_size: 15 } })
 
+    const page = Number(searchParams?.page || 1)
+
     if (!questions?.length) {
         return (
             <div className='flex flex-col gap-4'>
@@ -31,7 +33,7 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
             <div key={question.id} className="flex">
               <div className="flex flex-col items-center w-12">
                 <div className="flex items-center justify-center w-8 h-8 bg-green-500/15 dark:bg-green-600/15 rounded-full text-green-600 font-bold z-10 mt-1.5">
-                  {index + 1}
+                  {(index + 1) + (page - 1) * 15}
                 </div>
                 {index !== questions.length - 1 && (
                   <div className="flex-1 w-px bg-gray-300 dark:bg-secondary mt-1"></div>
