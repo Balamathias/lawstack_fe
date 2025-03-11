@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Delius, Inter, Poppins } from "next/font/google";
+import { Delius, Inter, Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -9,7 +9,7 @@ import ModeToggle from "@/components/mode-toggle";
 
 import NextTopLoader from "nextjs-toploader";
 
-const inter = Inter({weight: ['300', '400', '500', '600'], subsets: ['latin'], variable: '--font-inter'});
+const inter = Roboto({weight: ['300', '400', '500', '600'], subsets: ['latin'], variable: '--font-inter'});
 
 export const metadata: Metadata = {
   title: "Law Stack",

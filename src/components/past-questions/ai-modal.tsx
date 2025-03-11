@@ -2,12 +2,13 @@
 
 import React from 'react'
 import DynamicModal from '../dynamic-modal';
-import { LucideAxe, LucideLaptopMinimalCheck, LucideLightbulb, LucideList, LucideSearch, LucideSparkle, LucideSparkles, LucideStar } from 'lucide-react';
+import { LucideAxe, LucideLaptopMinimalCheck, LucideLightbulb, LucideList, LucideSearch, LucideSparkle, LucideSparkles, LucideStar, Notebook } from 'lucide-react';
 import { useQuestionInsights } from '@/services/client/question';
 import { Question, User } from '@/@types/db';
 import MarkdownPreview from '../markdown-preview';
 import { cn } from '@/lib/utils';
 import { DialogTitle } from '../ui/dialog';
+import { Button } from '../ui/button';
 
 interface Props {
     trigger: React.ReactNode;
@@ -88,6 +89,16 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
                     </button>
                 ))}
             </ul>
+
+            <div className='py-2 mt-4 hidden'>
+                <Button
+                    size={'lg'}
+                    className="bg-gradient-to-l from-sky-500 to-blue-500 rounded-xl w-full text-white"
+                >
+                    <Notebook />
+                    Save Note
+                </Button>
+            </div>
         </div>
     </DynamicModal>
   )

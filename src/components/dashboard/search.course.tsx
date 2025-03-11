@@ -42,7 +42,7 @@ const SearchCourse: React.FC = () => {
             >
                 <form 
                     onSubmit={handleSubmit}
-                    className="relative bg-secondary rounded-lg overflow-hidden flex items-center p-2 py-1.5 focus:ring">
+                    className="relative bg-secondary/45 rounded-lg overflow-hidden flex items-center p-2 py-[7px] focus:ring">
                     <Search
                         className="h-5 w-5 text-muted-foreground ml-2 flex-shrink-0"
                         aria-hidden="true"
@@ -50,7 +50,7 @@ const SearchCourse: React.FC = () => {
                     <input
                         type="text"
                         placeholder="Search for courses..."
-                        className="w-full border-none focus:outline-none bg-transparent py-2 px-4 text-muted-foreground placeholder:text-muted-foreground ring-0 focus-within:ring-0 focus:ring-0"
+                        className="w-full border-none focus:outline-none bg-transparent p-y1.5 px-4 text-muted-foreground placeholder:text-muted-foreground ring-0 focus-within:ring-0 focus:ring-0"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         onFocus={() => setIsFocused(true)}
@@ -71,16 +71,6 @@ const SearchCourse: React.FC = () => {
                     )}
                 </form>
             </div>
-            {/* {isFocused && (
-                <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="text-xs text-muted-foreground mt-2 text-center"
-                >
-                    Try searching for course names, topics, or instructors
-                </motion.div>
-            )} */}
         </motion.div>
     );
 };

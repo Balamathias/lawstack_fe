@@ -74,8 +74,16 @@ export interface Contribution {
     created_at: string,
     updated_at: string | null,
 }
-  
 
+export interface Note {
+  id: string,
+  title: string,
+  content: string,
+  author_name: string,
+  created_at: string,
+  updated_at: string,
+  label: string
+}
 
 
 

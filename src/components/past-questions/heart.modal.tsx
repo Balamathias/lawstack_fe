@@ -98,6 +98,7 @@ const HeartModal: React.FC<Props> = ({ trigger, user, question }) => {
             dialogClassName='sm:max-w-xl'
             open={isOpen}
             setOpen={setIsOpen}
+            dialogOnly
         >
             <div className='max-h-[500px] md:max-h-[400px] overflow-y-auto p-2.5'>
                 <div className='flex flex-col w-full gap-2'>
