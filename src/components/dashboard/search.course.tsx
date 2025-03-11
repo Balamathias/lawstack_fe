@@ -50,7 +50,7 @@ const SearchCourse: React.FC = () => {
                     <input
                         type="text"
                         placeholder="Search for courses..."
-                        className="w-full border-none focus:outline-none bg-transparent p-y1.5 px-4 text-muted-foreground placeholder:text-muted-foreground ring-0 focus-within:ring-0 focus:ring-0"
+                        className="w-full border-none focus:outline-none bg-transparent py-1.5 px-4 text-muted-foreground placeholder:text-muted-foreground ring-0 focus-within:ring-0 focus:ring-0"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         onFocus={() => setIsFocused(true)}
