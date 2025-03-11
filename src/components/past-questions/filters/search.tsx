@@ -53,7 +53,10 @@ const SearchModal = ({ trigger }: Props) => {
             <li key={index} className='cursor-pointer' role='button' onClick={() => router.push(`/dashboard/past-questions/${suggestion.id}`)}>
               <div className='p-3 hover:bg-secondary/70 py-4 rounded-lg flex justify-center flex-col gap-2'>
                 <div className=''>
-                  <MarkdownPreview content={truncateString(suggestion.text, 112)} />
+                  {/* <MarkdownPreview content={truncateString(suggestion.text, 112)} /> */}
+                  <p className="line-clamp-3">
+                    {suggestion.text}
+                  </p>
                 </div>
                 <p className='text-xs text-muted-foreground'>{suggestion.course}</p>
                 <p className='text-xs text-muted-foreground'>{suggestion.year} - {suggestion.session}</p>
