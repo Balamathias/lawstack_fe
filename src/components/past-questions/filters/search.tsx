@@ -4,9 +4,10 @@ import DynamicModal from '@/components/dynamic-modal'
 import MarkdownPreview from '@/components/markdown-preview'
 import { DialogTitle } from '@/components/ui/dialog'
 import { useDebounce } from '@/hooks/use-debounce'
-import { truncateString } from '@/lib/utils'
+import { addQueryParams, truncateString } from '@/lib/utils'
 import { useQuestionSuggestions } from '@/services/client/question'
 import { Loader, LucideSearch } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
 import React from 'react'
 
@@ -15,12 +16,21 @@ interface Props {
 }
 
 const SearchModal = ({ trigger }: Props) => {
+  const searchParams = useSearchParams()
   
-  const [query, setQuery] = React.useState('')
+  const [query, setQuery] = React.useState(searchParams?.get('search') || '')
   const debouncedQuery = useDebounce(query, 500)
   const router = useRouter()
 
   const { data: suggestions, isPending } = useQuestionSuggestions(debouncedQuery)
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const qs = searchParams?.toString()
+    e.preventDefault()
+
+    const url = addQueryParams(qs, { search: query })
+    router.push(url)
+  }
 
   const renderSuggestions = () => {
       
@@ -40,7 +50,7 @@ const SearchModal = ({ trigger }: Props) => {
       return (
         <ul>
           {suggestions.data.map((suggestion, index) => (
-            <li key={index} className='cursor-pointer' role='button' onClick={() => router.push(`/past-questions/${suggestion.id}`)}>
+            <li key={index} className='cursor-pointer' role='button' onClick={() => router.push(`/dashboard/past-questions/${suggestion.id}`)}>
               <div className='p-3 hover:bg-secondary/70 py-4 rounded-lg flex justify-center flex-col gap-2'>
                 <div className=''>
                   <MarkdownPreview content={truncateString(suggestion.text, 112)} />
@@ -76,15 +86,17 @@ const SearchModal = ({ trigger }: Props) => {
         hideDrawerCancelIcon
         dialogOnly
         title={
-            <DialogTitle className='flex items-center gap-2 h-10 px-3 mx-2 sm:mx-0'>
-                <input 
-                    placeholder='Search past questions by text, course, or year, session, etc...'
-                    className='w-full h-full focus-within:outline-none bg-transparent focus:border-none focus:outline-none ml-2 sm:ml-0'
-                    value={query}
-                    onChange={handleChange}
-                    autoFocus
-                />
-                <LucideSearch size={20} className='text-muted-foreground' />
+            <DialogTitle className='flex items-center gap-2 h-10 px-3 mx-2 sm:mx-0' asChild>
+                <form onSubmit={handleSubmit}>
+                  <input 
+                      placeholder='Search past questions by text, course, or year, session, etc...'
+                      className='w-full h-full focus-within:outline-none bg-transparent focus:border-none focus:outline-none ml-2 sm:ml-0'
+                      value={query}
+                      onChange={handleChange}
+                      autoFocus
+                  />
+                  <LucideSearch size={20} className='text-muted-foreground' />
+                </form>
             </DialogTitle>
         }
     >
