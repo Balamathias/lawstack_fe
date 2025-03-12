@@ -1,5 +1,5 @@
 import { getQuestions } from '@/services/server/questions';
-import { ScrollText, Clock, ArrowUpRight, GraduationCap, Building2 } from 'lucide-react';
+import { ScrollText, ArrowUpRight, GraduationCap, Building2, Clock } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { cn, truncateString } from '@/lib/utils';
@@ -25,9 +25,9 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
     });
 
     return (
-        <div className="space-y-6 mt-10">
-            <div className='flex items-center justify-between py-3 border-b border-muted/50'>
-                <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+        <div className="space-y-8 mt-10">
+            <div className='flex items-center justify-between py-4 border-b border-muted/30'>
+                <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2.5">
                     <ScrollText className="h-6 w-6 text-primary" />
                     Recent Questions
                 </h2>
@@ -41,31 +41,62 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
                     <Link
                         href={`/dashboard/past-questions/${question.id}`}
                         key={question.id}
-                        className="group p-5 rounded-xl border transition-all shadow-lg bg-secondary/30 backdrop-blur-md hover:opacity-80 translate-all flex flex-col gap-2.5 justify-between"
+                        className={cn(
+                            "group relative overflow-hidden p-6 rounded-xl border border-muted/30 transition-all duration-300 hover:border-primary/30",
+                            "bg-gradient-to-br from-background/80 to-secondary/20 backdrop-blur-lg shadow-md hover:shadow-xl",
+                            "flex flex-col gap-3 justify-between",
+                            view === 'list' ? "lg:flex-row lg:items-center" : ""
+                        )}
                     >
-                        <div className="flex justify-between items-start">
-                            <div className='line-clamp-2'>
-                                <MarkdownPreview content={(question?.text)} />
+                        <div className={cn(
+                            "flex flex-col gap-3", 
+                            view === 'list' ? "lg:flex-1" : "flex-1"
+                        )}>
+                            <div className="flex justify-between items-start gap-4">
+                                <div className={cn(
+                                    "font-medium text-foreground/90",
+                                    view === 'list' ? "line-clamp-2" : "line-clamp-3"
+                                )}>
+                                    <MarkdownPreview content={(question?.text)} />
+                                </div>
+                                <span className="bg-primary/10 p-2 rounded-full transform translate-y-0 group-hover:translate-y-1 transition-transform duration-300">
+                                    <ArrowUpRight className="h-4 w-4 text-primary" />
+                                </span>
                             </div>
-                            <ArrowUpRight className="h-5 w-5 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
-                        </div>
 
-                        <div className="flex items-center gap-3 mt-3 justify-between text-sm text-muted-foreground">
-                            <span className="text-xs px-3 py-1.5 bg-green-600/15 text-green-500 rounded-xl">
-                                {question.course_name}
-                            </span>
+                            <div className={cn(
+                                "flex items-center flex-wrap gap-y-2",
+                                view === 'list' ? "gap-x-6" : "gap-x-3 mt-auto"
+                            )}>
+                                <span className="text-xs px-3 py-1.5 bg-primary/15 text-primary font-medium rounded-full">
+                                    {question.course_name}
+                                </span>
+                                
+                                {question?.level && (
+                                    <span className="text-xs flex items-center gap-1 text-muted-foreground">
+                                        <GraduationCap className="h-3.5 w-3.5" /> 
+                                        <span>{question.level} Level</span>
+                                    </span>
+                                )}
+                                
+                                {question?.institution_name && (
+                                    <span className="text-xs flex items-center gap-1 text-muted-foreground">
+                                        <Building2 className="h-3.5 w-3.5" /> 
+                                        <span className="truncate max-w-[150px]">{question.institution_name}</span>
+                                    </span>
+                                )}
+                            </div>
                         </div>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                            {question?.level && <span className="flex items-center gap-1"><GraduationCap className="h-4 w-4" /> {question.level} Level</span>}
-                            {question?.institution_name && <span className="flex items-center gap-1"><Building2 className="h-4 w-4" /> {question.institution_name}</span>}
-                        </div>
+                        
+                        {/* Hover effect gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                     </Link>
                 ))}
             </div>
 
             <Pagination
                 totalPages={Math.ceil(count/12)}
-                className='mt-8'
+                className='mt-10'
             />
         </div>
     );
@@ -77,9 +108,9 @@ export const ExplorerSkeleton = ({ searchParams }: { searchParams: { view: strin
     const view = searchParams.view || 'list';
 
     return (
-        <div className="space-y-6 mt-10">
-            <div className='flex items-center justify-between py-3 border-b border-muted/50'>
-                <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+        <div className="space-y-8 mt-10">
+            <div className='flex items-center justify-between py-4 border-b border-muted/30'>
+                <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2.5">
                     <ScrollText className="h-6 w-6 text-primary" />
                     Recent Questions
                 </h2>
@@ -90,14 +121,35 @@ export const ExplorerSkeleton = ({ searchParams }: { searchParams: { view: strin
                 "flex flex-col": view === 'list'
             })}>
                 {[...Array(12)].map((_, index) => (
-                    <div key={index} className="p-5 rounded-lg border border-muted/50 bg-secondary/30 backdrop-blur-md shadow-lg flex flex-col gap-4 justify-between">
-                        <div className='flex flex-col gap-y-2'>
-                            <Skeleton className="h-5 w-3/4" />
-                            <Skeleton className="h-5 w-1/2" />
-                        </div>
-                        <div className="flex items-center gap-3 mt-3 justify-between">
-                            <Skeleton className="h-4 w-24" />
-                            <Skeleton className="h-4 w-24" />
+                    <div 
+                        key={index} 
+                        className={cn(
+                            "p-6 rounded-xl border border-muted/30 bg-gradient-to-br from-background/80 to-secondary/20 backdrop-blur-lg shadow-md",
+                            "flex flex-col gap-3",
+                            view === 'list' ? "lg:flex-row lg:items-center" : ""
+                        )}
+                    >
+                        <div className={cn(
+                            "flex flex-col gap-4",
+                            view === 'list' ? "lg:flex-1" : "flex-1"
+                        )}>
+                            <div className="flex justify-between items-start gap-4">
+                                <div className="space-y-2 w-full">
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-3/4" />
+                                    {view !== 'list' && <Skeleton className="h-4 w-1/2" />}
+                                </div>
+                                <Skeleton className="h-8 w-8 rounded-full" />
+                            </div>
+                            
+                            <div className={cn(
+                                "flex items-center flex-wrap gap-y-2",
+                                view === 'list' ? "gap-x-6" : "gap-x-3"
+                            )}>
+                                <Skeleton className="h-6 w-24 rounded-full" />
+                                <Skeleton className="h-4 w-28" />
+                                <Skeleton className="h-4 w-32" />
+                            </div>
                         </div>
                     </div>
                 ))}

@@ -61,7 +61,7 @@ const ExploreCourses = async ({ searchParams }: Props) => {
           <TrendingUp className="mr-2 h-6 w-6 text-green-500" />
           Explore Courses
         </h2>
-        <p className="text-muted-foreground">Discover all available courses on Law Stack, make a pick and carefully study {"it's"} past questions.</p>
+        <p className="text-muted-foreground">Discover all available courses on Law Stack, make a pick and carefully study its past questions.</p>
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
