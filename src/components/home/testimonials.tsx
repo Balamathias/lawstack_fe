@@ -64,8 +64,8 @@ const Testimonials = () => {
     <section className="py-16 relative overflow-hidden">
       {/* Background effect */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-20 left-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-60 h-60 bg-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-10 w-40 h-40 bg-green-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-60 h-60 bg-emerald-500/20 rounded-full blur-3xl"></div>
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -96,15 +96,15 @@ const Testimonials = () => {
                   {renderStars(testimonialsData[activeIndex].rating)}
                 </div>
                 
-                <p className="text-white/90 text-lg italic mb-4">
+                <p className="text-muted-foreground text-lg italic mb-4">
                   "{testimonialsData[activeIndex].feedback}"
                 </p>
                 
                 <div>
-                  <h3 className="text-xl font-bold text-white">
+                  <h3 className="text-xl font-bold">
                     {testimonialsData[activeIndex].name}
                   </h3>
-                  <p className="text-blue-300">
+                  <p className="text-green-300">
                     {testimonialsData[activeIndex].role}
                   </p>
                 </div>

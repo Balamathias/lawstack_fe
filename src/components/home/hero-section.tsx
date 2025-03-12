@@ -67,9 +67,9 @@ const HeroSection = () => {
   };
   
   return (
-    <section className="relative overflow-hidden px-4 py-20 bg-transparent rounded-2xl">
+    <section className="relative overflow-hidden py-20 bg-transparent rounded-2xl">
       {/* Decorative elements */}
-      <motion.div 
+      {/* <motion.div 
         className="absolute top-20 left-10 w-72 h-72 bg-emerald-300 rounded-full blur-[120px] opacity-20 dark:opacity-10" 
         animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.3, 0.2] }}
         transition={{ duration: 8, repeat: Infinity }}
@@ -78,7 +78,7 @@ const HeroSection = () => {
         className="absolute bottom-20 right-10 w-80 h-80 bg-green-400 rounded-full blur-[120px] opacity-20 dark:opacity-10" 
         animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.25, 0.2] }}
         transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-      />
+      /> */}
       
       <motion.div 
         className="flex flex-col gap-y-8 items-center justify-center max-w-7xl mx-auto relative z-10"
@@ -148,10 +148,10 @@ const HeroSection = () => {
               whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
               className="group relative overflow-hidden"
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} group-hover:${feature.hoverColor} opacity-80 transition-all duration-500 rounded-2xl`}></div>
-              <div className="absolute inset-0 backdrop-blur-[2px] group-hover:backdrop-blur-[5px] transition-all duration-300"></div>
+              {/* <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} group-hover:${feature.hoverColor} opacity-80 transition-all duration-500 rounded-2xl`}></div>
+              <div className="absolute inset-0 backdrop-blur-[2px] group-hover:backdrop-blur-[5px] transition-all duration-300"></div> */}
               
-              <div className="p-7 rounded-2xl border border-white/20 bg-white/30 dark:bg-black/5 shadow-lg relative h-full flex flex-col justify-between">
+              <div className="p-4 rounded-2xl border border-white/20 bg-white/30 dark:bg-black/5 shadow-lg relative h-full flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white/70 dark:bg-green-800/70 backdrop-blur-sm mb-5 shadow-inner">
                     {feature.icon}

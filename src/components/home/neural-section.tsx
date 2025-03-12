@@ -8,7 +8,7 @@ import { Brain, Sparkles, ArrowRight, Lightbulb } from 'lucide-react'
 
 const NeuralSection = () => {
   return (
-    <section className='py-20 flex flex-col items-center justify-center gap-y-10 bg-center bg-cover bg-no-repeat mt-10 h-full w-full relative max-w-5xl mx-auto px-4'>
+    <section className='py-20 flex flex-col items-center justify-center gap-y-10 bg-center bg-cover bg-no-repeat mt-10 h-full w-full relative max-w-5xl mx-auto'>
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-green-400/20 rounded-full filter blur-3xl" />
@@ -38,7 +38,7 @@ const NeuralSection = () => {
                     overflow-hidden transition-all hover:shadow-green-500/10 hover:border-green-500/30'>
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-green-500/10 to-blue-500/10 opacity-50 pointer-events-none" />
         
-        <div className="p-8 relative z-10">
+        <div className="p-4 relative z-10">
           <div className="flex items-start gap-4">
             <div className="p-3 bg-green-500/20 dark:bg-green-500/10 rounded-xl">
               <Brain className="w-6 h-6 text-green-600 dark:text-green-400" />

@@ -61,7 +61,7 @@ const GlobeSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className='bg-white/10 dark:bg-black/20 backdrop-blur-xl p-8 rounded-2xl flex flex-col gap-y-6 border border-white/20 dark:border-white/10 shadow-[0_0_15px_rgba(0,200,100,0.15)] dark:shadow-[0_0_20px_rgba(0,255,150,0.15)] w-full max-w-2xl'
+          className='bg-white/10 dark:bg-black/20 backdrop-blur-xl p-4 rounded-2xl flex flex-col gap-y-6 border border-white/20 dark:border-white/10 shadow-[0_0_15px_rgba(0,200,100,0.15)] dark:shadow-[0_0_20px_rgba(0,255,150,0.15)] w-full max-w-2xl'
         >
           <div className="flex items-start gap-5">
             <div className="bg-gradient-to-br from-green-400/80 to-emerald-600/80 p-3 rounded-xl text-white shadow-lg">
