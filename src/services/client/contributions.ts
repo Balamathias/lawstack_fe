@@ -1,8 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "./query-keys";
-import { Contribution, Question } from '@/@types/db';
+import { Contribution, Question, User } from '@/@types/db';
 import { createContribution, deleteContribution, getContribution, getContributions, updateContribution } from "../server/contributions";
 import { getContributionInsights } from "../ai";
+import axios from "axios";
+import { useUser } from "./auth";
 
 interface ContributionPayload {
     params?: Record<string, string | number | boolean>;
@@ -58,6 +60,25 @@ export const useContributionInsights = () => {
         mutationKey: [QUERY_KEYS.get_contribution_insights],
         mutationFn: ({ question, contribution, prompt }: { question: Question, contribution: Contribution, prompt: string }) => {
             return getContributionInsights({prompt, question, contribution});
+        },
+    });
+}
+
+export const useContributionInsights_Edge = () => {
+
+    const { data: user } = useUser()
+
+    return useMutation({
+        mutationKey: [QUERY_KEYS.get_contribution_insights_edge],
+        mutationFn: async ({ question, contribution, prompt }: { question: Question, contribution: Contribution, prompt: string, }) => {
+            const { data } = await axios.post('/api/ai/generate', {
+                prompt,
+                question,
+                contribution,
+                type: 'contribution',
+                user
+            });
+            return data.insights as string | null;
         },
     });
 }

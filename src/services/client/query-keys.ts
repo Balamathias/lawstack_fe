@@ -13,8 +13,11 @@ export enum QUERY_KEYS {
     follow_unfollow_user = 'follow_unfollow_user',
     profile_user_posts = 'profile_user_posts',
 
+    get_user = 'get_user',
+
     get_questions = 'get_questions',
     get_question_insights = 'get_question_insights',
+    get_question_insights_edge = 'get_question_insights_edge',
 
     get_bookmarks = 'get_bookmarks',
     get_bookmark = 'get_bookmark',
@@ -31,6 +34,7 @@ export enum QUERY_KEYS {
     create_contribution = 'create_contribution',
     update_contribution = 'update_contribution',
     delete_contribution = 'delete_contribution',
-    get_contribution_insights = 'get_contribution_insights'
+    get_contribution_insights = 'get_contribution_insights',
+    get_contribution_insights_edge = 'get_contribution_insights_edge',
 
   }

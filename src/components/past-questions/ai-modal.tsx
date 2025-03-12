@@ -3,7 +3,7 @@
 import React from 'react'
 import DynamicModal from '../dynamic-modal';
 import { LucideAxe, LucideLaptopMinimalCheck, LucideLightbulb, LucideList, LucideSearch, LucideSparkle, LucideSparkles, LucideStar, Notebook } from 'lucide-react';
-import { useQuestionInsights } from '@/services/client/question';
+import { useQuestionInsights, useQuestionInsights_Edge } from '@/services/client/question';
 import { Question, User } from '@/@types/db';
 import MarkdownPreview from '../markdown-preview';
 import { cn } from '@/lib/utils';
@@ -44,7 +44,7 @@ const quickPrompts = [
 ]
 
 const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
-  const { mutate: getInsights, data: insight, isPending } = useQuestionInsights();
+  const { mutate: getInsights, data: insight, isPending } = useQuestionInsights_Edge();
   
   const handlePromptClick = (prompt: string) => {
     getInsights({ prompt, user, question });
