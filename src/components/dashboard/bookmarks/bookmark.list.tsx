@@ -21,6 +21,7 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
     const { data, error, count } = await getBookmarks({
         params: {
             page_size: 10,
+            ordering: '-created_at',
             ...searchParams
         }
     });
@@ -55,7 +56,7 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
         <div className="space-y-6">
             <div className='flex items-center justify-between py-3 border-b border-muted/50'>
                 <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
-                    <Bookmark className="h-6 w-6 text-amber-500" />
+                    <Bookmark className="h-6 w-6" />
                     Your Bookmarks
                 </h2>
             </div>
