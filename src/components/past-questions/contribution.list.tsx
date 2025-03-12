@@ -70,13 +70,15 @@ const ContributionList: React.FC<Props> = async ({ past_question }) => {
         <Empty
             title='No contributions yet'
             content='Be the first to contribute to this question'
-            icon={<span 
-              className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
+            icon={
+            <span 
+                className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
                   'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
                       'bg-pink-500/20 text-pink-500 hover:bg-pink-500/40 hover:text-white': true,
                   })}>
                   <LucideHeart size={18} />
-              </span>}
+              </span>
+            }
             color='pink'
         />
       ) : (
