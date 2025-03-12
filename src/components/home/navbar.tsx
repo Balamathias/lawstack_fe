@@ -1,5 +1,5 @@
 import React from 'react'
-import { LucideSidebarOpen, Sidebar } from 'lucide-react'
+import { LucideSidebarOpen, LucideSquareArrowOutUpRight, Sidebar } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '../ui/button'
 import Logo from '../logo'
@@ -14,11 +14,11 @@ const Navbar = async () => {
   const { data: user } = await getUser()
 
   return (
-    <nav className='w-full h-16 flex items-center justify-between px-4 bg-transparent backdrop-blur-md fixed top-0 z-20 border-b dark:border-non'>
+    <nav className='w-full h-16 flex items-center justify-between px-4 bg-transparent backdrop-blur-md fixed top-0 z-20 border-b dark:border-none py-4'>
       <div className='flex w-full max-w-7xl mx-auto items-center justify-between'>
         <Logo />
 
-        <section className='items-center gap-x-4 hidden md:flex text-muted-foreground'>
+        <section className='items-center gap-x-4 text-muted-foreground hidden'>
             <Link href='#' className='cursor-pointer'>Features</Link>
             <Link href='#' className='cursor-pointer'>Premium</Link>
             <Link href='#' className='cursor-pointer'>Contact</Link>
@@ -28,21 +28,17 @@ const Navbar = async () => {
             <MobileSidebar user={user} />
         </div>
 
-        <div className='items-center gap-x-4 hidden md:flex'>
+        <div className='items-center gap-x-4 hidden md:flex '>
             {
               user ? (
-                <NavDropdown 
-                  trigger={
-                    <Link href={'#'}>
-                      <Avatar className='w-10 h-10 cursor-pointer transition-all hover:opacity-70'>
-                        <AvatarImage src={user.avatar!} />
-                        <AvatarFallback className='uppercase'>{user.username?.at(0) || user?.email?.at(0)}</AvatarFallback>
-                      </Avatar>
-                    </Link>
-                  }
-               />
+                <Button asChild variant={'secondary'} className='bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-500 hover:to-emerald-700 text-white px-8 py-6 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2'>
+                  <Link href={`/dashboard`}>
+                    Dashboard
+                    <LucideSquareArrowOutUpRight size={16} className='ml-2' />
+                  </Link>
+                </Button>
               ): (
-                <Button asChild variant={'secondary'} className='rounded-full cursor-pointer transition-all hover:opacity-70'>
+                <Button asChild variant={'secondary'} className='bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-500 hover:to-emerald-700 text-white px-8 py-6 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2'>
                   <Link href={`/login`}>
                     Login
                   </Link>
@@ -57,11 +53,11 @@ const Navbar = async () => {
 
 export const NavbarSkeleton = () => {
   return (
-    <nav className='w-full h-16 flex items-center justify-between px-4 bg-transparent backdrop-blur-md fixed top-0 z-20 border-b dark:border-non'>
+    <nav className='w-full h-16 flex items-center justify-between px-4 bg-transparent backdrop-blur-md fixed top-0 z-20 border-b dark:border-none'>
       <div className='flex w-full max-w-7xl mx-auto items-center justify-between'>
         <Logo />
 
-        <section className='items-center gap-x-4 hidden md:flex text-muted-foreground'>
+        <section className='items-center gap-x-4 hidden text-muted-foreground'>
             <Link href='#' className='cursor-pointer'>Features</Link>
             <Link href='#' className='cursor-pointer'>Premium</Link>
             <Link href='#' className='cursor-pointer'>Contact</Link>
