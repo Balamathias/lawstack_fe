@@ -1,12 +1,13 @@
 import { getCourses } from '@/services/server/courses';
 import React from 'react';
 import { Skeleton } from '../ui/skeleton';
-import { Card } from '../ui/card';
+import { Card, CardHeader, CardContent, CardFooter } from '../ui/card';
 import Link from 'next/link';
-import { GraduationCap, Flag, LucideBookLock } from 'lucide-react';
+import { GraduationCap, Flag, LucideBookLock, Clock, TrendingUp, Users } from 'lucide-react';
 import Empty from '../empty';
 import { truncateString } from '@/lib/utils';
 import Pagination from '../pagination';
+import { Badge } from '../ui/badge';
 
 interface Props {
   searchParams: Record<string, any>;
@@ -34,23 +35,69 @@ const ExploreCourses = async ({ searchParams }: Props) => {
     )
   }
 
+  // Map level to a color for visual distinction
+  const getLevelColor = (level: number | string) => {
+    const numLevel = typeof level === 'string' ? parseInt(level) : level;
+    switch(numLevel) {
+      case 100: return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300';
+      case 200: return 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300';
+      case 300: return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+      case 400: return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
+      case 500: return 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+    }
+  };
+
+  // Get human readable label for level
+  const getLevelLabel = (level: number | string) => {
+    const numLevel = typeof level === 'string' ? parseInt(level) : level;
+    return `${numLevel} Level`;
+  };
+
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-2 text-foreground/90 flex items-center">
+          <TrendingUp className="mr-2 h-6 w-6 text-green-500" />
+          Explore Courses
+        </h2>
+        <p className="text-muted-foreground">Discover all available courses on Law Stack, make a pick and carefully study {"it's"} past questions.</p>
+      </div>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {courses.map(({ id, name, description, level }) => (
           <Link key={id} href={`/dashboard/courses/${id}`} passHref>
-            <Card className="relative p-5 rounded-xl flex flex-col justify-between bg-secondary/40 border-none shadow-lg transition-all hover:bg-green-600/20 hover:text-green-600 hover:scale-105 cursor-pointer overflow-hidden group">
-              <div className="absolute top-3 right-3 text-green-500 group-hover:text-green-700 transition-colors">
-                <GraduationCap size={24} />
-              </div>
-              <h2 className="text-xl font-semibold flex items-center gap-2 line-clamp-1">
-                {truncateString(name, 20)}
-              </h2>
-              <p className="text-muted-foreground line-clamp-2 text-sm">{description}</p>
-              <div className="mt-3 flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <Flag size={16} className="text-green-500/90" />
-                <span>{level} Level</span>
-              </div>
+            <Card className="h-full flex flex-col overflow-hidden group transition-all duration-300 hover:shadow-xl border-muted/60 hover:border-green-500/50 relative">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-300 to-green-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              
+              <CardHeader className="pb-2 relative">
+                <div className="absolute top-1 right-1">
+                  <Badge variant="outline" className={`${getLevelColor(level)} text-xs font-medium`}>
+                    {getLevelLabel(level)}
+                  </Badge>
+                </div>
+                <div className="text-green-500 mb-2">
+                  <GraduationCap size={22} />
+                </div>
+                <h3 className="text-xl font-semibold line-clamp-1 group-hover:text-green-600 transition-colors">
+                  {truncateString(name, 25)}
+                </h3>
+              </CardHeader>
+              
+              <CardContent className="flex-grow">
+                <p className="text-muted-foreground line-clamp-2 text-sm">{description}</p>
+              </CardContent>
+              
+              <CardFooter className="pt-3 border-t border-border/40 bg-muted/20 flex justify-between items-center">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Clock size={14} className="text-green-500/80" />
+                  <span>8 weeks</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Users size={14} className="text-green-500/80" />
+                  <span>42 enrolled</span>
+                </div>
+              </CardFooter>
             </Card>
           </Link>
         ))}
@@ -65,16 +112,32 @@ export default ExploreCourses;
 
 export const ExploreCoursesSkeleton = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-      {Array.from({ length: 8 }).map((_, index) => (
-        <div key={index} className="relative p-5 bg-white dark:bg-black/70 bg-opacity-10 dark:bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg border">
-          <div className="flex flex-col gap-y-1.5">
-            <Skeleton className="h-6 w-3/4 mb-2" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
-          </div>
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="mb-6">
+        <Skeleton className="h-8 w-56 mb-2" />
+        <Skeleton className="h-4 w-full max-w-md" />
+      </div>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <Card key={index} className="h-full overflow-hidden border-muted/60">
+            <CardHeader className="pb-2">
+              <Skeleton className="h-5 w-5 mb-2" />
+              <Skeleton className="h-6 w-3/4 mb-1" />
+            </CardHeader>
+            
+            <CardContent>
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            
+            <CardFooter className="pt-3 border-t border-border/40 bg-muted/20 flex justify-between">
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-4 w-16" />
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </>
   );
 };

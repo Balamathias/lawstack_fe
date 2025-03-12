@@ -3,13 +3,14 @@ import { getContributions } from '@/services/server/contributions'
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ThumbsUp, ThumbsDown, MessageSquare, LucideMessageCircle } from 'lucide-react'
+import { ThumbsUp, ThumbsDown, MessageSquare, LucideMessageCircle, LucideHeart } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import Empty from '../empty'
 import DynamicModal from '../dynamic-modal'
 import MarkdownPreview from '../markdown-preview'
 import { DialogTitle } from '../ui/dialog'
 import ContributionDetailModal from './contribution.detail.modal'
+import { cn } from '@/lib/utils'
 
 interface Props {
     past_question: Question,
@@ -69,7 +70,13 @@ const ContributionList: React.FC<Props> = async ({ past_question }) => {
         <Empty
             title='No contributions yet'
             content='Be the first to contribute to this question'
-            icon={<LucideMessageCircle size={48} />}
+            icon={<span 
+              className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
+                  'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
+                      'bg-pink-500/20 text-pink-500 hover:bg-pink-500/40 hover:text-white': true,
+                  })}>
+                  <LucideHeart size={18} />
+              </span>}
             color='pink'
         />
       ) : (

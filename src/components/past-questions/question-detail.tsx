@@ -50,7 +50,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
 
             <div className='flex flex-col gap-2'>
                 <div className='text-lg sm:text-xl flex flex-col gap-y-2.5 antialiased dark:text-foreground/80 leading-relaxed font-serif py-2'>
-                    <MarkdownPreview content={data?.text} />
+                    <MarkdownPreview content={data?.text} className='text-lg sm:text-xl flex flex-col gap-y-2.5 antialiased dark:text-foreground/80 leading-relaxed font-serif py-2'/>
                 </div>
             </div>
 
