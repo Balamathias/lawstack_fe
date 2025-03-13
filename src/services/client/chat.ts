@@ -4,18 +4,14 @@ import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { API_URL } from "../utils"
 import { toast } from "sonner"
-import { useCookies } from "./auth"
+import { getCookie } from 'cookies-next/client'
 
-export const useCreateChat = (_token?: string) => {
-
-    const { data: store } = useCookies()
-
-    const token = store?.token
-    toast.info(token)
-
+export const useCreateChat = () => {
+    
     return useMutation({
-        mutationKey: ['chat', 'create'],
+        mutationKey: ['create-chat'],
         mutationFn: async (data: Record<string, any>) => {
+            const token = getCookie('token');
             if (!token) {
                 throw new Error('Authorization token is missing.');
             }

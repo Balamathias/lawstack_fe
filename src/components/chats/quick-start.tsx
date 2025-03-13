@@ -79,7 +79,7 @@ const QuickStart = ({ auth }: Props) => {
 
   const router = useRouter()
 
-  const { mutate: startChat, isPending } = useCreateChat(auth?.token || '')
+  const { mutate: startChat, isPending } = useCreateChat()
     
   const options = [
     {
