@@ -85,6 +85,22 @@ export interface Note {
   label: string
 }
 
+export interface Chat {
+    id: string,
+    title: string,
+    chat_type: 'general' | 'course_specific' | 'past_question_specific' | 'topic_specific',
+    created_at: string,
+    updated_at: string | null,
+    messages: Message[],
+  }
+  
+  export interface Message {
+    id: string,
+    text: string,
+    created_at: string,
+    updated_at: string | null,
+}
+
 
 
 

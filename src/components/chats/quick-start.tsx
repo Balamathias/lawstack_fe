@@ -6,6 +6,9 @@ import { MessageSquare, BookOpen, FileQuestion, Lightbulb, Scale, Info } from 'l
 import { cn } from '@/lib/utils'
 import { Delius } from 'next/font/google'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip'
+import { useCreateChat } from '@/services/client/chat'
+import { useRouter } from 'nextjs-toploader/app'
+import LoadingOverlay from '../loading-overlay'
 
 const delius = Delius({weight: ['400'], subsets: ['latin'], variable: '--font-delius'})
 
@@ -73,13 +76,29 @@ const QuickStartOption = ({ title, description, icon, onClick, color, iconBg, to
 }
 
 const QuickStart = ({ auth }: Props) => {
+
+  const router = useRouter()
+
+  const { mutate: startChat, isPending } = useCreateChat(auth?.token || '')
     
   const options = [
     {
       title: 'Start a Chat',
       description: 'Start a chat with LawStack Assistant on any topic including current happenings.',
       icon: <MessageSquare className="h-6 w-6" />,
-      onClick: () => console.log('Start a chat clicked'),
+      onClick: () => {
+        startChat({ title: 'New chat', chat_type: 'general' }, {
+            onSuccess: (data) => {
+                console.log('Chat started:', data)
+                if (data.error) {
+                    console.error('Error starting chat:', data.error)
+                    return
+                }
+
+                router.push(`/dashboard/chat/${data?.data?.id}`)
+            }
+        })
+      },
       color: "text-emerald-600 dark:text-emerald-400",
       iconBg: "bg-emerald-100 dark:bg-emerald-900/30",
       tooltipContent: "Best for general legal questions and exploratory conversations. Use this when you want open-ended guidance or have multiple topics to discuss with minimal structure."
@@ -88,7 +107,9 @@ const QuickStart = ({ auth }: Props) => {
       title: 'Start with a Course',
       description: 'Predict past questions, get mock past questions, analyze patterns',
       icon: <BookOpen className="h-6 w-6" />,
-      onClick: () => console.log('Start with a course clicked'),
+      onClick: () => {
+        startChat({ message: 'Start with a course' })
+      },
       color: "text-blue-600 dark:text-blue-400",
       iconBg: "bg-blue-100 dark:bg-blue-900/30",
       tooltipContent: "Perfect for exam preparation. Choose this option when studying for a specific course to identify likely exam questions, understand question patterns, and get tailored practice materials."
@@ -115,6 +136,9 @@ const QuickStart = ({ auth }: Props) => {
 
   return (
     <TooltipProvider delayDuration={300}>
+        {
+            isPending && <LoadingOverlay />
+        }
       <div className={cn("w-full max-w-4xl mx-auto py-8 px-4 relative", delius.variable)}>
         <div className="relative z-10">
           <motion.div 

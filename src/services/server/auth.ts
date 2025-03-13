@@ -399,3 +399,8 @@ export async function passwordResetConfirm({ uid, token, password }:{uid: string
     }
   }
 }
+
+export const getCookies = async () => {
+  const cookieStore = await cookies();
+  return { cookieStore, token: cookieStore?.get('token')?.value };
+}

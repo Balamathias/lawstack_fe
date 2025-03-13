@@ -14,6 +14,7 @@ export enum QUERY_KEYS {
     profile_user_posts = 'profile_user_posts',
 
     get_user = 'get_user',
+    get_cookies = 'get_cookies',
 
     get_questions = 'get_questions',
     get_question_insights = 'get_question_insights',

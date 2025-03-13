@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { followUnfollowUser, login, logout, register, updateUser, verifyOTP, resendOTP, resetPassword, passwordResetConfirm, getUser } from "@/services/server/auth";
+import { followUnfollowUser, login, logout, register, updateUser, verifyOTP, resendOTP, resetPassword, passwordResetConfirm, getUser, getCookies } from "@/services/server/auth";
 import { PartialUserUpdate, User } from "@/@types/db";
 import { QUERY_KEYS } from "./query-keys";
 
@@ -61,4 +61,12 @@ export const useResetPassword = () => useMutation({
 export const useResetPasswordConfirm = () => useMutation({
   mutationKey: ['reset-password-confirm'],
   mutationFn: (data: { uid: string, token: string, password: string }) => passwordResetConfirm(data)
+})
+
+export const useCookies = () => useQuery({
+  queryKey: [QUERY_KEYS.get_cookies], 
+  queryFn: async () => {
+    const { cookieStore, token } = await getCookies()
+    return {cookieStore, token}
+  }
 })
