@@ -3,10 +3,16 @@ import AccessSection from '@/components/past-questions/access-section'
 import Explorer, { ExplorerSkeleton } from '@/components/past-questions/explorer'
 import React, { Suspense } from 'react'
 import BackButton from '@/components/back-button'
+import { Metadata } from 'next'
 
 interface Props {
   params: Promise<{[key: string]: any}>,
   searchParams: Promise<{[key: string]: any}>
+}
+
+export const metadata: Metadata = {
+  title: 'Past Questions',
+  description: 'Explore past questions from various institutions',
 }
 
 const Page = async ({ searchParams }: Props) => {

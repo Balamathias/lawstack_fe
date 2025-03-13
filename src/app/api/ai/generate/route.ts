@@ -32,12 +32,20 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { prompt, question, type, contribution, user } = body;
 
+    if (!user) {
+      return NextResponse.json({ error: "You must be signed in to be able to use AI" }, { status: 400 });
+    }
+
     if (type === "question" && prompt && question) {
       const insights = await getQuestionInsights(prompt, question, user.data);
       return NextResponse.json({ insights }, { status: 200 });
     } 
     else if (type === "contribution" && prompt && question && contribution) {
       const insights = await getContributionInsights({ contribution, prompt, question, user });
+      return NextResponse.json({ insights }, { status: 200 });
+    }
+    else if (type === "context" && body.messages) {
+      const insights = await getContextualInsights(body.messages);
       return NextResponse.json({ insights }, { status: 200 });
     }
     else {
@@ -76,6 +84,18 @@ async function getContributionInsights({ contribution, prompt, question, user }:
       {"role": "assistant", "content": `Answers or responses to legal questions must be scoped to the course ${question?.course_name}. This user might probably be a student of ${question?.course_name} from ${question.institution_name}. Responses must be relevant and solidly grounded in the principles of law.`},
       {"role": "assistant", "content": `A contributor by name ${contribution.contributor.username} proffered the reply ${contribution.text} for the question ${question.text}. Now the user ${user?.username} is prompting the prompt: ${prompt} for that contribution to that question.`},
       {"role": "user", "content": `${prompt} for the contribution "${contribution.text}" for the question ${question?.text}`},
+    ],
+  });
+
+  return completion.choices[0].message.content;
+}
+
+async function getContextualInsights (messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[]) {
+  const completion = await openai.chat.completions.create({
+    model: "gemini-2.0-flash",
+    messages: [
+      {"role": "system", "content": `You a "LawStack Assistant". You are versed in the concepts of law, and you are able to provide insights on questions asked by any user on points of law. You are also able to provide explanations on legal concepts and principles.`},
+      ...messages,
     ],
   });
 
