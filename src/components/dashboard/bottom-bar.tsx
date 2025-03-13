@@ -32,7 +32,8 @@ export const navLinks = [
 const Bottombar = () => {
   const pathname = usePathname()
 
-  const patternMatch = pathname.match(/\/dashboard\/past-questions\/(.+)/)
+  const patternMatch = pathname.match(/\/dashboard\/past-questions\/(.+)/) ||
+    pathname.match(/\/dashboard\/chat\/(.+)/)
 
   if (patternMatch) {
     return null

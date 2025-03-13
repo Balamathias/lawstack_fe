@@ -35,7 +35,7 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams }) => {
   const promisedCourse = getCourse(params.id)
   
   return (
-    <div className='max-w-5xl flex flex-col space-y-2.5 sm:space-y-4 md:py-12 py-4 md:mx-auto w-full px-4'>
+    <div className='max-w-5xl flex flex-col space-y-2.5 sm:space-y-4 md:py-12 py-4 md:mx-auto w-full px-4 pb-16'>
         <div className='flex flex-col gap-2'>
           <Suspense fallback={<LoadingOverlay />}>
             <CourseDetail promisedCourse={promisedCourse} searchParams={searchParamsData} />

@@ -1,4 +1,4 @@
-import { Chat } from "@/@types/db"
+import { Chat, Message } from "@/@types/db"
 import { StackResponse } from "@/@types/generics"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
@@ -7,11 +7,12 @@ import { toast } from "sonner"
 import { getCookie } from 'cookies-next/client'
 
 export const useCreateChat = () => {
+
+    const token = getCookie('token')
     
     return useMutation({
         mutationKey: ['create-chat'],
         mutationFn: async (data: Record<string, any>) => {
-            const token = getCookie('token');
             if (!token) {
                 throw new Error('Authorization token is missing.');
             }
@@ -25,6 +26,30 @@ export const useCreateChat = () => {
         onError: (error) => {
             console.error('Error creating chat:', error)
             toast.error('Error creating chat, are you sure you are signed in?', { description: error.message })
+        }
+    })
+}
+
+export const useSendMessage = (chat_id: string) => {
+
+    const token = getCookie('token')
+    
+    return useMutation({
+        mutationKey: ['send-message'],
+        mutationFn: async (data: Record<string, any>) => {
+            if (!token) {
+                throw new Error('Authorization token is missing.');
+            }
+            const res = await axios.post(`${API_URL}/chats/${chat_id}/send-and-respond/`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            return res.data as StackResponse<{ user_message: Message, ai_message: Message }>
+        },
+        onError: (error) => {
+            console.error('Error sending message:', error)
+            toast.error('Error sending message, are you sure you are signed in?', { description: error.message })
         }
     })
 }

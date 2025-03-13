@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { followUnfollowUser, login, logout, register, updateUser, verifyOTP, resendOTP, resetPassword, passwordResetConfirm, getUser, getCookies } from "@/services/server/auth";
-import { PartialUserUpdate, User } from "@/@types/db";
+import { User } from "@/@types/db";
 import { QUERY_KEYS } from "./query-keys";
 
 export const useRegister = () => useMutation({

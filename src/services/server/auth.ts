@@ -1,7 +1,7 @@
 'use server'
 
 import { LoginResponse, OTPResponse, RefreshResponse, RegisterResponse, ResendOTPResponse, ResetPasswordConfirmResponse, ResetPasswordResponse } from "@/@types/auth"
-import { PartialUserUpdate, User } from "@/@types/db"
+import { User } from "@/@types/db"
 import { cookies } from "next/headers"
 import { setCookies, status as STATUS } from "@/lib/utils"
 import { stackbase } from "../server.entry"
