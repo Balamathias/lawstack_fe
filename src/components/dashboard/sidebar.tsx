@@ -29,14 +29,14 @@ export const navLinks = [
       icon: Bookmark,
     },
     {
-      tooltip: "Favorites",
-      href: "/dashboard/favorites",
-      icon: Heart,
-    },
-    {
       tooltip: "AI Insights",
       href: "/dashboard/chat",
       icon: Sparkle,
+    },
+    {
+      tooltip: "Favorites",
+      href: "/dashboard/favorites",
+      icon: Heart,
     },
   ]
 
