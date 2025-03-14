@@ -131,7 +131,7 @@ const CourseSelector = ({ isOpen, onClose }: CourseSelectorProps) => {
                       )}
                     </div>
                     <div className={cn(
-                      "h-6 w-6 rounded-full border-2 flex-shrink-0 transition-all",
+                      "h-6 w-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all",
                       course.id === selectedCourse?.id 
                         ? "border-emerald-500 bg-emerald-500 text-white" 
                         : "border-gray-300 group-hover:border-emerald-400"

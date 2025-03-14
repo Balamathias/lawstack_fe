@@ -145,7 +145,7 @@ const PastQuestionSelector = ({ isOpen, onClose }: PastQuestionSelectorProps) =>
                       </div>
                     </div>
                     <div className={cn(
-                      "h-6 w-6 rounded-full border-2 flex-shrink-0 transition-all",
+                      "h-6 w-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all",
                       question.id === selectedQuestion?.id 
                         ? "border-purple-500 bg-purple-500 text-white" 
                         : "border-gray-400 group-hover:border-purple-600"
