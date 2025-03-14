@@ -6,25 +6,25 @@ import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 const testimonialsData = [
   {
     id: 1,
-    name: "Alice Johnson",
+    name: "Mathias Bala",
     role: "Corporate Lawyer, Johnson & Associates",
-    avatar: "https://randomuser.me/api/portraits/women/17.jpg",
+    avatar: "/people/matiecodes.png",
     rating: 5,
-    feedback: "Law Stack transformed our document review process. The AI-powered analysis saved us countless hours and improved accuracy dramatically."
+    feedback: "LawStack has changed the way I navigate my route towards the legal profession. The platform is user-friendly and has helped me to understand the legal concepts in a more practical way."
   },
   {
     id: 2,
-    name: "Robert Smith",
+    name: "Alison Joyce",
     role: "General Counsel, Tech Innovations Inc.",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    avatar: "/people/matiecodes.png",
     rating: 5,
-    feedback: "As someone overseeing legal operations for a fast-growing company, Law Stack has become indispensable. The platform's intuitive design makes complex legal work streamlined and efficient."
+    feedback: "LawStack has been a game-changer for our legal team. The platform is intuitive and easy to use, and the AI insights have helped us to make better decisions faster."
   },
   {
     id: 3,
-    name: "Sarah Williams",
+    name: "Daniel Cornell",
     role: "Legal Operations Manager, Global Finance",
-    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    avatar: "/people/matiecodes.png",
     rating: 4,
     feedback: "Implementing Law Stack reduced our contract review time by 60%. The automated compliance checks give us peace of mind while the interface made adoption remarkably smooth."
   },
