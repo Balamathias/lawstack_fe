@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 const features = [
   {
     title: "Past Questions",
-    description: "Access an extensive database of past questions and answers",
+    description: "Those white question papers can be boring at times, lawstack simplifies them for you.",
     href: "/dashboard/past-questions",
     buttonText: "Start Exploring",
     icon: <Book className="w-6 h-6 text-emerald-500 group-hover:text-white transition-colors" />,
@@ -18,7 +18,7 @@ const features = [
   },
   {
     title: "Law Stack AI Agent",
-    description: "Automate legal document creation and processing",
+    description: "Utilize deeply integrated AI to analyze anything on lawstack, from past questions to cases to statutes, etc.",
     href: "/dashboard/chat",
     buttonText: "Dive In",
     icon: <FileText className="w-6 h-6 text-emerald-500 group-hover:text-white transition-colors" />,
@@ -27,8 +27,8 @@ const features = [
   },
   {
     title: "Case Analysis",
-    description: "Streamline your case workflow and organization",
-    href: "/dashboard/case-management",
+    description: "Get a detailed analysis of any case you want, with our AI-powered case analysis tool.",
+    href: "/dashboard/cases",
     buttonText: "Jump In",
     icon: <Scale className="w-6 h-6 text-emerald-500 group-hover:text-white transition-colors" />,
     color: "from-teal-400/20 to-emerald-500/20",

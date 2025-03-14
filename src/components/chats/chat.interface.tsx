@@ -7,6 +7,8 @@ import { useSendMessage } from '@/services/client/chat';
 import MarkdownPreview from '../markdown-preview';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import ChatHistory from './chat-history';
+import Link from 'next/link';
+import { Button } from '../ui/button';
 
 interface Props {
   chatId?: string;
@@ -88,7 +90,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
           <div className="bg-primary/10 p-1.5 rounded-full backdrop-blur-sm">
             <LucideScale size={20} className="text-primary" />
           </div>
-          <h2 className="text-lg font-semibold text-card-foreground">Legal Assistant</h2>
+          <h2 className="text-lg font-semibold text-card-foreground">LawStack Assistant</h2>
         </div>
         <ChatHistory
             user={user!}
@@ -110,6 +112,16 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
             </div>
             <p className="font-medium text-center animate-fade-in">Begin your legal consultation</p>
             <span className="text-sm opacity-70 mt-2 animate-fade-in-delay">Your secure AI legal advisor is ready to assist</span>
+
+            {
+              !user && (
+                  <Link href="/login" passHref>
+                    <Button className="flex items-center mt-4 " variant={'secondary'}>
+                      <span className="text-sm font-medium">Sign in to chat with LawStack AI</span>
+                    </Button>
+                  </Link>
+                )
+              }
           </div>
         ) : (
           messages.map((message, index) => (
@@ -126,10 +138,10 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
               )}
               
               <div 
-                className={`w-full sm:max-w-[80%] px-4 py-2.5 backdrop-blur-sm ${
+                className={`max-w-[80%] px-4 py-2.5 backdrop-blur-sm ${
                   message.sender === 'user' 
                     ? 'bg-secondary/40 rounded-2xl rounded-tr-sm shadow-sm' 
-                    : 'text-card-foreground rounded-2xl border-none'
+                    : 'text-card-foreground rounded-2xl border-none max-sm:max-w-max w-full'
                 }`}
               >
                 {message?.sender === 'user' ? <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>: (
@@ -161,6 +173,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
             </div>
           ))
         )}
+
         
         {isLoading && (
           <div className="flex mb-4 justify-start animate-fade-in">
