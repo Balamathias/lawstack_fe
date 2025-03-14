@@ -146,7 +146,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
   const recentChats = (chatsResponse.data as Chat[]).slice(0, 10)
   
   return (
-    <div className="w-full py-4 border-t bg-gradient-to-b from-muted/30 to-transparent">
+    <div className="w-full py-4 border-t mt-8">
       <div className="flex items-center justify-between mb-3 px-4">
         <div className="flex items-center gap-2">
           <History size={16} className="text-muted-foreground" />
