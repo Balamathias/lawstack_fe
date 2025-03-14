@@ -55,7 +55,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
   // Check if user is logged in
   if (!user) {
     return (
-      <div className="w-full py-6 border-t bg-gradient-to-b from-muted/30 to-transparent">
+      <div className="w-full py-6">
         <Empty 
           icon={<LogIn className="h-6 w-6 text-blue-500" />}
           color="blue"
@@ -63,11 +63,11 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
           content="Your chat history will appear here once you're logged in"
           action={
             <Button 
-              onClick={() => router.push('/auth/login')}
+              onClick={() => router.push('/login')}
               variant="outline"
               className="mt-2"
             >
-              Sign In
+              Log In
             </Button>
           }
         />
@@ -122,7 +122,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
   // Show empty state if no chats or error
   if (error || !chatsResponse?.data || chatsResponse.data.length === 0) {
     return (
-      <div className="w-full py-6 border-t ">
+      <div className="w-full py-6 ">
         <Empty 
           icon={<MessageSquareDashed className="h-6 w-6 text-amber-500" />}
           color="amber"
@@ -146,7 +146,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
   const recentChats = (chatsResponse.data as Chat[]).slice(0, 10)
   
   return (
-    <div className="w-full py-4 border-t mt-8">
+    <div className="w-full py-4 mt-8">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <History size={16} className="text-muted-foreground" />
