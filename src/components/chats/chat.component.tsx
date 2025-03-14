@@ -12,7 +12,7 @@ const ChatComponent = async ({ chat_id }: Props) => {
   const { data: user } = await getUser()
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full">
       <div className="flex-1">
         <ChatInterface 
           chatId={chat_id}
