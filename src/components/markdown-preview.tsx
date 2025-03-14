@@ -1,15 +1,16 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-// import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus, vs, atomDark, dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import rehypeRaw from 'rehype-raw';
 import Link from 'next/link';
+import { Check, Copy, Code } from "lucide-react";
 
 interface MarkdownPreviewProps {
   content: string;
@@ -24,6 +25,15 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 }) => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  
+  // Add state for tracking copied code blocks
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  const handleCopyCode = async (code: string) => {
+    await navigator.clipboard.writeText(code);
+    setCopiedCode(code);
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
 
   return (
 	<div className={cn(
@@ -102,42 +112,67 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 				)}
 			</div>
 			),
-			code: ({ children, ...props }) => (
-				<code className="mb-4 leading-relaxed word-wrap" {...props}>
-					{children}
-				</code>
-			),
-			// code: ({ node, inline, className, children, ...props }) => {
-			//   const match = /language-(\w+)/.exec(className || '');
-			//   const language = match && match[1] ? match[1] : '';
-			
-			//   if (noHighlight || inline) {
-			//     return (
-			//       <code className="bg-muted px-1.5 py-0.5 rounded-md text-sm" {...props}>
-			//         {children}
-			//       </code>
-			//     );
-			//   }
-			
-			//   return (
-			//     <div className="my-4 rounded-lg overflow-hidden">
-			//       <SyntaxHighlighter
-			//         language={language || 'text'}
-			//         style={isDark ? vscDarkPlus : vs}
-			//         customStyle={{
-				//           margin: 0,
-				//           borderRadius: '0.5rem',
-				//           fontSize: '0.875rem',
-			//         }}
-			//         wrapLongLines={true}
-			//         showLineNumbers={!inline && language !== 'text' && (children?.toString().split('\n').length || 0) > 1}
-			//         {...props}
-			//       >
-			//         {String(children).replace(/\n$/, '')}
-			//       </SyntaxHighlighter>
-			//     </div>
-			//   );
-			// },
+			code: ({ node, className, children, ...props }) => {
+			  const match = /language-(\w+)/.exec(className || '');
+			  const language = match && match[1] ? match[1] : '';
+			  
+			  // More reliable inline code detection
+			  const isInline = !className || !language
+			  
+			  if (isInline && !className) {
+			    return (
+			      <code className="bg-muted/70 px-1.5 py-0.5 rounded-md text-sm font-mono" {...props}>
+			        {children}
+			      </code>
+			    );
+			  }
+			  
+			  // Get the code content as a string
+			  const codeContent = String(children).replace(/\n$/, '');
+			  const isCopied = copiedCode === codeContent;
+			  
+			  // Code block with improved overflow handling and added language header + copy button
+			  return (
+			    <div className="my-4 overflow-hidden rounded-lg border bg-muted">
+			      <div className="flex items-center justify-between px-4 py-2 border-b bg-muted">
+			        <div className="flex items-center gap-2">
+			          <Code size={16} className="text-muted-foreground" />
+			          <span className="text-xs font-medium text-muted-foreground">
+			            {language || 'plain text'}
+			          </span>
+			        </div>
+			        <button
+			          onClick={() => handleCopyCode(codeContent)}
+			          className="h-7 w-7 flex items-center justify-center rounded-md transition-colors hover:bg-accent cursor-pointer"
+			          title="Copy code"
+			        >
+			          {isCopied ? (
+			            <Check size={16} className="text-green-500" />
+			          ) : (
+			            <Copy size={16} className="text-muted-foreground" />
+			          )}
+			        </button>
+			      </div>
+			      <div className="relative w-full overflow-auto break-words">
+			        <SyntaxHighlighter
+			          language={language || 'text'}
+			          style={(isDark ? atomDark : vs) as any}
+			          customStyle={{
+			            margin: 0,
+			            borderRadius: 0, // Remove border radius since the parent has it
+			            fontSize: '0.875rem',
+			            maxWidth: '100%',
+			          }}
+			          wrapLongLines={true}
+			          showLineNumbers={false}
+			          {...props as any}
+			        >
+			          {codeContent}
+			        </SyntaxHighlighter>
+			      </div>
+			    </div>
+			  );
+			},
 			ul: ({ children, ...props }) => (
 			<ul className="list-disc pl-6 mb-4 space-y-1.5" {...props}>
 				{children}
