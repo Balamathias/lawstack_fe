@@ -138,10 +138,10 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
               )}
               
               <div 
-                className={`max-w-[80%] px-4 py-2.5 backdrop-blur-sm ${
+                className={`max-w-[90%] px-4 py-2.5 backdrop-blur-sm ${
                   message.sender === 'user' 
                     ? 'bg-secondary/40 rounded-2xl rounded-tr-sm shadow-sm' 
-                    : 'text-card-foreground rounded-2xl border-none max-sm:max-w-max w-full'
+                    : 'text-card-foreground rounded-2xl border-none'
                 }`}
               >
                 {message?.sender === 'user' ? <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>: (
