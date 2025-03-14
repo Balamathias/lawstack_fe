@@ -10,6 +10,7 @@ import { useLogout } from '@/services/client/auth'
 import { toast } from 'sonner'
 import { useRouter } from 'nextjs-toploader/app'
 import { User } from '@/@types/db'
+import { usePathname } from 'next/navigation'
 
 export const navLinks = [
     {
@@ -47,6 +48,7 @@ const Sidebar = ({ user }: Props) => {
 
   const { mutate: logout, isPending: loggingOut } = useLogout()
   const router = useRouter()
+  const currentPath = usePathname()
 
   return (
     <div className='h-screen lg:flex flex-col bg-white dark:bg-background p-2 lg:p-2.5 hidden w-[210px] custom-scrollbar justify-between z-20 overflow-hidden left-0 bottom-0 fixed'>
@@ -92,7 +94,7 @@ const Sidebar = ({ user }: Props) => {
                   ): (
                     <Button 
                       className="w-full rounded-xl" variant="default"
-                      onClick={() => router.replace('/login')}
+                      onClick={() => router.replace('/login?next=' + currentPath)}
                     >
                       Login
                       <LucideArrowUpRight className='w-4 h-4' />
