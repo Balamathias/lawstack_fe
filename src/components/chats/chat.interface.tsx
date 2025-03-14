@@ -126,7 +126,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
               )}
               
               <div 
-                className={`max-w-[80%] px-4 py-2.5 backdrop-blur-sm ${
+                className={`w-full sm:max-w-[80%] px-4 py-2.5 backdrop-blur-sm ${
                   message.sender === 'user' 
                     ? 'bg-secondary/40 rounded-2xl rounded-tr-sm shadow-sm' 
                     : 'text-card-foreground rounded-2xl border-none'
