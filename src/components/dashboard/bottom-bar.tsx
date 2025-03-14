@@ -40,7 +40,7 @@ const Bottombar = () => {
   }
 
   return (
-    <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-gray-100 ">
+    <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-gray-100 dark:border-none">
       <div className="h-16 dark:bg-black/70 backdrop-blur-lg flex items-center justify-around px-2">
         {navLinks.map((link, idx) => {
           const isActive = pathname === link?.href;
@@ -50,17 +50,23 @@ const Bottombar = () => {
               href={link?.href} 
               className={cn(
                 "relative flex flex-col items-center justify-center w-16 h-16 transition-all duration-200",
-                isActive ? "text-green-600 dark:text-green-500" : "text-gray-600 dark:text-gray-400"
+                isActive ? "text-green-600 dark:text-green-500" : "text-foreground"
               )}
             >
               <div className={cn(
-                "flex items-center justify-center rounded-full p-2 transition-all duration-300",
+                "flex items-center justify-center p-2 transition-all duration-300",
                 isActive 
-                  ? "bg-green-100 dark:bg-green-900/30" 
-                  : "hover:bg-gray-100 dark:hover:bg-gray-800/50"
+                  ? "text-emerald-500" 
+                  : ""
               )}>
                 <link.icon 
-                  size={isActive ? 22 : 20}                   strokeWidth={isActive ? 2.5 : 2}                   className="transition-all duration-200"                 />              </div>              <span className={cn(                "mt-1 text-[10px] font-medium transition-all duration-200",
+                  size={isActive ? 22 : 20}   
+                  strokeWidth={isActive ? 1.5 : 1}                  
+                  className="transition-all duration-200"                
+                />              
+              </div>              
+              <span className={cn(
+                "mt-1 text-[10px] font-medium transition-all duration-200",
                 isActive ? "opacity-100" : "opacity-80"
               )}>
                 {link?.tooltip}
