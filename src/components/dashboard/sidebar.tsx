@@ -9,6 +9,7 @@ import { Button } from '../ui/button'
 import { useLogout } from '@/services/client/auth'
 import { toast } from 'sonner'
 import { useRouter } from 'nextjs-toploader/app'
+import { User } from '@/@types/db'
 
 export const navLinks = [
     {
@@ -38,7 +39,11 @@ export const navLinks = [
     },
   ]
 
-const Sidebar = () => {
+interface Props {
+    user: User | null
+}
+
+const Sidebar = ({ user }: Props) => {
 
   const { mutate: logout, isPending: loggingOut } = useLogout()
   const router = useRouter()
@@ -60,28 +65,40 @@ const Sidebar = () => {
         </div>
 
         <footer className="p-2 lg:p-2.5 flex gap-3 flex-col mt-auto">
-                <Button 
-                  className="w-full rounded-xl" variant="default"
-                  onClick={() => logout(undefined, {
-                    onSuccess: (data) => {
-                      if (data?.error) {
-                          toast.error(data.message)
-                          return
-                      }
+                {
+                  user ? (
+                    <Button 
+                      className="w-full rounded-xl" variant="default"
+                      onClick={() => logout(undefined, {
+                        onSuccess: (data) => {
+                          if (data?.error) {
+                              toast.error(data.message)
+                              return
+                          }
 
-                        toast.success('Logged out successfully')
-                        router.replace('/')
-                        router.refresh()
-                    },
-                    onError: (error) => {
-                        toast.error(error.message)
-                    }
-                  })}
-                  disabled={loggingOut}
-                >
-                  {loggingOut ? 'Processing...' : 'Logout'}
-                  <LucideArrowUpRight className='w-4 h-4' />
-                </Button>
+                            toast.success('Logged out successfully')
+                            router.replace('/')
+                            router.refresh()
+                        },
+                        onError: (error) => {
+                            toast.error(error.message)
+                        }
+                      })}
+                      disabled={loggingOut}
+                    >
+                      {loggingOut ? 'Processing...' : 'Logout'}
+                      <LucideArrowUpRight className='w-4 h-4' />
+                    </Button>
+                  ): (
+                    <Button 
+                      className="w-full rounded-xl" variant="default"
+                      onClick={() => router.replace('/login')}
+                    >
+                      Login
+                      <LucideArrowUpRight className='w-4 h-4' />
+                    </Button>
+                  )
+                }
         </footer>
     </div>
   )
