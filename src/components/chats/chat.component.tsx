@@ -13,14 +13,11 @@ const ChatComponent = async ({ chat_id }: Props) => {
 
   return (
     <div className="w-full h-full">
-      <div className="flex-1">
-        <ChatInterface 
-          chatId={chat_id}
-          initialMessages={messages || []}
-          user={user!}
-        />
-      </div>
-      
+      <ChatInterface 
+        chatId={chat_id}
+        initialMessages={messages || []}
+        user={user!}
+      />
     </div>
   )
 }
