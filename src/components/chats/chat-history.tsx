@@ -114,7 +114,7 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
       <SheetContent className='bg-background/70 backdrop-blur-sm'>
         <SheetHeader className=''>
           <SheetTitle className='flex items-center gap-2 text-xl'>
-            <LucideClock size={16} />
+            <LucideClock />
             Recent Conversations
           </SheetTitle>
         </SheetHeader>
