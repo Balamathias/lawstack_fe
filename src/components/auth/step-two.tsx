@@ -8,7 +8,7 @@ import { User } from '@/@types/db'
 import { useUpdateUser } from '@/services/client/auth'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { LucideLoader } from 'lucide-react'
+import { AtSign, ArrowRight, Phone, Loader2 } from 'lucide-react'
 import LoadingOverlay from '../loading-overlay'
 
 interface Props {
@@ -17,7 +17,6 @@ interface Props {
 
 const StepTwo = ({ user }: Props) => {
     const { mutate: updateUser, isPending } = useUpdateUser()
-
     const router = useRouter()
   
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,51 +50,61 @@ const StepTwo = ({ user }: Props) => {
 
   return (
     <div className='w-full flex items-center justify-center'>
-        {
-            isPending && (<LoadingOverlay />)
-        }
+        {isPending && (<LoadingOverlay />)}
+        
         <form 
             onSubmit={handleSubmit}
-            className='w-full flex flex-col gap-y-4 max-w-[500px]'
+            className='w-full flex flex-col gap-y-6 max-w-[500px]'
         >
-            <div className='mx-auto mb-5'>
+            <div className='mx-auto mb-8 transform hover:scale-105 transition-transform duration-300'>
                 <Logo />
             </div>
 
-            <h2 className='text-xl md:text-2xl text-center'>
-                We fancy usernames too <b className='text-green-500'>{user?.first_name}</b>!
-            </h2>
-            <p className='text-muted-foreground max-sm:text-center my-2'>
-                Sometimes, we just want to be known by a special name. Some call it &quot;alias&quot;, while others call it &quot;nickname&quot;. What should we call you?
-            </p>
+            <div className="space-y-2 text-center">
+                <h2 className='text-2xl md:text-3xl font-bold tracking-tight'>
+                    Hello, <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-teal-400">{user?.first_name}!</span>
+                </h2>
+                <p className='text-muted-foreground max-w-md mx-auto'>
+                    Sometimes, we just want to be known by a special name. What should we call you?
+                </p>
+            </div>
 
-            <div className='flex flex-col gap-y-4'>
-                <Input 
-                    className='h-12'
-                    name='username'
-                    placeholder='Your Username...'
-                    required
-                />
+            <div className='space-y-4 mt-4'>
+                <div className="relative">
+                    <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                    <Input 
+                        className='h-12 pl-10 rounded-lg border-input/60 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+                        name='username'
+                        placeholder='Your Username...'
+                        required
+                    />
+                </div>
 
-                <Input 
-                    className='h-12'
-                    name='phone'
-                    placeholder='Your Phone Number...'
-                    required
-                    type='tel'
-                />
+                <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                    <Input 
+                        className='h-12 pl-10 rounded-lg border-input/60 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+                        name='phone'
+                        placeholder='Your Phone Number...'
+                        required
+                        type='tel'
+                    />
+                </div>
 
                 <Button
-                    className='h-12'
+                    className='h-12 w-full rounded-lg text-base font-medium shadow-lg hover:shadow-primary/20 transition-all duration-300'
                     disabled={isPending}
                 >
                     {isPending ? (
                         <div className="flex items-center gap-x-2">
-                            <LucideLoader size={20} className='animate-spin' />
+                            <Loader2 size={20} className='animate-spin' />
                             <span>Saving...</span>
                         </div>
                     ) : (
-                        'Update My Details'
+                        <div className="flex items-center gap-x-2">
+                            <span>Continue</span>
+                            <ArrowRight size={18} />
+                        </div>
                     )}
                 </Button>
             </div>

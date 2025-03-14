@@ -7,12 +7,11 @@ import { Button } from '../ui/button'
 import { useUpdateUser } from '@/services/client/auth'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { LucideLoader } from 'lucide-react'
+import { ArrowRight, User, UserRound, Loader2 } from 'lucide-react'
 import LoadingOverlay from '../loading-overlay'
 
 const StepOne = () => {
   const { mutate: updateUser, isPending } = useUpdateUser()
-
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,50 +45,60 @@ const StepOne = () => {
 
   return (
     <div className='w-full flex items-center justify-center'>
-        {
-            isPending && (<LoadingOverlay />)
-        }
+        {isPending && (<LoadingOverlay />)}
+        
         <form 
-            className='w-full flex flex-col gap-y-4 max-w-[500px]'
+            className='w-full flex flex-col gap-y-6 max-w-[500px]'
             onSubmit={handleSubmit}
         >
-            <div className='mx-auto mb-5'>
+            <div className='mx-auto mb-8 transform hover:scale-105 transition-transform duration-300'>
                 <Logo />
             </div>
 
-            <h2 className='text-xl md:text-2xl text-center'>
-                It all starts with your name!
-            </h2>
-            <p className='text-muted-foreground max-sm:text-center my-2'>
-                Let&apos;s begin with your full name... A good name they say, is better than riches, right?
-            </p>
+            <div className="space-y-2 text-center">
+                <h2 className='text-2xl md:text-3xl font-bold tracking-tight'>
+                    It all starts with your name!
+                </h2>
+                <p className='text-muted-foreground max-w-md mx-auto'>
+                    Let&apos;s begin with your full name... A good name they say, is better than riches, right?
+                </p>
+            </div>
 
-            <div className='flex flex-col gap-y-4'>
-                <Input 
-                    className='h-12'
-                    name='first_name'
-                    placeholder='First Name...'
-                    required
-                />
+            <div className='space-y-4 mt-4'>
+                <div className="relative">
+                    <UserRound className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                    <Input 
+                        className='h-12 pl-10 rounded-lg border-input/60 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+                        name='first_name'
+                        placeholder='First Name...'
+                        required
+                    />
+                </div>
 
-                <Input 
-                    className='h-12'
-                    name='last_name'
-                    placeholder='Last Name...'
-                    required
-                />
+                <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                    <Input 
+                        className='h-12 pl-10 rounded-lg border-input/60 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all'
+                        name='last_name'
+                        placeholder='Last Name...'
+                        required
+                    />
+                </div>
 
                 <Button
-                    className='h-12'
+                    className='h-12 w-full rounded-lg text-base font-medium shadow-lg hover:shadow-primary/20 transition-all duration-300'
                     disabled={isPending}
                 >
                     {isPending ? (
                         <div className="flex items-center gap-x-2">
-                            <LucideLoader size={20} className='animate-spin' />
+                            <Loader2 size={20} className='animate-spin' />
                             <span>Saving...</span>
                         </div>
                     ) : (
-                        'Save My Name'
+                        <div className="flex items-center gap-x-2">
+                            <span>Continue</span>
+                            <ArrowRight size={18} />
+                        </div>
                     )}
                 </Button>
             </div>

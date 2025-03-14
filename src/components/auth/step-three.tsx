@@ -1,14 +1,13 @@
 'use client'
 
 import React from 'react'
-import { Input } from '../ui/input'
 import Logo from '../logo'
 import { Button } from '../ui/button'
 import { User } from '@/@types/db'
 import { useUpdateUser } from '@/services/client/auth'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { LucideLoader } from 'lucide-react'
+import { CheckCircle2, Loader2, ImageIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import LoadingOverlay from '../loading-overlay'
 
@@ -33,9 +32,7 @@ const avatars = [
 
 const StepThree = ({ user }: Props) => {
     const { mutate: updateUser, isPending } = useUpdateUser()
-
     const [avatar, setAvatar] = React.useState('')
-
     const router = useRouter()
 
     const handleSelectAvatar = (avatar: string) => {
@@ -63,43 +60,73 @@ const StepThree = ({ user }: Props) => {
 
   return (
     <div className='w-full flex items-center justify-center'>
-        {
-            isPending && (<LoadingOverlay loader="1" />)
-        }
-        <div 
-            className='w-full flex flex-col gap-y-4 max-w-3xl'
-        >
-            <div className='mb-5'>
+        {isPending && (<LoadingOverlay loader="1" />)}
+        
+        <div className='w-full flex flex-col gap-y-6 max-w-3xl'>
+            <div className='mb-8 transform hover:scale-105 transition-transform duration-300'>
                 <Logo />
             </div>
 
-            <h2 className='text-xl md:text-2xl'>
-                Got it! @<b className='text-sky-500'>{user?.username}</b>👌
-            </h2>
-            <p className='text-muted-foreground my-2'>
-                How about a picture of yourself? or simply an avatar? Make it unique!
-            </p>
+            <div className="space-y-2">
+                <h2 className='text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-2'>
+                    <ImageIcon className="h-6 w-6 text-sky-500" />
+                    <span>Choose your avatar, </span>
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-blue-400">@{user?.username}</span>
+                </h2>
+                <p className='text-muted-foreground'>
+                    Select an avatar that represents you best. Make it unique!
+                </p>
+            </div>
 
-            <div className='grid grid-cols-4 md:grid-cols-6 gap-4'>
+            <div className='grid grid-cols-4 md:grid-cols-6 gap-4 mt-4'>
                 {avatars.map((_avatar, index) => (
-                    <div key={index} className=''>
+                    <div 
+                        key={index} 
+                        className={cn(
+                            'relative group cursor-pointer transition-all duration-300',
+                            _avatar === avatar && 'scale-110'
+                        )}
+                    >
+                        <div className={cn(
+                            'absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-sky-500 opacity-0 transition-opacity duration-300 -z-10',
+                            _avatar === avatar && 'opacity-100'
+                        )} />
+                        
                         <img 
                             src={_avatar}
-                            className={cn('w-12 h-12 rounded-full object-cover cursor-pointer transition-all duration-300 hover:scale-110 filter', {
-                                'brightness-110 contrast-125 saturate-150 shadow-lg ring-2 ring-sky-500': _avatar === avatar,
-                                'hover:brightness-110 hover:contrast-110 grayscale-[50%]': _avatar !== avatar
-                            })}
+                            alt={`Avatar option ${index + 1}`}
+                            className={cn(
+                                'w-16 h-16 rounded-full object-cover transition-all duration-300 border-2 group-hover:scale-105',
+                                _avatar === avatar 
+                                    ? 'border-sky-500 shadow-lg shadow-sky-500/25' 
+                                    : 'border-transparent grayscale-[30%] group-hover:grayscale-0'
+                            )}
                             onClick={() => handleSelectAvatar(_avatar)}
                         />
+                        
+                        {_avatar === avatar && (
+                            <CheckCircle2 className="absolute -top-2 -right-2 w-6 h-6 text-sky-500 bg-background rounded-full" />
+                        )}
                     </div>
                 ))}
             </div>
 
-            <Button className='w-full mt-16 sm:w-fit sm:float-right rounded-lg' type='submit' variant={'secondary'} onClick={handleSubmit} disabled={isPending}>
+            <Button 
+                className='mt-8 h-12 ml-auto rounded-lg text-base font-medium shadow-lg hover:shadow-primary/20 transition-all duration-300 px-8'
+                variant={avatar ? 'default' : 'secondary'} 
+                onClick={handleSubmit}
+                disabled={isPending || !avatar}
+            >
                 {isPending ? (
-                    <LucideLoader className='w-6 h-6 animate-spin' />
+                    <div className="flex items-center gap-x-2">
+                        <Loader2 className='w-5 h-5 animate-spin' />
+                        <span>Saving...</span>
+                    </div>
                 ) : (
-                    'Continue'
+                    <div className="flex items-center gap-x-2">
+                        <span>Complete Setup</span>
+                        <CheckCircle2 size={18} />
+                    </div>
                 )}
             </Button>
         </div>
