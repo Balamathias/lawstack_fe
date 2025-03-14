@@ -96,7 +96,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
             user={user!}
             currentChatId={chatId} 
             trigger={
-                <button className="p-1.5 hover:bg-secondary/60 rounded-full transition-all">
+                <button className="p-1.5 hover:bg-secondary/60 rounded-full transition-all cursor-pointer">
             <MoreVertical size={18} className="text-muted-foreground" />
             </button>
         }
@@ -195,7 +195,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
       </div>
 
       {/* Input Area - Glassmorphic */}
-      <div className="p-3 bg-card/80 backdrop-blur-md border-t border-border/30 shadow-[0_-1px_10px_rgba(0,0,0,0.03)] rounded-xl mt-auto sticky bottom-0">
+      <div className="p-3 bg-card/80 backdrop-blur-md border border-border/50 shadow-[0_-1px_10px_rgba(0,0,0,0.03)] rounded-xl mt-auto sticky bottom-0">
         <div className="flex items-end space-x-2 bg-background/70 backdrop-blur-sm rounded-xl p-1.5 shadow-inner">
           <button className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary/50 rounded-full transition-all">
             <Paperclip size={18} />
