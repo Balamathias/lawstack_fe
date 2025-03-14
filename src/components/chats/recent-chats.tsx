@@ -55,7 +55,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
   // Check if user is logged in
   if (!user) {
     return (
-      <div className="w-full py-6">
+      <div className="w-full">
         <Empty 
           icon={<LogIn className="h-6 w-6 text-blue-500" />}
           color="blue"
@@ -64,8 +64,8 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
           action={
             <Button 
               onClick={() => router.push('/login')}
-              variant="outline"
-              className="mt-2"
+              variant="default"
+              className="rounded-full"
             >
               Log In
             </Button>
@@ -122,7 +122,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
   // Show empty state if no chats or error
   if (error || !chatsResponse?.data || chatsResponse.data.length === 0) {
     return (
-      <div className="w-full py-6 ">
+      <div className="w-full">
         <Empty 
           icon={<MessageSquareDashed className="h-6 w-6 text-amber-500" />}
           color="amber"
@@ -132,7 +132,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
             <Button 
               onClick={() => router.push('/dashboard/chat')}
               variant="outline"
-              className="mt-2"
+              className="rounded-full"
             >
               Start New Chat
             </Button>
