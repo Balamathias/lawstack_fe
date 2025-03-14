@@ -186,10 +186,12 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
         </div>
 
         
-        <RecentChats 
-          user={user} 
-          currentChatId={chat_id} 
-        />
+        <div className='py-5'>
+          <RecentChats 
+            user={user} 
+            currentChatId={chat_id} 
+          />
+        </div>
       </div>
       
       {/* Course Selector Modal */}

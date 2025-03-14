@@ -122,7 +122,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
   // Show empty state if no chats or error
   if (error || !chatsResponse?.data || chatsResponse.data.length === 0) {
     return (
-      <div className="w-full py-6 border-t bg-gradient-to-b from-muted/30 to-transparent">
+      <div className="w-full py-6 border-t ">
         <Empty 
           icon={<MessageSquareDashed className="h-6 w-6 text-amber-500" />}
           color="amber"
@@ -147,7 +147,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
   
   return (
     <div className="w-full py-4 border-t mt-8">
-      <div className="flex items-center justify-between mb-3 px-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <History size={16} className="text-muted-foreground" />
           <h3 className="text-sm font-medium text-muted-foreground">Recent Conversations</h3>
@@ -174,7 +174,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
       </div>
       
       <ScrollArea className="pb-2" ref={scrollContainerRef}>
-        <div className="flex gap-3 px-4">
+        <div className="flex gap-3">
           {recentChats.map((chat) => (
             <div 
               key={chat.id} 
