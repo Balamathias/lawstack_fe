@@ -105,7 +105,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
       <div className="flex-1 overflow-y-auto scrollbar-hidden p-2 sm:p-4 h-full pb-2">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-            <div className="bg-primary/5 p-3 rounded-full backdrop-blur-sm mb-3 animate-pulse">
+            <div className="bg-primary/5 p-1.5 sm:p-3 rounded-full backdrop-blur-sm mb-3 animate-pulse">
               <LucideScale size={36} className="text-primary/70" />
             </div>
             <p className="font-medium text-center animate-fade-in">Begin your legal consultation</p>

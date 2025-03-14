@@ -102,6 +102,11 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 				)}
 			</div>
 			),
+			code: ({ children, ...props }) => (
+				<code className="mb-4 leading-relaxed word-wrap" {...props}>
+					{children}
+				</code>
+			),
 			// code: ({ node, inline, className, children, ...props }) => {
 			//   const match = /language-(\w+)/.exec(className || '');
 			//   const language = match && match[1] ? match[1] : '';
