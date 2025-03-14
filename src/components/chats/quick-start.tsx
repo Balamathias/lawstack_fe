@@ -12,6 +12,8 @@ import LoadingOverlay from '../loading-overlay'
 import CourseSelector from '../courses/course-selector'
 import PastQuestionSelector from '../questions/past-question-selector'
 import { useSearchParams } from 'next/navigation'
+import RecentChats from './recent-chats'
+import { User } from '@/@types/db'
 
 const delius = Delius({weight: ['400'], subsets: ['latin'], variable: '--font-delius'})
 
@@ -30,8 +32,10 @@ interface Props {
     searchParams?: Promise<{[key: string]: any}>,
     auth?: {
         token: string
-    }
-}
+    },
+    user: User | null,
+    chat_id?: string
+  }
 
 const QuickStartOption = ({ title, description, icon, onClick, color, iconBg, tooltipContent }: QuickStartOptionProps) => {
   return (
@@ -78,7 +82,7 @@ const QuickStartOption = ({ title, description, icon, onClick, color, iconBg, to
   )
 }
 
-const QuickStart = ({ auth }: Props) => {
+const QuickStart = ({ auth, user, chat_id }: Props) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false)
@@ -180,6 +184,12 @@ const QuickStart = ({ auth }: Props) => {
             ))}
           </motion.div>
         </div>
+
+        
+        <RecentChats 
+          user={user} 
+          currentChatId={chat_id} 
+        />
       </div>
       
       {/* Course Selector Modal */}

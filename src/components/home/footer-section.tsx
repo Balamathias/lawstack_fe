@@ -32,7 +32,7 @@ const FooterSection: FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
           <div className="flex flex-col space-y-4">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">LegalX</h2>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">LawStack</h2>
             <p className="text-gray-300 mt-4 max-w-xs">
               Transforming legal services with cutting-edge AI technology to make justice accessible for everyone.
             </p>
