@@ -23,7 +23,7 @@ export const navLinks = [
       icon: Bookmark,
     },
     {
-      tooltip: "AI",
+      tooltip: "Chat",
       href: "/dashboard/chat",
       icon: Sparkle,
     },
@@ -40,21 +40,38 @@ const Bottombar = () => {
   }
 
   return (
-    <nav className="h-14 bg-white/80 dark:bg-black/20 backdrop-blur-md max-lg:py-1 py-5 fixed lg:hidden bottom-0 w-full flex flex-row items-center justify-around z-30">
-      {
-         navLinks.map((link, idx) => (
-            <div key={idx} className=' flex flex-row gap-4'>
-                <Link href={link?.href} className={` flex flex-col md:flex-row md:gap-2.5 items-center justify-center`}>
-                    <link.icon size={pathname === link?.href ? 18 : 19} strokeWidth={2} className={cn( "hover:p-1 hover:bg-green-500/75 dark:hover:bg-green-500/80 hover:rounded-md hover:transition-all hover:duration-500", {
-                      "rounded-md text-green-600 bg-green-600/15 hover:transition-all hover:opacity-80": pathname === link.href
-                    })} />
-                    <span className={cn('text-xs md:text-sm', {
-                      'text-green-500': pathname === link.href
-                    })}>{link?.tooltip}</span>
-                </Link>
-            </div>
-          ))
-        }
+    <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-gray-100 dark:border-gray-800">
+      <div className="h-16 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg flex items-center justify-around px-2">
+        {navLinks.map((link, idx) => {
+          const isActive = pathname === link?.href;
+          return (
+            <Link 
+              key={idx} 
+              href={link?.href} 
+              className={cn(
+                "relative flex flex-col items-center justify-center w-16 h-16 transition-all duration-200",
+                isActive ? "text-green-600 dark:text-green-500" : "text-gray-600 dark:text-gray-400"
+              )}
+            >
+              <div className={cn(
+                "flex items-center justify-center rounded-full p-2 transition-all duration-300",
+                isActive 
+                  ? "bg-green-100 dark:bg-green-900/30" 
+                  : "hover:bg-gray-100 dark:hover:bg-gray-800/50"
+              )}>
+                <link.icon 
+                  size={isActive ? 22 : 20}                   strokeWidth={isActive ? 2.5 : 2}                   className="transition-all duration-200"                 />              </div>              <span className={cn(                "mt-1 text-[10px] font-medium transition-all duration-200",
+                isActive ? "opacity-100" : "opacity-80"
+              )}>
+                {link?.tooltip}
+              </span>
+              {isActive && (
+                <span className="absolute -top-0.5 left-1/2 w-1 h-1 bg-green-500 rounded-full transform -translate-x-1/2"></span>
+              )}
+            </Link>
+          )
+        })}
+      </div>
     </nav>
   )
 }

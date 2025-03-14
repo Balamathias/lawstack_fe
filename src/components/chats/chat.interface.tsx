@@ -6,6 +6,7 @@ import { Message, User } from '@/@types/db';
 import { useSendMessage } from '@/services/client/chat';
 import MarkdownPreview from '../markdown-preview';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import ChatHistory from './chat-history';
 
 interface Props {
   chatId?: string;
@@ -89,10 +90,16 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
           </div>
           <h2 className="text-lg font-semibold text-card-foreground">Legal Assistant</h2>
         </div>
-        <button className="p-1.5 hover:bg-secondary/60 rounded-full transition-all">
-          <MoreVertical size={18} className="text-muted-foreground" />
-        </button>
-      </div>
+        <ChatHistory
+            user={user!}
+            currentChatId={chatId} 
+            trigger={
+                <button className="p-1.5 hover:bg-secondary/60 rounded-full transition-all">
+            <MoreVertical size={18} className="text-muted-foreground" />
+            </button>
+        }
+        />
+        </div>
 
       {/* Messages Container - Fill Available Space */}
       <div className="flex-1 overflow-y-auto scrollbar-hidden p-2 sm:p-4 h-full pb-2">
@@ -165,7 +172,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
             <div className="bg-card/90 backdrop-blur-sm text-card-foreground px-4 py-3 rounded-2xl rounded-tl-none shadow-sm border-none border-primary/20">
               <div className="flex items-center space-x-1.5">
                 <Loader2 className="h-3.5 w-3.5 animate-spin text-primary/70" />
-                <span className="text-sm text-muted-foreground">Consulting legal knowledge...</span>
+                <span className="text-sm text-muted-foreground">Consulting LawStack base...</span>
               </div>
             </div>
           </div>
@@ -214,7 +221,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
         <div className="flex items-center justify-center mt-2">
           <div className="text-xs text-muted-foreground/70 flex items-center">
             <Sparkles size={10} className="mr-1 text-primary/50" />
-            <span>Powered by advanced legal AI</span>
+            <span>Powered by advanced LawStack AI</span>
           </div>
         </div>
       </div>

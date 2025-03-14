@@ -1,11 +1,32 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { getTypingSuggestions } from "../server/questions"
+import { getTypingSuggestions, getQuestions, getQuestion } from "../server/questions"
 import { QUERY_KEYS } from "./query-keys";
 import { getQuestionInsights } from "../ai";
 import { Question, User } from "@/@types/db";
 import { useUser } from "./auth";
 import axios from "axios";
 import { toast } from "sonner";
+
+// Add a new hook to fetch questions
+export const useQuestions = (payload?: { params?: Record<string, string | number | boolean> }) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.get_questions, payload],
+        queryFn: async () => {
+            return getQuestions(payload);
+        },
+    });
+};
+
+// Add a hook to fetch a single question by ID
+export const useQuestion = (id: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.get_question, id],
+        queryFn: async () => {
+            return getQuestion(id);
+        },
+        enabled: !!id,
+    });
+};
 
 export const useQuestionSuggestions = (query: string) => {
     

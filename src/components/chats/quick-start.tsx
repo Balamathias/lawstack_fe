@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { MessageSquare, BookOpen, FileQuestion, Lightbulb, Scale, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -9,6 +9,9 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/comp
 import { useCreateChat } from '@/services/client/chat'
 import { useRouter } from 'nextjs-toploader/app'
 import LoadingOverlay from '../loading-overlay'
+import CourseSelector from '../courses/course-selector'
+import PastQuestionSelector from '../questions/past-question-selector'
+import { useSearchParams } from 'next/navigation'
 
 const delius = Delius({weight: ['400'], subsets: ['latin'], variable: '--font-delius'})
 
@@ -76,9 +79,10 @@ const QuickStartOption = ({ title, description, icon, onClick, color, iconBg, to
 }
 
 const QuickStart = ({ auth }: Props) => {
-
+  const searchParams = useSearchParams()
   const router = useRouter()
-
+  const [isCourseModalOpen, setIsCourseModalOpen] = useState(false)
+  const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false)
   const { mutate: startChat, isPending } = useCreateChat()
     
   const options = [
@@ -107,9 +111,7 @@ const QuickStart = ({ auth }: Props) => {
       title: 'Start with a Course',
       description: 'Predict past questions, get mock past questions, analyze patterns',
       icon: <BookOpen className="h-6 w-6" />,
-      onClick: () => {
-        startChat({ message: 'Start with a course' })
-      },
+      onClick: () => setIsCourseModalOpen(true),
       color: "text-blue-600 dark:text-blue-400",
       iconBg: "bg-blue-100 dark:bg-blue-900/30",
       tooltipContent: "Perfect for exam preparation. Choose this option when studying for a specific course to identify likely exam questions, understand question patterns, and get tailored practice materials."
@@ -118,7 +120,7 @@ const QuickStart = ({ auth }: Props) => {
       title: 'Start with a Past Question',
       description: 'Deeply analyze past questions, get insights, predict future questions',
       icon: <FileQuestion className="h-6 w-6" />,
-      onClick: () => console.log('Start with a past question clicked'),
+      onClick: () => setIsQuestionModalOpen(true),
       color: "text-purple-600 dark:text-purple-400",
       iconBg: "bg-purple-100 dark:bg-purple-900/30",
       tooltipContent: "Ideal when you have specific exam questions to study. The assistant will break down question patterns, suggest model answers, and help you understand marking criteria and examiners' expectations."
@@ -179,6 +181,18 @@ const QuickStart = ({ auth }: Props) => {
           </motion.div>
         </div>
       </div>
+      
+      {/* Course Selector Modal */}
+      <CourseSelector 
+        isOpen={isCourseModalOpen} 
+        onClose={() => setIsCourseModalOpen(false)} 
+      />
+      
+      {/* Past Question Selector Modal */}
+      <PastQuestionSelector
+        isOpen={isQuestionModalOpen}
+        onClose={() => setIsQuestionModalOpen(false)}
+      />
     </TooltipProvider>
   )
 }

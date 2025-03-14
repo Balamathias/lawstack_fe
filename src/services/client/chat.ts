@@ -1,10 +1,11 @@
 import { Chat, Message } from "@/@types/db"
 import { StackResponse } from "@/@types/generics"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { API_URL } from "../utils"
 import { toast } from "sonner"
 import { getCookie } from 'cookies-next/client'
+import { getChats } from "../server/chats"
 
 export const useCreateChat = () => {
 
@@ -51,5 +52,12 @@ export const useSendMessage = (chat_id: string) => {
             console.error('Error sending message:', error)
             toast.error('Error sending message, are you sure you are signed in?', { description: error.message })
         }
+    })
+}
+
+export const useGetChats = (params?: Record<string, any>) => {
+    return useQuery({
+        queryKey: ['get_chats', params],
+        queryFn: () => getChats(params),
     })
 }

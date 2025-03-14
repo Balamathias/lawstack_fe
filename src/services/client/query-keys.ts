@@ -38,4 +38,12 @@ export enum QUERY_KEYS {
     get_contribution_insights = 'get_contribution_insights',
     get_contribution_insights_edge = 'get_contribution_insights_edge',
 
+    get_courses = 'get_courses',
+    get_course = 'get_course',
+    create_course = 'create_course',
+    update_course = 'update_course',
+    delete_course = 'delete_course',
+
+    get_question = 'get_question',
+
   }

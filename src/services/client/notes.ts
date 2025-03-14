@@ -42,3 +42,12 @@ export const useDeleteNote = () => {
         },
     });
 };
+
+// export const useUpdateNote = () => {
+//     return useMutation({
+//         mutationKey: [QUERY_KEYS.update_note],
+//         mutationFn: ({ id, payload }: { id: string; payload: Partial<Note> }) => {
+//             return updateNote(id, payload);
+//         },
+//     });
+// };

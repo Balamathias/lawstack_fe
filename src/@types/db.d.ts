@@ -88,7 +88,7 @@ export interface Note {
 export interface Chat {
     id: string,
     title: string,
-    chat_type: 'general' | 'course_specific' | 'past_question_specific' | 'topic_specific',
+    chat_type: 'general' | 'course_specific' | 'past_question' | 'exam_prep',
     created_at: string,
     updated_at: string | null,
     course: string | null,

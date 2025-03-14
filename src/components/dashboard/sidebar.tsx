@@ -28,7 +28,7 @@ export const navLinks = [
       icon: Heart,
     },
     {
-      tooltip: "AI",
+      tooltip: "AI Insights",
       href: "/dashboard/chat",
       icon: Sparkle,
     },
