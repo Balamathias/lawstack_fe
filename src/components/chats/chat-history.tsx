@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { format } from 'date-fns'
-import { MessageSquare, Book, FileQuestion, Briefcase, HelpCircle, Loader2, MessageCircle, Sidebar, LucideClock } from 'lucide-react'
+import { MessageSquare, Book, FileQuestion, Briefcase, HelpCircle, Loader2, MessageCircle, Sidebar, LucideClock, LucidePlus } from 'lucide-react'
 import Link from 'next/link'
 
 import {
@@ -16,6 +16,9 @@ import {
 import { cn } from '@/lib/utils'
 import { User, Chat } from '@/@types/db'
 import { useGetChats } from '@/services/client/chat'
+import { Button } from '../ui/button'
+
+import { useRouter } from 'nextjs-toploader/app'
 
 interface ChatHistoryProps {
     user: User | null
@@ -25,6 +28,7 @@ interface ChatHistoryProps {
 
 const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
   const { data: chatsResponse, isPending, error } = useGetChats()
+  const router = useRouter()
   
   const getChatIcon = (chatType: string) => {
     switch (chatType) {
@@ -114,12 +118,14 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
       <SheetContent className='bg-background/70 backdrop-blur-sm'>
         <SheetHeader className=''>
           <SheetTitle className='flex items-center gap-2 text-xl'>
-            <LucideClock />
-            Recent Conversations
+            <Button className="rounded-lg" onClick={() => router.push('/dashboard/chat')}>
+              <LucidePlus />
+              New Chat
+            </Button>
           </SheetTitle>
         </SheetHeader>
 
-        <div className="flex flex-col h-[calc(100%-80px)] overflow-hidden">
+        <div className="flex flex-col h-[calc(100%-80px)] overflow-auto">
           {renderChatContent()}
         </div>
       </SheetContent>
