@@ -7,23 +7,23 @@ const testimonialsData = [
   {
     id: 1,
     name: "Mathias Bala",
-    role: "Corporate Lawyer, Johnson & Associates",
+    role: "Founder, lawstack.io, Inc.",
     avatar: "/people/matiecodes.png",
     rating: 5,
     feedback: "LawStack has changed the way I navigate my route towards the legal profession. The platform is user-friendly and has helped me to understand the legal concepts in a more practical way."
   },
   {
     id: 2,
-    name: "Alison Joyce",
-    role: "General Counsel, Tech Innovations Inc.",
+    name: "Serafina Adeola",
+    role: "Database Administrator, LawStack",
     avatar: "/people/matiecodes.png",
     rating: 5,
     feedback: "LawStack has been a game-changer for our legal team. The platform is intuitive and easy to use, and the AI insights have helped us to make better decisions faster."
   },
   {
     id: 3,
-    name: "Daniel Cornell",
-    role: "Legal Operations Manager, Global Finance",
+    name: "Daniel Lad",
+    role: "Legal Analyst, LawStack",
     avatar: "/people/matiecodes.png",
     rating: 4,
     feedback: "Implementing Law Stack reduced our contract review time by 60%. The automated compliance checks give us peace of mind while the interface made adoption remarkably smooth."

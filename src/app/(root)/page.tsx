@@ -3,6 +3,7 @@ import HeroSection from "@/components/home/hero-section";
 import NeuralSection from "@/components/home/neural-section";
 import EnhancedGridPattern from "@/components/home/svgs/grid";
 import Testimonials from "@/components/home/testimonials";
+import FooterSection from "@/components/home/footer-section";
 
 export default async function Home() {
   return (
@@ -12,8 +13,8 @@ export default async function Home() {
         <HeroSection />
         <GlobeSection />
         <NeuralSection />
-
         <Testimonials />
+        <FooterSection />
       </div>
     </div>
   );
