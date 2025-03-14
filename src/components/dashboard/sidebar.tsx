@@ -2,9 +2,13 @@
 
 import React from 'react'
 
-import { Home, HelpCircleIcon, Bookmark, Heart, Sparkle } from "lucide-react"
+import { Home, HelpCircleIcon, Bookmark, Heart, Sparkle, LucideArrowUpRight } from "lucide-react"
 import Logo from '../logo'
 import LinkItem from './link-item'
+import { Button } from '../ui/button'
+import { useLogout } from '@/services/client/auth'
+import { toast } from 'sonner'
+import { useRouter } from 'nextjs-toploader/app'
 
 export const navLinks = [
     {
@@ -35,6 +39,10 @@ export const navLinks = [
   ]
 
 const Sidebar = () => {
+
+  const { mutate: logout, isPending: loggingOut } = useLogout()
+  const router = useRouter()
+
   return (
     <div className='h-screen lg:flex flex-col bg-white dark:bg-background p-2 lg:p-2.5 hidden w-[210px] custom-scrollbar justify-between z-20 overflow-hidden left-0 bottom-0 fixed'>
         <div className="flex flex-col space-y-8">
@@ -51,8 +59,29 @@ const Sidebar = () => {
             </nav>
         </div>
 
-        <footer className="p-2 lg:p-2.5 flex gap-3 flex-col">
-                
+        <footer className="p-2 lg:p-2.5 flex gap-3 flex-col mt-auto">
+                <Button 
+                  className="w-full rounded-xl" variant="default"
+                  onClick={() => logout(undefined, {
+                    onSuccess: (data) => {
+                      if (data?.error) {
+                          toast.error(data.message)
+                          return
+                      }
+
+                        toast.success('Logged out successfully')
+                        router.replace('/')
+                        router.refresh()
+                    },
+                    onError: (error) => {
+                        toast.error(error.message)
+                    }
+                  })}
+                  disabled={loggingOut}
+                >
+                  {loggingOut ? 'Processing...' : 'Logout'}
+                  <LucideArrowUpRight className='w-4 h-4' />
+                </Button>
         </footer>
     </div>
   )
