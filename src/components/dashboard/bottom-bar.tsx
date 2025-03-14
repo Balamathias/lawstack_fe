@@ -40,8 +40,8 @@ const Bottombar = () => {
   }
 
   return (
-    <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-gray-100 dark:border-gray-800">
-      <div className="h-16 bg-transparent backdrop-blur-lg flex items-center justify-around px-2">
+    <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-gray-100 ">
+      <div className="h-16 dark:bg-black/70 backdrop-blur-lg flex items-center justify-around px-2">
         {navLinks.map((link, idx) => {
           const isActive = pathname === link?.href;
           return (
