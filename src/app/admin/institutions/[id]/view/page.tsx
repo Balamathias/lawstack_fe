@@ -8,12 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { notFound } from 'next/navigation'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-const ViewInstitutionPage = async ({ params }: PageProps) => {
+const ViewInstitutionPage = async ({ params: _params }: PageProps) => {
+  const params = await _params
   const institutionResponse = await getInstitution(params.id)
   
   if (!institutionResponse?.data) {

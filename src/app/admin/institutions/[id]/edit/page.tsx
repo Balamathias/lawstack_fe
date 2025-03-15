@@ -4,12 +4,12 @@ import Link from 'next/link'
 import InstitutionEditForm from '@/components/admin/institutions/institution-edit-form'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-const EditInstitutionPage = ({ params }: PageProps) => {
+const EditInstitutionPage = async ({ params }: PageProps) => {
   return (
     <div className='max-w-7xl flex flex-col space-y-2.5 sm:space-y-4 md:py-12 py-4 md:mx-auto w-full px-4 pb-16'>
       <div className="flex items-center justify-between mb-6">
@@ -30,7 +30,7 @@ const EditInstitutionPage = ({ params }: PageProps) => {
         </div>
       </div>
       
-      <InstitutionEditForm institutionId={params.id} />
+      <InstitutionEditForm institutionId={(await params).id} />
     </div>
   )
 }

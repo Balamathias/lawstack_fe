@@ -10,7 +10,7 @@ export interface User {
     avatar: string | null,
     phone: string | null,
     created_at: string,
-  }
+}
 
 export interface Question {
     id: string,

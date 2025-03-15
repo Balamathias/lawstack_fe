@@ -10,12 +10,13 @@ import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-const ViewUserPage = async ({ params }: PageProps) => {
+const ViewUserPage = async ({ params: _params }: PageProps) => {
+  const params = await _params
   const userResponse = await getUser(params.id)
   
   if (!userResponse?.data) {
