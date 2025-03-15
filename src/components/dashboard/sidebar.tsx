@@ -10,7 +10,8 @@ import {
   LogOut,
   Users,
   Sparkles,
-  MessageSquare
+  MessageSquare,
+  ShieldAlert
 } from "lucide-react"
 import Logo from '../logo'
 import { Button } from '../ui/button'
@@ -104,6 +105,25 @@ const DashboardSidebar = ({ user }: Props) => {
               </Link>
             )
           })}
+          
+          {/* Admin Access Link - Only visible to staff and superusers */}
+          {user && (user.is_staff || user.is_superuser) && (
+            <Link 
+              href="/admin"
+              className={cn(
+                "flex items-center gap-3 px-3 py-2 rounded-md transition-all mt-2 border-t border-border pt-3",
+                pathname.startsWith('/admin')
+                  ? "bg-red-500/10 text-red-500 font-medium"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
+              )}
+            >
+              <ShieldAlert className="h-4 w-4" />
+              <span className="text-sm">Admin Dashboard</span>
+              {pathname.startsWith('/admin') && (
+                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500"></span>
+              )}
+            </Link>
+          )}
         </nav>
       </div>
 

@@ -1,10 +1,11 @@
 "use client"
 
 import { cn } from '@/lib/utils'
-import { Home, BookOpen, Search, BookMarked, User, MessageSquare } from 'lucide-react'
+import { Home, BookOpen, Search, BookMarked, User, MessageSquare, ShieldAlert } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
+import { useUser } from '@/services/client/auth'
 
 export const dashboardMobileLinks = [
   {
@@ -36,15 +37,20 @@ export const dashboardMobileLinks = [
 
 const DashboardBottomBar = () => {
   const pathname = usePathname()
+  const { data: userData } = useUser();
+  const user = userData?.data;
 
   // Hide bottom bar on specific detail pages
   if (pathname.match(/\/dashboard\/(questions|bookmarks|search)\/[^/]+/)) {
     return null
   }
 
+  // Check if user is staff or superuser
+  const isAdmin = user && (user.is_staff || user.is_superuser);
+
   return (
     <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-border">
-      <div className="h-16 bg-background/80 dark:bg-black/70 backdrop-blur-lg flex items-center justify-around px-2">
+      <div className={`h-16 bg-background/80 dark:bg-black/70 backdrop-blur-lg flex items-center justify-around px-2 ${isAdmin ? 'pb-safe' : ''}`}>
         {dashboardMobileLinks.map((link, idx) => {
           const isActive = pathname === link?.href || pathname.startsWith(`${link.href}/`);
           return (
@@ -78,6 +84,37 @@ const DashboardBottomBar = () => {
             </Link>
           )
         })}
+
+        {/* Admin link for mobile - Only for staff/superusers */}
+        {isAdmin && (
+          <Link 
+            href="/admin"
+            className={cn(
+              "relative flex flex-col items-center justify-center w-16 h-16 transition-all duration-200",
+              pathname.startsWith('/admin') ? "text-red-500" : "text-foreground"
+            )}
+          >
+            <div className={cn(
+              "flex items-center justify-center p-2 transition-all duration-300",
+              pathname.startsWith('/admin') ? "bg-red-500/10 rounded-full" : ""
+            )}>
+              <ShieldAlert 
+                size={pathname.startsWith('/admin') ? 22 : 20}   
+                strokeWidth={pathname.startsWith('/admin') ? 2 : 1.5}                  
+                className="transition-all duration-200"                
+              />              
+            </div>              
+            <span className={cn(
+              "mt-1 text-[10px] font-medium transition-all duration-200",
+              pathname.startsWith('/admin') ? "opacity-100" : "opacity-80"
+            )}>
+              Admin
+            </span>
+            {pathname.startsWith('/admin') && (
+              <span className="absolute -top-0.5 left-1/2 w-1 h-1 bg-red-500 rounded-full transform -translate-x-1/2"></span>
+            )}
+          </Link>
+        )}
       </div>
     </nav>
   )
