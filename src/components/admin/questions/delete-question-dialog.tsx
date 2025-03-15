@@ -41,7 +41,7 @@ const DeleteQuestionDialog = ({
               <p className="line-clamp-2">{questionText}</p>
             </div>
           </div>
-        </div>
+        </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
           <Button 
