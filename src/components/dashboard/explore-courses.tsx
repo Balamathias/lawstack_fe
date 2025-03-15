@@ -3,7 +3,7 @@ import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 import { Card, CardHeader, CardContent, CardFooter } from '../ui/card';
 import Link from 'next/link';
-import { GraduationCap, Flag, LucideBookLock, Clock, TrendingUp, Users } from 'lucide-react';
+import { GraduationCap, Flag, LucideBookLock, Clock, TrendingUp, Users, LucideCode } from 'lucide-react';
 import Empty from '../empty';
 import { truncateString } from '@/lib/utils';
 import Pagination from '../pagination';
@@ -65,7 +65,7 @@ const ExploreCourses = async ({ searchParams }: Props) => {
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {courses.map(({ id, name, description, level }) => (
+        {courses.map(({ id, name, description, level, duration, code }) => (
           <Link key={id} href={`/dashboard/courses/${id}`} passHref>
             <Card className="h-full flex flex-col overflow-hidden group transition-all duration-300 hover:shadow-xl border-muted/60 hover:border-green-500/50 relative">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-300 to-green-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
@@ -91,11 +91,11 @@ const ExploreCourses = async ({ searchParams }: Props) => {
               <CardFooter className="pt-3 border-t border-border/40 bg-muted/20 flex justify-between items-center">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Clock size={14} className="text-green-500/80" />
-                  <span>8 weeks</span>
+                  <span>{duration} Year</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Users size={14} className="text-green-500/80" />
-                  <span>42 enrolled</span>
+                  <LucideCode size={14} className="text-green-500/80" />
+                  <span>{code}</span>
                 </div>
               </CardFooter>
             </Card>
