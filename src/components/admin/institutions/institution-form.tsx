@@ -90,6 +90,7 @@ const InstitutionForm = () => {
   const countries = ["Nigeria", "Ghana", "South Africa", "Kenya", "United States", "United Kingdom", "Canada"];
 
   return (
+    <>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -356,6 +357,7 @@ const InstitutionForm = () => {
         </Card>
       </form>
     </Form>
+    </>
   );
 };
 
