@@ -1,58 +1,68 @@
 'use client'
 
 import React from 'react'
-import { 
-  Home, 
-  BookOpen, 
-  HelpCircle, 
-  Building2, 
-  Users, 
-  Settings, 
-  LayoutDashboard, 
-  LogOut, 
-  ArrowUpRight 
-} from "lucide-react"
+import { User } from '@/@types/db'
 import Logo from '../logo'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { 
+  BookOpen, 
+  Home, 
+  Building2, 
+  Settings, 
+  LogOut,
+  Users,
+  HelpCircle,
+  FileText,
+  BarChart3
+} from 'lucide-react'
 import { Button } from '../ui/button'
 import { useLogout } from '@/services/client/auth'
-import { toast } from 'sonner'
 import { useRouter } from 'nextjs-toploader/app'
-import { User } from '@/@types/db'
-import { usePathname } from 'next/navigation'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 
 export const adminLinks = [
   {
-    tooltip: "Dashboard",
+    name: "Dashboard",
     href: "/admin",
-    icon: LayoutDashboard,
+    icon: Home,
   },
   {
-    tooltip: "Courses",
-    href: "/admin/courses",
+    name: "Questions",
+    href: "/admin/questions",
     icon: BookOpen,
   },
   {
-    tooltip: "Questions",
-    href: "/admin/questions",
-    icon: HelpCircle,
+    name: "Courses",
+    href: "/admin/courses",
+    icon: FileText,
   },
   {
-    tooltip: "Institutions",
+    name: "Institutions",
     href: "/admin/institutions",
     icon: Building2,
   },
   {
-    tooltip: "Users",
+    name: "Users",
     href: "/admin/users",
     icon: Users,
   },
   {
-    tooltip: "Settings",
+    name: "Analytics",
+    href: "/admin/analytics",
+    icon: BarChart3,
+  },
+  {
+    name: "Settings",
     href: "/admin/settings",
     icon: Settings,
   },
+  {
+    name: "Help",
+    href: "/admin/help",
+    icon: HelpCircle,
+  }
 ]
 
 interface Props {
@@ -60,21 +70,20 @@ interface Props {
 }
 
 const AdminSidebar = ({ user }: Props) => {
-  const { mutate: logout, isPending: loggingOut } = useLogout()
-  const router = useRouter()
   const pathname = usePathname()
+  const router = useRouter()
+  const { mutate: logout, isPending: loggingOut } = useLogout()
 
   return (
     <div className='h-screen lg:flex flex-col bg-white dark:bg-card p-2 lg:p-2.5 hidden w-[220px] custom-scrollbar justify-between z-20 overflow-hidden left-0 bottom-0 fixed border-r border-border'>
       <div className="flex flex-col space-y-8">
-        <div className="py-2.5 px-2 flex items-center gap-2">
+        <div className="py-2.5 px-2">
           <Logo />
-          <span className="font-semibold text-sm opacity-80">Admin</span>
         </div>
 
         <nav className='flex flex-col gap-1'>
           {adminLinks.map((link, index) => {
-            const isActive = ((pathname === link.href)) || pathname.startsWith(`/${link.href}/`);
+            const isActive = pathname === link.href || pathname.startsWith(`/${link.href}/`);
             
             return (
               <Link 
@@ -88,7 +97,7 @@ const AdminSidebar = ({ user }: Props) => {
                 )}
               >
                 <link.icon className="h-4 w-4" />
-                <span className="text-sm">{link.tooltip}</span>
+                <span className="text-sm">{link.name}</span>
                 {isActive && (
                   <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary"></span>
                 )}

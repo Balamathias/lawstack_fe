@@ -2,6 +2,9 @@ export const QUERY_KEYS = {
   // User & Auth keys
   get_users: "get_users",
   get_user: "get_user",
+  create_user: "create_user",
+  update_user: "update_user",
+  delete_user: "delete_user",
   
   // Question keys
   get_questions: "get_questions",
