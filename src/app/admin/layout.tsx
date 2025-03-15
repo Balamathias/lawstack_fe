@@ -2,9 +2,14 @@ import React, { PropsWithChildren } from 'react'
 import AdminSidebar from '@/components/admin/admin-sidebar'
 import AdminBottomBar from '@/components/admin/admin-bottom-bar'
 import { getUser } from '@/services/server/auth'
+import { redirect } from 'next/navigation'
 
 const Layout = async ({ children }: PropsWithChildren) => {
   const { data: user } = await getUser()
+
+  if (!user?.is_superuser) {
+    return redirect('/')
+  }
   
   return (
     <div className='bg-background min-h-screen'>
