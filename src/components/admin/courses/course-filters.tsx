@@ -110,7 +110,7 @@ const CourseFilters = ({ onSearch, className }: CourseFiltersProps) => {
             <SelectValue placeholder="All Institutions" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Institutions</SelectItem>
+            <SelectItem value="all">All Institutions</SelectItem>
             {isLoadingInstitutions ? (
               <SelectItem value="loading" disabled>
                 <div className="flex items-center gap-2">
@@ -137,7 +137,7 @@ const CourseFilters = ({ onSearch, className }: CourseFiltersProps) => {
             <SelectValue placeholder="All Levels" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Levels</SelectItem>
+            <SelectItem value="all">All Levels</SelectItem>
             {levels.map((lvl) => (
               <SelectItem key={lvl} value={lvl}>
                 {lvl} Level

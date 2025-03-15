@@ -110,7 +110,7 @@ const InstitutionFilters = ({ onSearch, className }: InstitutionFiltersProps) =>
             <SelectValue placeholder="All Types" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Types</SelectItem>
+            <SelectItem value="all">All Types</SelectItem>
             {institutionTypes.map((institutionType) => (
               <SelectItem key={institutionType} value={institutionType.toLowerCase()}>
                 {institutionType}
@@ -128,7 +128,7 @@ const InstitutionFilters = ({ onSearch, className }: InstitutionFiltersProps) =>
             <SelectValue placeholder="All Countries" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Countries</SelectItem>
+            <SelectItem value="all">All Countries</SelectItem>
             {countries.map((countryName) => (
               <SelectItem key={countryName} value={countryName.toLowerCase()}>
                 {countryName}
