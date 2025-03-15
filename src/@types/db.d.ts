@@ -10,6 +10,7 @@ export interface User {
     avatar: string | null,
     phone: string | null,
     created_at: string,
+    date_joined: string
 }
 
 export interface Question {

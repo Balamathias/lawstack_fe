@@ -26,7 +26,7 @@ const ViewUserPage = async ({ params: _params }: PageProps) => {
   const user = userResponse.data
   
   // Format date of joining
-  const formattedDate = user.date_joined ? format(new Date(user.date_joined), 'MMM d, yyyy') : 'Unknown'
+  const formattedDate = user.created_at ? format(new Date(user.created_at), 'MMM d, yyyy') : 'Unknown'
   
   // Get role badge component
   const getRoleBadge = () => {
