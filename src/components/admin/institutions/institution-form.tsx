@@ -71,8 +71,6 @@ const InstitutionForm = () => {
   const onSubmit = (values: InstitutionFormValues) => {
     createInstitution({
       ...values,
-      created_at: new Date().toISOString(),
-      updated_at: null,
     }, {
       onSuccess: (data) => {
         if (data?.data) {
