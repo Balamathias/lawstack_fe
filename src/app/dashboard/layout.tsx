@@ -1,19 +1,27 @@
 import React, { PropsWithChildren } from 'react'
-import Sidebar from '@/components/dashboard/sidebar'
-import Bottombar from '@/components/dashboard/bottom-bar'
+import DashboardSidebar from '@/components/dashboard/sidebar'
+import DashboardBottomBar from '@/components/dashboard/bottom-bar'
 import { getUser } from '@/services/server/auth'
+import { redirect } from 'next/navigation'
 
 const Layout = async ({ children }: PropsWithChildren) => {
-    const { data: user } = await getUser()
-    return (
-        <div className='dark:bg-black bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-800 via-amber-900 to-black w-full min-h-screen'>
-            <Sidebar user={user} />
-            <main className='lg:ml-[210px]'>
-                {children}
-            </main>
-            <Bottombar />
+  const { data: user } = await getUser()
+  
+  if (!user) {
+    return redirect('/login?next=/dashboard')
+  }
+  
+  return (
+    <div className='bg-background min-h-screen'>
+      <DashboardSidebar user={user} />
+      <main className='lg:pl-[220px] pb-20 lg:pb-8'>
+        <div className="container mx-auto">
+          {children}
         </div>
-    )
+      </main>
+      <DashboardBottomBar />
+    </div>
+  )
 }
 
 export default Layout

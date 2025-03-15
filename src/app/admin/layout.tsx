@@ -7,9 +7,9 @@ import { redirect } from 'next/navigation'
 const Layout = async ({ children }: PropsWithChildren) => {
   const { data: user } = await getUser()
 
-  if (!user?.is_superuser) {
-    return redirect('/')
-  }
+//   if (!user?.is_superuser || !user.is_staff) {
+//     return redirect('/')
+//   }
   
   return (
     <div className='bg-background min-h-screen'>

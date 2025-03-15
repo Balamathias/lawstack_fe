@@ -50,7 +50,7 @@ const questionSchema = z.object({
   year: z.string().min(4, "Please enter a valid year"),
   course: z.string().min(1, "Please select a course"),
   level: z.string().min(1, "Please select a level"),
-  session: z.string().max(9, "Session must be in the format 'YYYY/YYYY'"),
+  session: z.string().nullable().optional(),
   marks: z.number().min(1, "Marks must be at least 1"),
   semester: z.string().min(1, "Please select a semester"),
   institution: z.string().min(1, "Please select an institution"),
@@ -92,7 +92,7 @@ const QuestionForm = () => {
       year: savedMetadata?.year || new Date().getFullYear().toString(),
       course: savedMetadata?.course || "",
       level: savedMetadata?.level || "",
-      session: savedMetadata?.session || '',
+      session: savedMetadata?.session || null,
       marks: savedMetadata?.marks || 1,
       semester: savedMetadata?.semester || "",
       institution: savedMetadata?.institution || "",
@@ -137,7 +137,7 @@ const QuestionForm = () => {
       year: new Date().getFullYear().toString(),
       course: "",
       level: "",
-      session: '',
+      session: null,
       marks: 1,
       semester: "",
       institution: "",
@@ -194,6 +194,10 @@ const QuestionForm = () => {
     { name: "Second Semester", value: "2" },
   ];
   
+  // Current and past years for the dropdown
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 20 }, (_, i) => (currentYear - i).toString());
+
   return (
     <>
       <Form {...form}>
@@ -272,9 +276,23 @@ const QuestionForm = () => {
                           <Calendar className="h-4 w-4" />
                           Year
                         </FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g., 2023" {...field} />
-                        </FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select Year" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {years.map((year) => (
+                              <SelectItem key={year} value={year}>
+                                {year}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -291,7 +309,7 @@ const QuestionForm = () => {
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
                           disabled={isLoadingInstitutions}
                         >
                           <FormControl>
@@ -327,7 +345,7 @@ const QuestionForm = () => {
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
                           disabled={isLoadingCourses}
                         >
                           <FormControl>
@@ -364,7 +382,7 @@ const QuestionForm = () => {
                           </FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -392,7 +410,7 @@ const QuestionForm = () => {
                           <FormLabel>Semester</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -428,6 +446,7 @@ const QuestionForm = () => {
                               type="number" 
                               placeholder="e.g., 10" 
                               {...field} 
+                              value={field.value}
                               onChange={e => field.onChange(parseInt(e.target.value) || 0)}
                             />
                           </FormControl>
@@ -447,7 +466,7 @@ const QuestionForm = () => {
                           </FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -456,7 +475,7 @@ const QuestionForm = () => {
                             </FormControl>
                             <SelectContent>
                               {questionTypes.map((type) => (
-                                <SelectItem key={type} value={type.toLocaleLowerCase()}>
+                                <SelectItem key={type} value={type.toLowerCase()}>
                                   {type}
                                 </SelectItem>
                               ))}
@@ -557,8 +576,8 @@ const QuestionForm = () => {
               </Button>
               <Button
                 type="submit"
-                disabled={isPending}
-                className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+                disabled={isPending || isLoadingInstitutions || isLoadingCourses}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2"
               >
                 {isPending ? (
                   <>

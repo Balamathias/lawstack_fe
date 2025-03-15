@@ -1,67 +1,68 @@
 "use client"
 
 import { cn } from '@/lib/utils'
-import { Bookmark, Heart, HelpCircleIcon, Home, Sparkle } from 'lucide-react'
+import { Home, BookOpen, Search, BookMarked, User, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
-export const navLinks = [
-    {
-      tooltip: "Home",
-      href: "/dashboard",
-      icon: Home,
-    },
-    {
-      tooltip: "Questions",
-      href: "/dashboard/past-questions",
-      icon: HelpCircleIcon,
-    },
-    {
-      tooltip: "Bookmarks",
-      href: "/dashboard/bookmarks",
-      icon: Bookmark,
-    },
-    {
-      tooltip: "Chat",
-      href: "/dashboard/chat",
-      icon: Sparkle,
-    },
-  ]
+export const dashboardMobileLinks = [
+  {
+    tooltip: "Home",
+    href: "/dashboard",
+    icon: Home,
+  },
+  {
+    tooltip: "Questions",
+    href: "/dashboard/questions",
+    icon: BookOpen,
+  },
+  {
+    tooltip: "Search",
+    href: "/dashboard/search",
+    icon: Search,
+  },
+  {
+    tooltip: "Bookmarks",
+    href: "/dashboard/bookmarks",
+    icon: BookMarked,
+  },
+  {
+    tooltip: "Chat",
+    href: "/dashboard/chat",
+    icon: MessageSquare,
+  },
+]
 
-const Bottombar = () => {
+const DashboardBottomBar = () => {
   const pathname = usePathname()
 
-  const patternMatch = pathname.match(/\/dashboard\/past-questions\/(.+)/) ||
-    pathname.match(/\/dashboard\/chat\/(.+)/)
-
-  if (patternMatch) {
+  // Hide bottom bar on specific detail pages
+  if (pathname.match(/\/dashboard\/(questions|bookmarks|search)\/[^/]+/)) {
     return null
   }
 
   return (
-    <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-gray-100 dark:border-none">
-      <div className="h-16 dark:bg-black/70 backdrop-blur-lg flex items-center justify-around px-2">
-        {navLinks.map((link, idx) => {
-          const isActive = pathname === link?.href;
+    <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-border">
+      <div className="h-16 bg-background/80 dark:bg-black/70 backdrop-blur-lg flex items-center justify-around px-2">
+        {dashboardMobileLinks.map((link, idx) => {
+          const isActive = pathname === link?.href || pathname.startsWith(`${link.href}/`);
           return (
             <Link 
               key={idx} 
               href={link?.href} 
               className={cn(
                 "relative flex flex-col items-center justify-center w-16 h-16 transition-all duration-200",
-                isActive ? "text-green-600 dark:text-green-500" : "text-foreground"
+                isActive ? "text-primary" : "text-foreground"
               )}
             >
               <div className={cn(
                 "flex items-center justify-center p-2 transition-all duration-300",
-                isActive 
-                  ? "text-emerald-500" 
-                  : ""
+                isActive ? "bg-primary/10 rounded-full" : ""
               )}>
                 <link.icon 
                   size={isActive ? 22 : 20}   
-                  strokeWidth={isActive ? 1.5 : 1}                  
+                  strokeWidth={isActive ? 2 : 1.5}                  
                   className="transition-all duration-200"                
                 />              
               </div>              
@@ -72,7 +73,7 @@ const Bottombar = () => {
                 {link?.tooltip}
               </span>
               {isActive && (
-                <span className="absolute -top-0.5 left-1/2 w-1 h-1 bg-green-500 rounded-full transform -translate-x-1/2"></span>
+                <span className="absolute -top-0.5 left-1/2 w-1 h-1 bg-primary rounded-full transform -translate-x-1/2"></span>
               )}
             </Link>
           )
@@ -82,11 +83,4 @@ const Bottombar = () => {
   )
 }
 
-export default Bottombar
-
-
-// {
-    //   tooltip: "Favorites",
-    //   href: "/dashboard/favorites",
-    //   icon: Heart,
-    // },
+export default DashboardBottomBar
