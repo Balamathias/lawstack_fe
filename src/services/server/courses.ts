@@ -1,9 +1,8 @@
 'use server'
 
+import { StackResponse, PaginatedStackResponse } from '@/@types/generics'
 import { Course } from '@/@types/db'
-import { PaginatedStackResponse, StackResponse } from '@/@types/generics'
 import { stackbase } from '../server.entry'
-
 
 interface CoursePayload {
     params?: Record<string, string | number | boolean>
@@ -70,7 +69,7 @@ export const updateCourse = async (id: string, payload: Partial<Course>): Promis
 
 export const deleteCourse = async (id: string): Promise<StackResponse<Course | null>> => {
     try {
-        const { data } = await stackbase.delete(`/courses/${id}/`)
+        const { data } = await stackbase.delete(`/courses/${id}`)
         return data
     } catch (error: any) {
         return {

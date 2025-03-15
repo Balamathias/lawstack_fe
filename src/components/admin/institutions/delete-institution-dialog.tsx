@@ -35,12 +35,12 @@ const DeleteInstitutionDialog = ({
             <AlertTriangle className="h-5 w-5" />
             Delete Institution
           </AlertDialogTitle>
-          <AlertDialogDescription className="space-y-2">
+          <div className="space-y-2">
             <p>Are you sure you want to delete this institution? This action cannot be undone and may affect courses and questions associated with this institution.</p>
             <div className="mt-2 p-3 bg-muted/50 rounded-md border text-sm text-foreground/80">
               <p className="font-semibold">{institutionName}</p>
             </div>
-          </AlertDialogDescription>
+          </div>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>

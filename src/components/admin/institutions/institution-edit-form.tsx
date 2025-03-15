@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2, Save, Building2, MapPin, Globe, Phone, Mail, Info } from "lucide-react";
+import { Loader2, Save, Building2, MapPin, Globe, Phone, Mail, Info, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCreateInstitution } from "@/services/client/institutions";
-import { toast } from "sonner";
+import { useInstitution, useUpdateInstitution } from "@/services/client/institutions";
 
 import {
   Form,
@@ -29,6 +28,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Define the schema for institution form validation
 const institutionSchema = z.object({
@@ -47,9 +48,15 @@ const institutionSchema = z.object({
 
 type InstitutionFormValues = z.infer<typeof institutionSchema>;
 
-const InstitutionForm = () => {
+interface InstitutionEditFormProps {
+  institutionId: string;
+}
+
+const InstitutionEditForm = ({ institutionId }: InstitutionEditFormProps) => {
   const router = useRouter();
-  const { mutate: createInstitution, isPending } = useCreateInstitution();
+  
+  const { data: institutionData, isLoading, isError } = useInstitution(institutionId);
+  const { mutate: updateInstitution, isPending } = useUpdateInstitution();
   
   const form = useForm<InstitutionFormValues>({
     resolver: zodResolver(institutionSchema),
@@ -68,19 +75,44 @@ const InstitutionForm = () => {
     },
   });
 
+  // Set form values when institution data is loaded
+  useEffect(() => {
+    if (institutionData?.data) {
+      const institution = institutionData.data;
+      form.reset({
+        name: institution.name,
+        short_name: institution.short_name,
+        type: institution.type,
+        country: institution.country,
+        state: institution.state,
+        city: institution.city,
+        address: institution.address,
+        website: institution.website || "",
+        email: institution.email || "",
+        phone: institution.phone || "",
+        description: institution.description || "",
+      });
+    }
+  }, [institutionData, form]);
+
   const onSubmit = (values: InstitutionFormValues) => {
-    createInstitution({
-      ...values,
-      created_at: new Date().toISOString(),
-      updated_at: null,
-    }, {
-      onSuccess: (data) => {
-        if (data?.data) {
-          toast.success("Institution created successfully");
-          router.push("/admin/institutions");
+    updateInstitution(
+      {
+        id: institutionId,
+        payload: {
+          ...values,
+          updated_at: new Date().toISOString(),
+        }
+      },
+      {
+        onSuccess: (data) => {
+          if (data?.data) {
+            toast.success("Institution updated successfully");
+            router.push("/admin/institutions");
+          }
         }
       }
-    });
+    );
   };
   
   // Institution types
@@ -88,6 +120,45 @@ const InstitutionForm = () => {
   
   // Countries - just a sample, would be more extensive in a real app
   const countries = ["Nigeria", "Ghana", "South Africa", "Kenya", "United States", "United Kingdom", "Canada"];
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-8 w-1/3" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (isError || !institutionData?.data) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex flex-col items-center justify-center text-center space-y-4">
+            <AlertCircle className="h-12 w-12 text-destructive" />
+            <div>
+              <h3 className="text-lg font-medium">Failed to load institution</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                The institution you are trying to edit could not be found or loaded.
+              </p>
+            </div>
+            <Button onClick={() => router.push("/admin/institutions")}>
+              Return to Institutions
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Form {...form}>
@@ -219,16 +290,6 @@ const InstitutionForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>City</FormLabel>
-                )}
-              />
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="state"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>State/Province</FormLabel>
                       <FormControl>
                         <Input placeholder="e.g., Lagos" {...field} />
                       </FormControl>
@@ -239,12 +300,12 @@ const InstitutionForm = () => {
 
                 <FormField
                   control={form.control}
-                  name="city"
+                  name="state"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>City</FormLabel>
+                      <FormLabel>State</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Akoka" {...field} />
+                        <Input placeholder="e.g., Lagos State" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -254,73 +315,86 @@ const InstitutionForm = () => {
 
               <FormField
                 control={form.control}
-                name="address"
+                name="country"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Address</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Full address of the institution"
-                        className="resize-y"
-                        {...field}
-                      />
-                    </FormControl>
+                    <FormLabel>Country</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Country" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {countries.map((country) => (
+                          <SelectItem key={country} value={country.toLowerCase()}>
+                            {country}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="website"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
-                      Website (Optional)
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://www.example.edu" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="border-t pt-4">
+                <h3 className="text-sm font-medium mb-3">Contact Information (Optional)</h3>
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="website"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center gap-2">
+                          <Globe className="h-4 w-4" />
+                          Website
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., https://www.unilag.edu.ng" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Mail className="h-4 w-4" />
-                        Email (Optional)
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder="contact@institution.edu" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center gap-2">
+                          <Mail className="h-4 w-4" />
+                          Email
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., info@institution.edu" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Phone className="h-4 w-4" />
-                        Phone (Optional)
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder="+234 123 4567 890" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center gap-2">
+                          <Phone className="h-4 w-4" />
+                          Phone
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., +234 123 456 7890" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -348,7 +422,7 @@ const InstitutionForm = () => {
               ) : (
                 <>
                   <Save className="h-4 w-4" />
-                  Save Institution
+                  Update Institution
                 </>
               )}
             </Button>
@@ -359,4 +433,4 @@ const InstitutionForm = () => {
   );
 };
 
-export default InstitutionForm;
+export default InstitutionEditForm;

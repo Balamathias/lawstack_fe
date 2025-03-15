@@ -35,13 +35,13 @@ const DeleteQuestionDialog = ({
             <AlertTriangle className="h-5 w-5" />
             Delete Question
           </AlertDialogTitle>
-          <AlertDialogDescription className="space-y-2">
+          <div className="space-y-2">
             <p>Are you sure you want to delete this question? This action cannot be undone.</p>
             <div className="mt-2 p-3 bg-muted/50 rounded-md border text-sm text-foreground/80">
               <p className="line-clamp-2">{questionText}</p>
             </div>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
+          </div>
+        </div>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
           <Button 
