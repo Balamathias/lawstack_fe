@@ -52,6 +52,7 @@ export interface Course {
     level: string,
     duration: string,
     credit_units: number,
+    ordering: number | null,
     created_at: string,
     updated_at: string
 }

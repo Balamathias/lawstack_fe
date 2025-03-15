@@ -16,7 +16,12 @@ export enum QUERY_KEYS {
     get_user = 'get_user',
     get_cookies = 'get_cookies',
 
+    // Question related keys
     get_questions = 'get_questions',
+    get_question = 'get_question',
+    create_question = 'create_question',
+    update_question = 'update_question',
+    delete_question = 'delete_question',
     get_question_insights = 'get_question_insights',
     get_question_insights_edge = 'get_question_insights_edge',
 
@@ -38,12 +43,17 @@ export enum QUERY_KEYS {
     get_contribution_insights = 'get_contribution_insights',
     get_contribution_insights_edge = 'get_contribution_insights_edge',
 
+    // Course related keys
     get_courses = 'get_courses',
     get_course = 'get_course',
     create_course = 'create_course',
     update_course = 'update_course',
     delete_course = 'delete_course',
 
-    get_question = 'get_question',
-
-  }
+    // Institution related keys
+    get_institutions = 'get_institutions',
+    get_institution = 'get_institution',
+    create_institution = 'create_institution',
+    update_institution = 'update_institution',
+    delete_institution = 'delete_institution',
+}

@@ -7,7 +7,7 @@ import { useUser } from "./auth";
 import axios from "axios";
 import { toast } from "sonner";
 
-// Add a new hook to fetch questions
+// Add a new hook to fetch questions with filtering support
 export const useQuestions = (payload?: { params?: Record<string, string | number | boolean> }) => {
     return useQuery({
         queryKey: [QUERY_KEYS.get_questions, payload],

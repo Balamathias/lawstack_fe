@@ -53,11 +53,12 @@ export const getQuestion = async (id: string): Promise<StackResponse<Question | 
     }
 }
 
-export const createQuestion = async (payload: Question): Promise<StackResponse<Question | null>> => {
+export const createQuestion = async (payload: Partial<Question>): Promise<StackResponse<Question | null>> => {
     try {
-        const { data } = await stackbase.post('/past-questions', payload)
+        const { data } = await stackbase.post('/past-questions/', payload)
         return data
     } catch (error: any) {
+        console.error(error?.response?.data)
         return {
             message: error?.response?.data?.message || error.response?.data?.detail,
             error: error?.response?.data,
@@ -69,7 +70,7 @@ export const createQuestion = async (payload: Question): Promise<StackResponse<Q
 
 export const updateQuestion = async (id: string, payload: Partial<Question>): Promise<StackResponse<Question | null>> => {
     try {
-        const { data } = await stackbase.put(`/past-questions/${id}`, payload)
+        const { data } = await stackbase.put(`/past-questions/${id}/`, payload)
         return data
     } catch (error: any) {
         return {
@@ -83,7 +84,7 @@ export const updateQuestion = async (id: string, payload: Partial<Question>): Pr
 
 export const deleteQuestion = async (id: string): Promise<StackResponse<Question | null>> => {
     try {
-        const { data } = await stackbase.delete(`/past-questions/${id}`)
+        const { data } = await stackbase.delete(`/past-questions/${id}/`)
         return data
     } catch (error: any) {
         return {
