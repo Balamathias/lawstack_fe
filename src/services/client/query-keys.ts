@@ -33,6 +33,7 @@ export const QUERY_KEYS = {
   get_bookmarks: "get_bookmarks",
   create_bookmark: "create_bookmark",
   delete_bookmark: "delete_bookmark",
+  get_bookmark: "get_bookmark",
   
   // Note keys
   get_notes: "get_notes",
@@ -54,4 +55,14 @@ export const QUERY_KEYS = {
   // other
   get_cookies: "get_cookies",
   get_user_bookmarks: "get_user_bookmarks",
+
+  // Contribution keys
+  get_contributions: "get_contributions",
+  get_contribution: "get_contribution",
+  create_contribution: "create_contribution",
+  update_contribution: "update_contribution",
+  delete_contribution: "delete_contribution",
+  get_contribution_insights: "get_contribution_insights",
+  get_contribution_insights_edge: "get_contribution_insights_edge",
+  
 }

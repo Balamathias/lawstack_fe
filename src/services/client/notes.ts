@@ -18,7 +18,7 @@ export const useNotes = (payload?: NotePayload) => {
 
 export const useNote = (id: string) => {
     return useQuery({
-        queryKey: [QUERY_KEYS.get_note, id],
+        queryKey: [QUERY_KEYS.get_notes, id],
         queryFn: async () => {
             return getNote(id);
         },
