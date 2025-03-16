@@ -16,7 +16,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
     <div className='bg-background dark:bg-black min-h-screen'>
       <DashboardSidebar user={user} />
       <Navbar user={user} />
-      <main className='lg:pl-[220px] lg:pb-8'>
+      <main className='lg:pl-[220px]'>
         <div className="container mx-auto">
           {children}
         </div>
