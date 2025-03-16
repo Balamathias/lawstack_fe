@@ -15,8 +15,13 @@ export const dashboardMobileLinks = [
   },
   {
     tooltip: "Questions",
-    href: "/dashboard/questions",
+    href: "/dashboard/past-questions",
     icon: BookOpen,
+  },
+  {
+    tooltip: "Chat",
+    href: "/dashboard/chat",
+    icon: MessageSquare,
   },
   {
     tooltip: "Search",
@@ -27,11 +32,6 @@ export const dashboardMobileLinks = [
     tooltip: "Bookmarks",
     href: "/dashboard/bookmarks",
     icon: BookMarked,
-  },
-  {
-    tooltip: "Chat",
-    href: "/dashboard/chat",
-    icon: MessageSquare,
   },
 ]
 
