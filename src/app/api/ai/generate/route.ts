@@ -128,7 +128,7 @@ async function getContextualInsights(messages: OpenAI.Chat.Completions.ChatCompl
 
   const completion = await openai.chat.completions.create({
     model: "gemini-2.0-flash",
-    messages: allMessages,
+    messages: allMessages as any,
     temperature: 0.7,
     // max_tokens: 1000,
   });
