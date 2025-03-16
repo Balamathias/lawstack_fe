@@ -41,7 +41,7 @@ const DashboardBottomBar = () => {
   const user = userData?.data;
 
   // Hide bottom bar on specific detail pages
-  if (pathname.match(/\/dashboard\/(questions|bookmarks|search)\/[^/]+/)) {
+  if (pathname.match(/\/dashboard\/(questions|bookmarks|search|chat)\/[^/]+/)) {
     return null
   }
 
