@@ -84,7 +84,7 @@ const DashboardSidebar = ({ user }: Props) => {
 
         <nav className='flex flex-col gap-1'>
           {dashboardLinks.map((link, index) => {
-            const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+            const isActive = pathname === link.href || pathname.startsWith(`/${link.href}/`);
             
             return (
               <Link 
