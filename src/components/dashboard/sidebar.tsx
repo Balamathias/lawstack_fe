@@ -31,13 +31,13 @@ export const dashboardLinks = [
   },
   {
     tooltip: "Past Questions",
-    href: "/dashboard/questions",
+    href: "/dashboard/past-questions",
     icon: BookOpen,
   },
   {
-    tooltip: "Search",
-    href: "/dashboard/search",
-    icon: Search,
+    tooltip: "AI Assistant",
+    href: "/dashboard/chat",
+    icon: Sparkles,
   },
   {
     tooltip: "Bookmarks",
@@ -45,15 +45,15 @@ export const dashboardLinks = [
     icon: BookMarked,
   },
   {
-    tooltip: "AI Assistant",
-    href: "/dashboard/assistant",
-    icon: Sparkles,
+    tooltip: "Search",
+    href: "/dashboard/search",
+    icon: Search,
   },
-  {
-    tooltip: "Chat",
-    href: "/dashboard/chat",
-    icon: MessageSquare,
-  },
+  // {
+  //   tooltip: "Chat",
+  //   href: "/dashboard/chat",
+  //   icon: MessageSquare,
+  // },
   {
     tooltip: "Community",
     href: "/dashboard/community",
