@@ -83,7 +83,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
   }, [inputValue]);
 
   return (
-    <div className="flex flex-col h-full bg-inherit backdrop-blur-sm rounded-xl overflow-hidden relative">
+    <div className="flex flex-col h-full bg-inherit backdrop-blur-sm rounded-xl overflow-hidden relative lg:-mb-8">
       {/* Chat Header - Glassmorphic */}
       <div className="flex items-center justify-between p-2 sm:p-4 ">
         <div className="flex items-center space-x-2">
