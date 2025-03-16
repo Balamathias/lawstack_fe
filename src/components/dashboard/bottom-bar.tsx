@@ -64,12 +64,13 @@ const DashboardBottomBar = () => {
             >
               <div className={cn(
                 "flex items-center justify-center p-2 transition-all duration-300",
-                isActive ? "bg-primary/10 rounded-full" : ""
+                isActive ? "text-emerald-500" : ""
               )}>
                 <link.icon 
                   size={isActive ? 22 : 20}   
                   strokeWidth={isActive ? 2 : 1.5}                  
-                  className="transition-all duration-200"                
+                  className="transition-all duration-200"  
+                  fill={isActive ? 'currentColor' : undefined}              
                 />              
               </div>              
               <span className={cn(
