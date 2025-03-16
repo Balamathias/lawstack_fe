@@ -5,7 +5,7 @@ import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ScrollToBottomButtonProps {
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef: React.RefObject<HTMLDivElement>;
   className?: string;
   offset?: number;
   onClick?: () => void;

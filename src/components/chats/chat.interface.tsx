@@ -198,7 +198,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
 
       {/* Floating scroll to bottom button */}
       <ScrollToBottomButton 
-        containerRef={messagesContainerRef} 
+        containerRef={messagesContainerRef!} 
         className="right-6 bottom-24"
         onClick={scrollToBottom}
       />
