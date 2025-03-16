@@ -100,7 +100,7 @@ const DashboardSidebar = ({ user }: Props) => {
                 <link.icon className="h-4 w-4" />
                 <span className="text-sm">{link.tooltip}</span>
                 {isActive && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                 )}
               </Link>
             )
