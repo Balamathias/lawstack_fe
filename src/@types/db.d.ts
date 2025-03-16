@@ -27,6 +27,7 @@ export interface Question {
     institution: string,
     institution_name: string,
     type: string,
+    exam_type: string | null,
     tags: string[],
     created_at: string,
     updated_at: string | null,
