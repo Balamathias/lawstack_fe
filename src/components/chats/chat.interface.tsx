@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import ChatHistory from './chat-history';
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import ScrollToBottomButton from '../ui/scroll-to-bottom-button';
 
 interface Props {
   chatId?: string;
@@ -23,6 +24,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const { mutate: sendMessage, isPending: isLoading } = useSendMessage(chatId!);
 
@@ -104,7 +106,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
         </div>
 
       {/* Messages Container - Fill Available Space */}
-      <div className="flex-1 overflow-y-auto scrollbar-hidden p-2 sm:p-4 h-full pb-2">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto scrollbar-hidden p-2 sm:p-4 h-full pb-2">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
             <div className="bg-primary/5 p-1.5 sm:p-3 rounded-full backdrop-blur-sm mb-3 animate-pulse">
@@ -193,6 +195,13 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
         
         <div ref={messagesEndRef} />
       </div>
+
+      {/* Floating scroll to bottom button */}
+      <ScrollToBottomButton 
+        containerRef={messagesContainerRef} 
+        className="right-6 bottom-24"
+        onClick={scrollToBottom}
+      />
 
       {/* Input Area - Glassmorphic */}
       <div className="p-3 bg-card/80 backdrop-blur-md border border-border/50 shadow-[0_-1px_10px_rgba(0,0,0,0.03)] rounded-xl mt-auto sticky bottom-0">
