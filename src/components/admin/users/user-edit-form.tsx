@@ -86,10 +86,10 @@ const UserEditForm = ({ userId }: UserEditFormProps) => {
     const payload = {
       ...values,
       password: changePassword ? values.password : undefined,
-    };
+    } as any;
     
     // Remove empty values to prevent overwriting with blank strings
-    Object.keys(payload).forEach((key: keyof typeof payload) => {
+    Object.keys(payload).forEach((key: any) => {
       if (payload[key] === "") {
         delete payload[key];
       }

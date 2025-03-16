@@ -38,11 +38,6 @@ export const useUpdateUser = () => useMutation({
   mutationKey: [QUERY_KEYS.update_user]
 })
 
-export const useFollowUnfollowUser = () => useMutation({
-  mutationFn: async ({ userId }: { userId: string }) => followUnfollowUser(userId),
-  mutationKey: [QUERY_KEYS.follow_unfollow_user]
-})
-
 export const useVerifyOTP = () => useMutation({
   mutationKey: ['verify-otp'],
   mutationFn: ({email, otp}: { email: string, otp: string}) => verifyOTP(email, otp),

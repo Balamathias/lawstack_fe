@@ -392,7 +392,7 @@ const EmailSettings = () => {
                             />
                           </FormControl>
                           <FormDescription>
-                            Available variables: <code>{{name}}</code>
+                            Available variables: <code>{"{{name}}"}</code>
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -433,7 +433,7 @@ const EmailSettings = () => {
                             />
                           </FormControl>
                           <FormDescription>
-                            Available variables: <code>{{name}}</code>, <code>{{reset_link}}</code>
+                            Available variables: <code>{"{{name}}"}</code>, <code>{"{{reset_link}}"}</code>
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -474,7 +474,7 @@ const EmailSettings = () => {
                             />
                           </FormControl>
                           <FormDescription>
-                            Available variables: <code>{{name}}</code>, <code>{{verification_link}}</code>
+                            Available variables: <code>{"{{name}}"}</code>, <code>{"{{verification_link}}"}</code>
                           </FormDescription>
                           <FormMessage />
                         </FormItem>

@@ -50,4 +50,8 @@ export const QUERY_KEYS = {
   // Message keys
   get_messages: "get_messages",
   create_message: "create_message",
+
+  // other
+  get_cookies: "get_cookies",
+  get_user_bookmarks: "get_user_bookmarks",
 }
