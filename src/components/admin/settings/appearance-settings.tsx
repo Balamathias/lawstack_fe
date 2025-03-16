@@ -431,7 +431,7 @@ const AppearanceSettings = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="">System Default</SelectItem>
+                        <SelectItem value="all">System Default</SelectItem>
                         <SelectItem value="inter">Inter</SelectItem>
                         <SelectItem value="roboto">Roboto</SelectItem>
                         <SelectItem value="open-sans">Open Sans</SelectItem>
