@@ -36,7 +36,7 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchPar
   const { data: chat } = await getChat(params.id)
 
   return (
-    <div className='flex flex-col h-[calc(100vh-5px)] max-w-5xl mx-auto p-2.5 sm:p-6'>
+    <div className='flex flex-col h-[calc(100vh-5px)] max-w-5xl mx-auto p-2.5 sm:p-6 lg:-pb-8'>
       <div className='items-center justify-between mb-3 hidden'>
         <BackButton />
         <h1 className="text-xl font-bold truncate max-w-[50%]">{chat?.title || 'Legal Consultation'}</h1>
