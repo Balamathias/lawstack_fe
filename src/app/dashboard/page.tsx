@@ -23,7 +23,7 @@ const Page = async ({ params: _params, searchParams: _searchParams }: Props) => 
   const searchParams = await _searchParams
 
   return (
-    <div className='max-w-7xl flex flex-col space-y-2.5 sm:space-y-4 md:py-12 py-4 md:mx-auto w-full px-4 pb-16'>
+    <div className='max-w-7xl flex flex-col space-y-2.5 sm:space-y-4 md:py-12 py-4 md:mx-auto w-full px-4 pb-16 max-lg:mt-14'>
         <h2 className='sr-only'>Hi, Welcome</h2>
 
         <div className='w-full items-center justify-between py-4 hidden'>

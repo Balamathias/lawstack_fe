@@ -35,7 +35,7 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchPar
 
 
   return (
-    <div className='w-full flex flex-col gap-y-10 max-w-5xl mx-auto p-4 sm:p-8'>
+    <div className='w-full flex flex-col gap-y-10 max-w-5xl mx-auto p-4 sm:p-8 '>
         <div className='flex flex-col gap-y-5'>
             <h1 className='text-3xl font-bold hidden'>Past Questions</h1>
             
