@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Logo from '../logo'
 import { User } from '@/@types/db'
+import { usePathname } from 'next/navigation' 
 
 interface NavbarProps {
   user: User | null
@@ -13,18 +14,25 @@ interface NavbarProps {
 
 const Navbar = ({ user }: NavbarProps) => {
 
+  const pathname = usePathname()
+
+  
   const [hidden, setHidden] = useState(false)
   const { scrollY } = useScroll()
-
+  
   useMotionValueEvent(scrollY, 'change', latest => {
-    const prevValue = scrollY.getPrevious()
-
-    if (latest > prevValue! && latest > 150) {
-        setHidden(true)
+      const prevValue = scrollY.getPrevious()
+      
+      if (latest > prevValue! && latest > 150) {
+          setHidden(true)
     } else {
         setHidden(false)
     }
   })
+
+  if (pathname.match(/\/dashboard\/(questions|bookmarks|search)\/[^/]+/)) {
+    return null
+  }
 
   return (
     <motion.nav
