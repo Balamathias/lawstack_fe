@@ -33,9 +33,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url));
   }
   
-  if (!user && currentPath.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/login?next=' + currentPath, request.url));
-  }
+  // if (!user && currentPath.startsWith('/dashboard')) {
+  //   return NextResponse.redirect(new URL('/login?next=' + currentPath, request.url));
+  // }
 
   return NextResponse.next();
 }
