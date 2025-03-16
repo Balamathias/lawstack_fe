@@ -30,7 +30,7 @@ const Navbar = ({ user }: NavbarProps) => {
     }
   })
 
-  if (pathname.match(/\/dashboard\/(questions|bookmarks|search|chat)\/[^/]+/)) {
+  if (pathname.match(/\/dashboard\/(past-questions|bookmarks|search|chat)\/[^/]+/)) {
     return null
   }
 
