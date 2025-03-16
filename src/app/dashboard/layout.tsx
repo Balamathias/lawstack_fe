@@ -12,7 +12,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   }
   
   return (
-    <div className='bg-background min-h-screen'>
+    <div className='bg-background dark:bg-black min-h-screen'>
       <DashboardSidebar user={user} />
       <main className='lg:pl-[220px] pb-20 lg:pb-8'>
         <div className="container mx-auto">
