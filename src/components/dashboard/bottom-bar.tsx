@@ -52,7 +52,7 @@ const DashboardBottomBar = () => {
     <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-border">
       <div className={`h-16 bg-background/80 dark:bg-black/70 backdrop-blur-lg flex items-center justify-around px-2 ${isAdmin ? 'pb-safe' : ''}`}>
         {dashboardMobileLinks.map((link, idx) => {
-          const isActive = pathname === link?.href || pathname.startsWith(`${link.href}/`);
+          const isActive = pathname === link?.href || pathname.startsWith(`/${link.href}/`);
           return (
             <Link 
               key={idx} 
