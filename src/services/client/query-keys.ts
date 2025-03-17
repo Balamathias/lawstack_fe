@@ -64,5 +64,7 @@ export const QUERY_KEYS = {
   delete_contribution: "delete_contribution",
   get_contribution_insights: "get_contribution_insights",
   get_contribution_insights_edge: "get_contribution_insights_edge",
+
+  ai_insights: "ai_insights",
   
 }
