@@ -1,12 +1,14 @@
 import React from 'react'
 import AdminShortcuts from '@/components/admin/admin.shortcuts'
+import { getUser } from '@/services/server/auth'
 
-const Page = () => {
+const Page = async () => {
+  const { data: user } = await getUser()
   return (
     <div className='max-w-7xl flex flex-col space-y-2.5 sm:space-y-6 md:py-12 py-4 md:mx-auto w-full px-4 pb-16'>
       <div className="mb-6">
         <h2 className='text-2xl font-bold'>
-            Welcome, Admin
+            Welcome, {user?.username || user?.first_name || 'Admin'}
         </h2>
         <p className="text-muted-foreground mt-2">
           Manage your educational content and platform settings from this dashboard.
