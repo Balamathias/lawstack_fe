@@ -385,7 +385,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-auto">
             {messages.map((message) => (
               <AnimatePresence key={message.id}>
                 <motion.div
@@ -393,7 +393,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                   className={cn(
-                    "flex items-start gap-3 mb-4",
+                    "flex items-start gap-2 mb-4",
                     message.role === 'user' ? "justify-end" : "justify-start"
                   )}
                 >
@@ -404,7 +404,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
                   )}
                   
                   <div className={cn(
-                    "rounded-2xl px-4 py-2 max-w-[85%]",
+                    "rounded-2xl px-2 sm:px-4 py-2 w-full max-w-[85%]",
                     message.role === 'user' 
                       ? "bg-primary text-primary-foreground rounded-tr-none" 
                       : "rounded-tl-none"

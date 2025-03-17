@@ -40,6 +40,7 @@ const ContributionInsights: React.FC<Props> = ({ trigger, contribution, question
         </DialogTitle>
       }
       dialogClassName='sm:max-w-3xl h-[80vh]'
+      drawerClassName="pb-4"
     //   contentClassName='flex-1 flex flex-col overflow-hidden'
     >
       <InsightsPanel

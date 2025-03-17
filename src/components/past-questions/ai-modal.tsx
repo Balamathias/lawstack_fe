@@ -27,6 +27,7 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
   return (
     <DynamicModal
       trigger={trigger}
+
       title={
         <DialogTitle className="flex items-center gap-2 p-3">
           <LucideStar size={18} className='text-sky-500' />
@@ -36,6 +37,7 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
         </DialogTitle>
       }
       dialogClassName='sm:max-w-3xl h-[80vh]'
+      
     //   contentClassName='flex-1 flex flex-col overflow-hidden'
     >
       <InsightsPanel
