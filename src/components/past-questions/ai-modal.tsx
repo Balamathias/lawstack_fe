@@ -37,7 +37,7 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
         </DialogTitle>
       }
       dialogClassName='sm:max-w-3xl h-[80vh]'
-      
+
     //   contentClassName='flex-1 flex flex-col overflow-hidden'
     >
       <InsightsPanel
@@ -50,7 +50,7 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
           question,
           user
         })}
-        initialPrompts={initialPrompts}
+        // initialPrompts={undefined}
         className="h-full"
       />
     </DynamicModal>

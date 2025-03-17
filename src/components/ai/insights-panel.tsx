@@ -411,7 +411,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
                   )}>
                     {message.role === 'ai' ? (
                       <div className="prose-sm dark:prose-invert max-w-none">
-                        <MarkdownPreview content={message.content} />
+                        <MarkdownPreview content={message.content} className="prose-h1:font-serif prose-h1:italicize prose-h2:font-serif" />
                       </div>
                     ) : (
                       <p>{message.content}</p>
@@ -526,9 +526,9 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
       )}
 
       {/* Input area */}
-      <div className="border-t p-3 mb-4">
+      <div className="border-t p-3">
         <form 
-          className="flex gap-2"
+          className="flex gap-2 max-sm:mb-4"
           onSubmit={(e) => {
             e.preventDefault();
             handleSendMessage(inputValue);

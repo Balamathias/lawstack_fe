@@ -57,12 +57,12 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 		rehypePlugins={[rehypeRaw]}
 		components={{
 			h1: ({ children, ...props }) => (
-				<h1 className="text-2xl font-semibold mb-4 mt-6 text-foreground/90" {...props}>
+				<h1 className="text-2xl font-semibold mb-4 mt-6 text-foreground/90 italic font-serif" {...props}>
 				{children}
 			</h1>
 			),
 			h2: ({ children, ...props }) => (
-			<h2 className="text-xl font-medium mb-3 mt-5 text-foreground/90" {...props}>
+			<h2 className="text-xl font-medium mb-3 mt-5 text-foreground/90 font-serif" {...props}>
 				{children}
 			</h2>
 			),

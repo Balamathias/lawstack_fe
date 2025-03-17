@@ -54,7 +54,7 @@ const ContributionInsights: React.FC<Props> = ({ trigger, contribution, question
           contribution,
           user
         })}
-        initialPrompts={initialPrompts}
+        initialPrompts={[]}
         className="h-full"
       />
     </DynamicModal>
