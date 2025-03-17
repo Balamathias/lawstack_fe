@@ -1,108 +1,239 @@
-import { Question } from '@/@types/db'
-import MarkdownPreview from '@/components/markdown-preview'
-import { getQuestions } from '@/services/server/questions'
-import React from 'react'
-import { Skeleton } from '@/components/ui/skeleton'
-import Link from 'next/link'
-import Empty from '@/components/empty'
-import { truncateString } from '@/lib/utils'
-import Pagination from '@/components/pagination'
+"use client";
 
-interface Props {
-    courseId: string,
-    searchParams: Record<string, any>
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Question } from '@/@types/db';
+import { useQuestions } from '@/services/client/question';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Search, Filter, Calendar, X } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import Pagination from '@/components/pagination';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import QuestionsList from '@/components/dashboard/courses/questions-list';
+import QuestionsSkeleton from '@/components/dashboard/courses/questions-skeleton';
+import QuestionsEmpty from '@/components/dashboard/courses/questions-empty';
+
+interface CourseQuestionsProps {
+  courseId: string;
+  initialParams: {
+    page: number;
+    page_size: number;
+    search?: string;
+    year?: string;
+    course: string;
+  };
 }
 
-const CourseQuestions = async ({ courseId, searchParams }: Props) => {
-    const { data: questions, count } = await getQuestions({ params: { course: courseId, ...searchParams, page_size: 15 } })
-
-    const page = Number(searchParams?.page || 1)
+const CourseQuestions = ({ courseId, initialParams }: CourseQuestionsProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   
-    return (
-      <div className="relative">
-        {questions?.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {questions.map((question, index) => (
-                <QuestionItem 
-                  key={question.id} 
-                  question={question} 
-                  number={(index + 1) + (page - 1) * 15} 
+  const [searchTerm, setSearchTerm] = useState(initialParams.search || '');
+  const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
+  const [year, setYear] = useState(initialParams.year || '');
+  const [activeTab, setActiveTab] = useState('questions');
+
+  // Generate a range of years from current year to 10 years ago
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 15 }, (_, i) => (currentYear - i).toString());
+
+  // Fetch questions
+  const { data, isLoading } = useQuestions({ 
+    params: { 
+      ...initialParams,
+      search: debouncedSearch,
+      year: year
+    } 
+  });
+
+  const questions = data?.data || [];
+  const totalQuestions = data?.count || 0;
+
+  // Handle search debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Update URL when filters change
+  useEffect(() => {
+    if (
+      debouncedSearch === initialParams.search && 
+      year === initialParams.year
+    ) return;
+    
+    const params = new URLSearchParams(searchParams?.toString());
+    
+    if (debouncedSearch) {
+      params.set('search', debouncedSearch);
+    } else {
+      params.delete('search');
+    }
+    
+    if (year) {
+      params.set('year', year);
+    } else {
+      params.delete('year');
+    }
+    
+    // Reset to page 1 when filters change
+    params.set('page', '1');
+    
+    router.push(`${pathname}?${params.toString()}`);
+  }, [debouncedSearch, year, router, pathname, searchParams, initialParams]);
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setDebouncedSearch('');
+    setYear('');
+  };
+
+  const hasActiveFilters = searchTerm || year;
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle>Course Materials</CardTitle>
+        <CardDescription>Past questions and study materials for this course</CardDescription>
+      </CardHeader>
+      
+      <CardContent>
+        <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="mb-4">
+            <TabsTrigger value="questions">Past Questions</TabsTrigger>
+            <TabsTrigger value="materials">Study Materials</TabsTrigger>
+            <TabsTrigger value="reviews">Course Reviews</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="questions">
+            {/* Filters */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input 
+                  placeholder="Search past questions..." 
+                  className="pl-10 pr-10"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
-              ))}
+                {searchTerm && (
+                  <button 
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    onClick={() => setSearchTerm('')}
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              
+              <div className="flex gap-2">
+                <div className="relative w-[130px]">
+                  <Select value={year} onValueChange={setYear}>
+                    <SelectTrigger className="pl-8">
+                      <SelectValue placeholder="Year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Any Year</SelectItem>
+                      {years.map(y => (
+                        <SelectItem key={y} value={y}>{y}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                </div>
+                
+                {hasActiveFilters && (
+                  <Button 
+                    variant="ghost" 
+                    onClick={clearFilters}
+                    className="flex items-center gap-1"
+                  >
+                    <X className="h-4 w-4" />
+                    <span>Clear</span>
+                  </Button>
+                )}
+              </div>
             </div>
-            <Pagination
-              totalPages={Math.ceil(count / 15)}
-              className="mt-8"
-            />
-          </>
-        ) : (
-          <div className="flex justify-center py-10">
-            <Empty 
-              title="No questions found" 
-              content="There are currently no questions available for this course or filter." 
-              color="blue" 
-              className="dark:bg-inherit max-w-md" 
-            />
-          </div>
-        )}
-      </div>
-    )
-  }
-  
-  const QuestionItem = ({ question, number }: { question: Question; number: number }) => {
-    return (
-      <Link href={`/dashboard/past-questions/${question.id}`} className="group" passHref>
-        <div className="h-full p-5 bg-white dark:bg-secondary/25 rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-green-500/50 dark:hover:border-green-500/50 flex flex-col">
-          <div className="flex items-center mb-3">
-            <div className="flex items-center justify-center w-8 h-8 bg-green-500/15 dark:bg-green-600/15 rounded-full text-green-600 font-bold mr-3 group-hover:bg-green-500/30 transition-colors">
-              {number}
-            </div>
-            {question?.session && (
-              <span className="text-xs bg-secondary/50 text-muted-foreground px-2 py-1 rounded-full">
-                {question.session}
-              </span>
+            
+            {/* Questions List */}
+            {isLoading ? (
+              <QuestionsSkeleton />
+            ) : questions.length === 0 ? (
+              <QuestionsEmpty searchTerm={debouncedSearch} year={year} />
+            ) : (
+              <>
+                <QuestionsList questions={questions} />
+                
+                {/* Pagination */}
+                {totalQuestions > initialParams.page_size && (
+                  <div className="mt-6">
+                    <Pagination 
+                      totalPages={Math.ceil(totalQuestions / initialParams.page_size)}
+                      currentPage={initialParams.page}
+                    />
+                  </div>
+                )}
+              </>
             )}
-          </div>
+          </TabsContent>
           
-          <div className="flex-1">
-            <div className="prose prose-sm dark:prose-invert max-w-none">
-              <MarkdownPreview content={truncateString(question.text, 180)} />
+          <TabsContent value="materials">
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="p-3 bg-amber-100 dark:bg-amber-900/20 rounded-full mb-3">
+                <BookOpen className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+              </div>
+              <h3 className="text-lg font-medium mb-1">Study Materials Coming Soon</h3>
+              <p className="text-muted-foreground max-w-md">
+                We're working on adding lecture notes, textbook recommendations, and other study materials for this course.
+              </p>
             </div>
-          </div>
+          </TabsContent>
           
-          <div className="mt-3 text-sm text-muted-foreground flex justify-end">
-            <span className="group-hover:text-green-500 transition-colors flex items-center gap-1">
-              View question
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transform group-hover:translate-x-1 transition-transform">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </span>
-          </div>
-        </div>
-      </Link>
-    )
-  }
-
-  export const CourseQuestionsSkeleton = () => {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <div key={index} className="p-5 bg-white dark:bg-secondary/25 rounded-xl border border-border/50 shadow-sm">
-            <div className="flex items-center mb-3">
-              <Skeleton className="w-8 h-8 rounded-full mr-3" />
-              <Skeleton className="h-5 w-16 rounded-full" />
+          <TabsContent value="reviews">
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-full mb-3">
+                <StarIcon className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              <h3 className="text-lg font-medium mb-1">Course Reviews Coming Soon</h3>
+              <p className="text-muted-foreground max-w-md">
+                Student reviews and ratings for this course will be available soon. Check back later for insights from your peers.
+              </p>
             </div>
-            <Skeleton className="mb-2 h-4 w-full rounded" />
-            <Skeleton className="mb-2 h-4 w-full rounded" />
-            <Skeleton className="h-4 w-3/4 rounded" />
-            <div className="mt-3 flex justify-end">
-              <Skeleton className="h-4 w-24 rounded" />
-            </div>
-          </div>
-        ))}
-      </div>
-    )
-  }
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+};
 
-export default CourseQuestions
+export default CourseQuestions;
+
+// Star icon component
+const StarIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+  </svg>
+);

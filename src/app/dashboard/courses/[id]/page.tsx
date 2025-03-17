@@ -1,48 +1,66 @@
-import CourseDetail from '@/components/dashboard/courses/course.detail'
-import LoadingOverlay from '@/components/loading-overlay'
-import { getCourse } from '@/services/server/courses'
-import { Metadata, ResolvingMetadata } from 'next'
-import React, { Suspense } from 'react'
+import React from 'react';
+import { Metadata } from 'next';
+import { getCourse } from '@/services/server/courses';
+import { notFound } from 'next/navigation';
+import CourseDetail from '@/components/dashboard/courses/course-detail';
+import CourseQuestions from '@/components/dashboard/courses/course-questions';
 
-interface Props {
-    params: Promise<{ id: string }>,
-    searchParams: Promise<any>
-}
-
-export async function generateMetadata(
-  { params, searchParams }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const id = (await params).id
- 
-  const { data: course } = await getCourse(id)
- 
-  const previousImages = (await parent).openGraph?.images || []
- 
-  return {
-    title: course?.name || 'Course',
-    description: course?.description || 'Course',
-    openGraph: {
-      images: [...previousImages],
-    },
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: { id: string } 
+}): Promise<Metadata> {
+  const { data: course } = await getCourse(params.id);
+  
+  if (!course) {
+    return {
+      title: 'Course Not Found | LegalX',
+      description: 'The requested course could not be found',
+    };
   }
+  
+  return {
+    title: `${course.name} | LegalX`,
+    description: course.description || `Past questions and materials for ${course.name}`,
+  };
 }
 
-const Page: React.FC<Props> = async ({ params: _params, searchParams }) => {
-  const params = await _params
-  const searchParamsData = await searchParams
-
-  const promisedCourse = getCourse(params.id)
+export default async function CourseDetailPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const { data: course } = await getCourse(params.id);
+  
+  if (!course) {
+    return notFound();
+  }
+  
+  // Parse search parameters for questions
+  const page = typeof searchParams.page === 'string' ? parseInt(searchParams.page) : 1;
+  const search = typeof searchParams.search === 'string' ? searchParams.search : undefined;
+  const year = typeof searchParams.year === 'string' ? searchParams.year : undefined;
+  
+  const questionParams = {
+    page,
+    page_size: 10,
+    search,
+    year,
+    course: params.id,
+  };
   
   return (
-    <div className='max-w-5xl flex flex-col space-y-2.5 sm:space-y-4 md:py-12 py-4 md:mx-auto w-full px-4 pb-16 max-lg:mt-14'>
-        <div className='flex flex-col gap-2'>
-          <Suspense fallback={<LoadingOverlay />}>
-            <CourseDetail promisedCourse={promisedCourse} searchParams={searchParamsData} />
-          </Suspense>
-        </div>
+    <div className="container py-6 max-w-7xl mx-auto space-y-8 px-4 pb-16">
+      {/* Course Detail Header */}
+      <CourseDetail course={course} />
+      
+      {/* Course Questions */}
+      <CourseQuestions 
+        courseId={params.id} 
+        initialParams={questionParams} 
+      />
     </div>
-  )
+  );
 }
-
-export default Page

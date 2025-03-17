@@ -95,3 +95,20 @@ export const deleteQuestion = async (id: string): Promise<StackResponse<Question
         }
     }
 }
+
+export const getRecentQuestions = async (payload?: { params?: Record<string, string | number | boolean> }): Promise<PaginatedStackResponse<Question[]>> => {
+    try {
+        const { data } = await stackbase.get('/questions/recent/', { ...payload })
+        return data
+    } catch (error: any) {
+        return {
+            message: error?.response?.data?.message || error.response?.data?.detail,
+            error: error?.response?.data,
+            data: [],
+            status: error?.response?.status,
+            count: 0,
+            next: '',
+            previous: ''
+        }
+    }
+}

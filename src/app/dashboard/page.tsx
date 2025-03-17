@@ -1,51 +1,53 @@
-import React from 'react'
-import { Suspense } from 'react'
-import { Metadata } from 'next'
-import { getUser } from '@/services/server/auth'
-import ExploreCourses, { ExploreCoursesSkeleton } from '@/components/dashboard/explore-courses'
-import { Button } from '@/components/ui/button'
-import { LucidePlaneTakeoff } from 'lucide-react'
-import SearchCourse from '@/components/dashboard/search.course'
+import React from 'react';
+import { getUser } from '@/services/server/auth';
+import { Metadata } from 'next';
+import { getCourses } from '@/services/server/courses';
+import { getRecentQuestions } from '@/services/server/questions';
+import DashboardWelcome from '@/components/dashboard/welcome';
+import ActivityFeed from '@/components/dashboard/activity-feed';
+import QuickActions from '@/components/dashboard/quick-actions';
+import ExploreCourses from '@/components/dashboard/explore-courses';
+import QuickStats from '@/components/dashboard/quick-stats';
+import TrendingTopics from '@/components/dashboard/trending-topics';
 
 export const metadata: Metadata = {
-  title: 'Dashboard | Law Stack',
-  description: 'Law Stack'
-}
+  title: 'Dashboard | LegalX',
+  description: 'Your legal learning dashboard',
+};
 
-interface Props {
-  params: Promise<Record<string, any>>,
-  searchParams: Promise<Record<string, any>>,
-}
-
-const Page = async ({ params: _params, searchParams: _searchParams }: Props) => {
-
-  const { data: user } = await getUser()
-  const searchParams = await _searchParams
+export default async function Dashboard() {
+  const { data: user } = await getUser();
+  const { data: courses } = await getCourses();
+  const { data: recentQuestions } = await getRecentQuestions({ params: { limit: 5 }});
 
   return (
-    <div className='max-w-7xl flex flex-col space-y-2.5 sm:space-y-4 md:py-12 py-4 md:mx-auto w-full px-4 pb-20 max-lg:mt-14'>
-        <h2 className='sr-only'>Hi, Welcome</h2>
-
-        <div className='w-full items-center justify-between py-4 hidden'>
-          <h1 className='text-2xl font-semibold text-muted-foreground line-clamp-1'>
-            Hi, <span className='text-primary'>{user?.username || user?.first_name || user?.email || 'Guest'}</span>.
-          </h1>
-
-            <Button className='flex items-center rounded-full px-5'>
-              <LucidePlaneTakeoff className='w-6 h-6 mr-0.5' />
-              Start
-            </Button>
-          </div>
-
-        <SearchCourse />
-
-        <div className='flex flex-col gap-2'>
-          <Suspense fallback={<ExploreCoursesSkeleton />}>
-            <ExploreCourses searchParams={searchParams} />
-          </Suspense>
+    <div className="container py-6 max-w-7xl mx-auto space-y-8 max-lg:mt-14 px-4 pb-20">
+      {/* Welcome Section */}
+      <DashboardWelcome user={user} />
+      
+      {/* Quick Stats */}
+      <QuickStats user={user} />
+      
+      {/* Main Dashboard Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Content - Left Column (2/3 width) */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Quick Actions */}
+          <QuickActions />
+          
+          {/* Explore Courses */}
+          <ExploreCourses courses={courses || []} />
+          
+          {/* Trending Topics */}
+          <TrendingTopics />
         </div>
+        
+        {/* Sidebar - Right Column (1/3 width) */}
+        <div className="space-y-6">
+          {/* Activity Feed */}
+          <ActivityFeed questions={recentQuestions || []} />
+        </div>
+      </div>
     </div>
-  )
+  );
 }
-
-export default Page
