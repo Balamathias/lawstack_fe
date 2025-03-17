@@ -36,7 +36,7 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
         </DialogTitle>
       }
       dialogClassName='sm:max-w-3xl h-[80vh]'
-      contentClassName='flex-1 flex flex-col overflow-hidden'
+    //   contentClassName='flex-1 flex flex-col overflow-hidden'
     >
       <InsightsPanel
         user={user}
