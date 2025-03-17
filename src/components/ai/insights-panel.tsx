@@ -526,7 +526,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
       )}
 
       {/* Input area */}
-      <div className="border-t p-3">
+      <div className="border-t p-3 mb-4">
         <form 
           className="flex gap-2"
           onSubmit={(e) => {
@@ -538,7 +538,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Ask anything about this content..."
-            className="flex-1"
+            className="flex-1 h-10 rounded-lg"
             disabled={isLoading}
           />
           <Button 
@@ -547,7 +547,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
             disabled={!inputValue.trim() || isLoading}
             className={!inputValue.trim() || isLoading ? undefined : "bg-primary/90 hover:bg-primary text-primary-foreground"}
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-6 w-6" />
           </Button>
         </form>
         

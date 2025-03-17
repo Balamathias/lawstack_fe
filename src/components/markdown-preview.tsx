@@ -121,7 +121,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 			  
 			  if (isInline && !className) {
 			    return (
-			      <code className="bg-muted/70 px-1.5 py-0.5 rounded-md text-sm font-mono" {...props}>
+			      <code className="bg-muted/70 px-1.5 py-0.5 rounded-md text-sm font-mono break-words overflow-x-auto " {...props}>
 			        {children}
 			      </code>
 			    );

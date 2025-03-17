@@ -30,7 +30,7 @@ export default function manifest(): MetadataRoute.Manifest {
       },
     ],
     prefer_related_applications: false,
-    orientation: 'any',
+    // orientation: 'any',
     categories: ['productivity']
   }
 }
