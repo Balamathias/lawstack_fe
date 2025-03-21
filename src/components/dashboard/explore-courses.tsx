@@ -56,7 +56,7 @@ const ExploreCourses = async ({ searchParams }: Props) => {
 
   return (
     <>
-      <div className="mb-6">
+      <div className="mb-6 hidden">
         <h2 className="text-2xl font-bold mb-2 text-foreground/90 flex items-center">
           <TrendingUp className="mr-2 h-6 w-6 text-green-500" />
           Explore Courses
