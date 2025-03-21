@@ -113,7 +113,7 @@ export default ExploreCourses;
 export const ExploreCoursesSkeleton = () => {
   return (
     <>
-      <div className="mb-6">
+      <div className="mb-6 hidden">
         <Skeleton className="h-8 w-56 mb-2" />
         <Skeleton className="h-4 w-full max-w-md" />
       </div>
