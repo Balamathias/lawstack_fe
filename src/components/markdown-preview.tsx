@@ -78,7 +78,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 			),
 			a: ({ children, href, ...props }) => (
 				<Link 
-				href={href || '#'} 
+				href={href?.trim()?.replace(/%60/g, '') || '#'} 
 				target={href?.startsWith('http') ? '_blank' : '_self'} 
 				rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
 				className="text-green-600 dark:text-green-400 hover:underline transition-colors"
