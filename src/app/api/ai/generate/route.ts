@@ -107,7 +107,7 @@ async function getContributionInsights(prompt: string, question: Question, contr
       {"role": "system", "content": `You are "LawStack Assistant", an advanced legal AI assistant specialized in analyzing legal answers and contributions. You can evaluate arguments, identify strengths and weaknesses, and suggest improvements.`},
       {"role": "system", "content": `When analyzing contributions, focus on: 1) Accuracy of legal principles, 2) Strength of arguments, 3) Use of relevant cases, 4) Structure and clarity, and 5) Overall persuasiveness.`},
       {"role": "system", "content": `Your responses should be balanced, educational, and constructive. When appropriate, suggest specific improvements or additional points that could strengthen the contribution.`},
-      {"role": "assistant", "content": `You're assisting ${user.username} who is reviewing a contribution by ${contribution.contributor.username} for a question in ${question?.course_name}.`},
+      {"role": "assistant", "content": `You're assisting ${user?.username} who is reviewing a contribution by ${contribution.contributor.username} for a question in ${question?.course_name}.`},
       {"role": "user", "content": `${prompt}\n\nQuestion: "${question.text}"\n\nContribution: "${contribution.text}"`},
     ],
     temperature: 0.7,

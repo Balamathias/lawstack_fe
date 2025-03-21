@@ -108,7 +108,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
             prompts.map((prompt, i) => ({
               prompt,
               emoji: emojis[i] || '💡'
-            })).slice(0, 5)
+            })).slice(0, 3)
           );
           setIsLoading(false);
           return;
@@ -406,7 +406,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
                   <div className={cn(
                     "rounded-2xl px-2 sm:px-4 py-2 w-full max-w-[85%]",
                     message.role === 'user' 
-                      ? "bg-primary text-primary-foreground rounded-tr-none" 
+                      ? "bg-secondary/70 rounded-tr-none w-fit" 
                       : "rounded-tl-none"
                   )}>
                     {message.role === 'ai' ? (
@@ -450,7 +450,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
                   </div>
                   
                   {message.role === 'user' && (
-                    <div className="bg-primary text-primary-foreground rounded-full h-8 w-8 flex items-center justify-center">
+                    <div className="bg-secondary/70 rounded-full h-8 w-8 flex items-center justify-center">
                       {user.avatar ? (
                         <img 
                           src={user.avatar} 
@@ -514,6 +514,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
                   className="justify-start gap-2 hover:bg-secondary/50 transition-all"
                   onClick={() => handleSendMessage(item.prompt)}
                   disabled={isLoading}
+                  title={item.prompt}
                 >
                   <span>{item.emoji}</span>
                   <span className="text-sm truncate text-left">{item.prompt}</span>

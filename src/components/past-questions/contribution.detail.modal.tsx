@@ -18,8 +18,8 @@ const ContributionDetailModal = ({ contribution, question }: Props) => {
         <DynamicModal
             dialogClassName='sm:max-w-3xl'
             title={
-                <DialogTitle className="flex items-center gap-16 justify-between px-3 w-full">
-                    <div className='flex items-center gap-2'>
+                <DialogTitle className="flex items-center gap-16 justify-between max-sm:justify-end px-3 w-full">
+                    <div className='flex items-center gap-2 max-sm:hidden'>
                         <LucideHeart size={18} className="text-pink-500" />
                         <span className="bg-gradient-to-l from-pink-500 to-red-500 text-transparent bg-clip-text font-semibold text-xs sm:text-lg line-clamp-1">Contributions</span>
                     </div>
