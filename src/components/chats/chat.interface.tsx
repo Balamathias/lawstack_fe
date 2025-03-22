@@ -283,9 +283,9 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
           </span>
           
           {message.sender === 'ai' && (
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+            <div className="opacity-75 group-hover:opacity-100 transition-opacity flex gap-1">
               <button 
-                className="text-xs text-muted-foreground hover:text-foreground p-1 rounded-sm"
+                className="text-xs text-muted-foreground hover:text-foreground p-1 rounded-sm cursor-pointer"
                 onClick={() => handleCopy(message.id as string, message.content as string)}
               >
                 {copyState[message.id as string] ? (
