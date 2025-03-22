@@ -10,7 +10,7 @@ import { User } from '@/@types/db';
 import MarkdownPreview from '../markdown-preview';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { cn, convertMarkdownToPlainText, truncateString } from '@/lib/utils';
+import { cn, convertMarkdownToPlainText } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
@@ -377,7 +377,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
   };
 
   return (
-    <div className={cn("flex flex-col h-full overflow-hidden max-h-[90vh]", className)}>
+    <div className={cn("flex flex-col h-full overflow-hidden w-full max-h-[90vh]", className)}>
       {/* Messages header with actions */}
       {messages.length > 0 && (
         <div className="p-2 border-b flex justify-between items-center">
@@ -556,44 +556,42 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
         )}
       </ScrollArea>
 
-      {/* vertically scrollable suggested prompts */}
-      <div className='flex w-full p-3 border-t'>
-        {messages.length === 0 && (
-          <div className="">
-            <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-              <Lightbulb className="h-4 w-4 text-amber-500" />
-              {isLoading ? 'Generating suggestions...' : 'Suggested questions'}
-            </h4>
-            
-            <div className="space-y-2">
-              {isLoading ? (
-                <div className="grid gap-2.5 sm:grid-cols-2 w-full">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-9 bg-secondary/40 animate-pulse rounded-md w-full"></div>
-                  ))}
-                </div>
-              ) : (
-                <div className="grid gap-2.5 sm:grid-cols-2">
-                  {suggestedPrompts.slice(0, 4).map((item, index) => (
-                    <Button
-                      key={index}
-                      variant="outline"
-                      className="justify-start gap-2 hover:bg-secondary/50 transition-all flex items-center"
-                      onClick={() => handleSendMessage(item.prompt)}
-                      disabled={isLoading}
-                      title={item.prompt}
-                    >
-                      <span>{item.emoji}</span>
-                      <span className="text-sm truncate">{truncateString(item.prompt, 30)}</span>
-                      <ArrowRight className="h-3 w-3 ml-auto opacity-70" />
-                    </Button>
-                  ))}
-                </div>
-              )}
-            </div>
+      {/* Horizontally scrollable suggested prompts */}
+      {messages.length === 0 && (
+        <div className="p-3 border-t relative">
+          <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+            <Lightbulb className="h-4 w-4 text-amber-500" />
+            {isLoading ? 'Generating suggestions...' : 'Suggested questions'}
+          </h4>
+          
+          <div className="space-y-2">
+            {isLoading ? (
+              <>
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-9 bg-secondary/40 animate-pulse rounded-md w-full"></div>
+                ))}
+              </>
+            ) : (
+              <div>
+                {suggestedPrompts.slice(0, 4).map((item, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    className="justify-start gap-2 hover:bg-secondary/50 transition-all w-full"
+                    onClick={() => handleSendMessage(item.prompt)}
+                    disabled={isLoading}
+                    title={item.prompt}
+                  >
+                    <span>{item.emoji}</span>
+                    <span className="text-sm truncate">{item.prompt}</span>
+                    <ArrowRight className="h-3 w-3 ml-auto opacity-70" />
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Input area - Professional styling */}
       <div className="border-t p-3 bg-card/50 backdrop-blur-sm mt-auto">
