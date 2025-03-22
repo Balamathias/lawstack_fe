@@ -482,7 +482,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
       )}
 
       {/* Messages area */}
-      <ScrollArea className="flex-1 p-3 overflow-y-auto" style={{ height: 'calc(100% - 140px)' }}>
+      <ScrollArea className="flex-1 p-3 overflow-y-auto max-h-[400px]" style={{ height: 'calc(100% - 140px)' }}>
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center space-y-3 py-8">
             <div className="bg-primary/10 p-3 rounded-full animate-pulse">
@@ -558,38 +558,35 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
 
       {/* Horizontally scrollable suggested prompts */}
       {messages.length === 0 && (
-        <div className="p-3 border-t relative">
+        <div className="p-3 border-t">
           <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
             <Lightbulb className="h-4 w-4 text-amber-500" />
             {isLoading ? 'Generating suggestions...' : 'Suggested questions'}
           </h4>
           
-          <div className="space-y-2">
-            {isLoading ? (
-              <>
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-9 bg-secondary/40 animate-pulse rounded-md w-full"></div>
-                ))}
-              </>
-            ) : (
-              <div>
-                {suggestedPrompts.slice(0, 4).map((item, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    className="justify-start gap-2 hover:bg-secondary/50 transition-all w-full"
-                    onClick={() => handleSendMessage(item.prompt)}
-                    disabled={isLoading}
-                    title={item.prompt}
-                  >
-                    <span>{item.emoji}</span>
-                    <span className="text-sm truncate">{item.prompt}</span>
-                    <ArrowRight className="h-3 w-3 ml-auto opacity-70" />
-                  </Button>
-                ))}
-              </div>
-            )}
-          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-9 bg-secondary/40 animate-pulse rounded-md"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {suggestedPrompts.map((item, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  className="justify-start gap-2 hover:bg-secondary/50 transition-all"
+                  onClick={() => handleSendMessage(item.prompt)}
+                  disabled={isLoading}
+                >
+                  <span>{item.emoji}</span>
+                  <span className="text-sm truncate text-left">{item.prompt}</span>
+                  <ArrowRight className="h-3 w-3 ml-auto opacity-70" />
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
