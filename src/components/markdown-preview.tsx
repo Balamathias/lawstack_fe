@@ -76,37 +76,58 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 				{children}
 			</p>
 			),
-			a: ({ children, href, ...props }) => (
-				<Link 
-				href={href?.trim()?.replace(/%60/g, '') || '#'} 
-				target={href?.startsWith('http') ? '_blank' : '_self'} 
-				rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-				className="text-green-600 dark:text-green-400 hover:underline transition-colors"
-				{...props}
-			>
-				{children}
-			</Link>
-			),
+			a: ({ children, href, ...props }) => {
+				// Clean URL from encoded special characters at the beginning and end
+				const cleanHref = href ? (() => {
+					try {
+						// First decode the URL
+						let decodedHref = decodeURIComponent(href.trim());
+						
+						// Remove common problematic characters from beginning and end
+						// %60 (backtick), %5B ([), %5D (])
+						decodedHref = decodedHref
+							.replace(/^[`\[\]]+|[`\[\]]+$/g, '') // Remove backticks, brackets from start/end
+							.trim();
+						
+						return decodedHref || '#';
+					} catch (e) {
+						// If decoding fails, use simpler approach
+						return href.trim().replace(/%60|%5B|%5D/g, '') || '#';
+					}
+				})() : '#';
+				
+				return (
+					<Link 
+						href={cleanHref} 
+						target={cleanHref?.startsWith('http') ? '_blank' : '_self'} 
+						rel={cleanHref?.startsWith('http') ? 'noopener noreferrer' : undefined}
+						className="text-green-600 dark:text-green-400 hover:underline transition-colors"
+						{...props}
+					>
+						{children}
+					</Link>
+				);
+			},
 			img: ({ src, alt, ...props }) => (
 			<div className="my-4 flex justify-center">
 				{src && (
 				src.startsWith('http') ? (
 					// eslint-disable-next-line @next/next/no-img-element
 					<img
-					src={src}
-					alt={alt || ''}
-					className="rounded-lg max-h-96 object-contain"
-					loading="lazy"
-					{...props}
+						src={src}
+						alt={alt || ''}
+						className="rounded-lg max-h-96 object-contain"
+						loading="lazy"
+						{...props}
 					/>
 				) : (
 					<Image
-					src={src}
-					alt={alt || ''}
-					className="rounded-lg max-h-96 object-contain"
-					{...props}
-					width={600}
-					height={400}
+						src={src}
+						alt={alt || ''}
+						className="rounded-lg max-h-96 object-contain"
+						{...props}
+						width={600}
+						height={400}
 					/>
 				)
 				)}
