@@ -557,7 +557,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
       </ScrollArea>
 
       {/* vertically scrollable suggested prompts */}
-      <div className='w-fit p-3 border-t'>
+      <div className='flex w-full p-3 border-t'>
         {messages.length === 0 && (
           <div className="">
             <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
@@ -567,11 +567,11 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
             
             <div className="space-y-2">
               {isLoading ? (
-                <>
+                <div className="grid gap-2.5 sm:grid-cols-2">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="h-9 bg-secondary/40 animate-pulse rounded-md w-full"></div>
                   ))}
-                </>
+                </div>
               ) : (
                 <div className="grid gap-2.5 sm:grid-cols-2">
                   {suggestedPrompts.slice(0, 4).map((item, index) => (
