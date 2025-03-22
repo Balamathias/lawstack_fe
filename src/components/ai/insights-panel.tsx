@@ -10,7 +10,7 @@ import { User } from '@/@types/db';
 import MarkdownPreview from '../markdown-preview';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { cn, convertMarkdownToPlainText } from '@/lib/utils';
+import { cn, convertMarkdownToPlainText, truncateString } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
@@ -567,7 +567,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
             
             <div className="space-y-2">
               {isLoading ? (
-                <div className="grid gap-2.5 sm:grid-cols-2">
+                <div className="grid gap-2.5 sm:grid-cols-2 w-full">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="h-9 bg-secondary/40 animate-pulse rounded-md w-full"></div>
                   ))}
@@ -584,7 +584,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
                       title={item.prompt}
                     >
                       <span>{item.emoji}</span>
-                      <span className="text-sm truncate">{(item.prompt)}</span>
+                      <span className="text-sm truncate">{truncateString(item.prompt, 30)}</span>
                       <ArrowRight className="h-3 w-3 ml-auto opacity-70" />
                     </Button>
                   ))}
