@@ -180,7 +180,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
               key={chat.id} 
               onClick={() => router.push(`/dashboard/chat/${chat.id}`)}
               className={cn(
-                "flex-shrink-0 w-[280px] h-28 rounded-xl bg-gradient-to-br border cursor-pointer",
+                "flex-shrink-0 w-[280px] h-28 rounded-xl bg-gradient-to-br cursor-pointer",
                 getChatGradient(chat.chat_type),
                 currentChatId === chat.id ? "ring-2 ring-primary/20" : "hover:shadow-md transition-shadow",
               )}

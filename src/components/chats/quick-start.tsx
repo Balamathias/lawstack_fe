@@ -41,8 +41,7 @@ const QuickStartOption = ({ title, description, icon, onClick, color, iconBg, to
   return (
     <motion.div
       className={cn(
-        "p-6 rounded-xl cursor-pointer border backdrop-blur-sm bg-white/50 dark:bg-gray-800/50",
-        "shadow-md hover:shadow-lg border-gray-100 dark:border-gray-700",
+        "p-6 rounded-xl cursor-pointer backdrop-blur-sm bg-white/50 dark:bg-secondary/40 ",
         "relative overflow-hidden"
       )}
       whileHover={{ scale: 1.03 }}
@@ -74,10 +73,10 @@ const QuickStartOption = ({ title, description, icon, onClick, color, iconBg, to
               </TooltipContent>
             </Tooltip>
           </div>
-          <p className="text-gray-700 dark:text-gray-300 text-sm pr-4">{description}</p>
+          <p className="text-muted-foreground text-sm pr-4">{description}</p>
         </div>
       </div>
-      <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-transparent to-current" />
+      {/* <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-transparent to-current" /> */}
     </motion.div>
   )
 }
@@ -154,7 +153,7 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
             transition={{ duration: 0.7 }}
           >
             <Scale size={24} className="text-green-500 dark:text-green-400" />
-            <span className="text-green-500 dark:text-green-400 font-delius font-medium">LawStack Assistant</span>
+            <span className="text-emerald-500 dark:text-emerald-400 font-delius font-medium">LawStack Assistant</span>
           </motion.div>
           
           <motion.h2 

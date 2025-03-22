@@ -30,20 +30,24 @@ export const useCreateChat = () => {
             })
             return res.data as StackResponse<Chat | null>
         },
-        onError: (error) => {
+        onError: (error: any) => {
             console.error('Error creating chat:', error)
-            toast.error(
-                'Error creating chat, are you sure you are signed in?', 
-                { description: error.message, action: (
-                    React.createElement('button', { onClick: () => router.push('/login'), className: cn(
-                        buttonVariants({
-                            size: 'sm',
-                            variant: 'default',
-                            className: 'rounded-full'
-                        })
-                    ) }, 'Login')
-                ) }
-            )
+            if (error?.message?.includes('Authorization')) {
+                toast.error(
+                    'Error creating chat, are you sure you are signed in?', 
+                    { description: error.message, action: (
+                        React.createElement('button', { onClick: () => router.push('/login'), className: cn(
+                            buttonVariants({
+                                size: 'sm',
+                                variant: 'default',
+                                className: 'rounded-full'
+                            })
+                        ) }, 'Login')
+                    ) }
+                )
+            } else {
+                toast.error('Error creating chat, please try again?', { description: error.message })
+            }
         }
     })
 }
@@ -67,7 +71,7 @@ export const useSendMessage = (chat_id: string) => {
         },
         onError: (error) => {
             console.error('Error sending message:', error)
-            toast.error('Error sending message, are you sure you are signed in?', { description: error.message })
+            toast.error('Error sending message, please try again?', { description: error.message })
         }
     })
 }

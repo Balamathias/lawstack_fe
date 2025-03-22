@@ -230,3 +230,12 @@
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
 }
+
+@keyframes fadeInText {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in-text {
+  animation: fadeInText 1.5s ease-in-out;
+}

@@ -8,7 +8,7 @@ interface Props {
 }
 
 const ChatComponent = async ({ chat_id }: Props) => {
-  const { data: messages, count } = await getChatMessages(chat_id, { ordering: '-created_at' })
+  const { data: messages, count } = await getChatMessages(chat_id, { ordering: '-created_at', page_size: 200 })
   const { data: user } = await getUser()
 
   return (
