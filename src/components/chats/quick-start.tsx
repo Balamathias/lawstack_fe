@@ -41,7 +41,7 @@ const QuickStartOption = ({ title, description, icon, onClick, color, iconBg, to
   return (
     <motion.div
       className={cn(
-        "p-6 rounded-xl cursor-pointer backdrop-blur-sm bg-white/50 dark:bg-secondary/40 ",
+        "p-6 rounded-xl cursor-pointer backdrop-blur-sm bg-white/95 dark:bg-secondary/40 ",
         "relative overflow-hidden"
       )}
       whileHover={{ scale: 1.03 }}

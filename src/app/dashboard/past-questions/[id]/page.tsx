@@ -1,5 +1,6 @@
 import BackButton from '@/components/back-button';
 import LoadingOverlay from '@/components/loading-overlay';
+import ModeToggle from '@/components/mode-toggle';
 import QuestionDetail from '@/components/past-questions/question-detail';
 import { getQuestion } from '@/services/server/questions';
 import { Metadata, ResolvingMetadata } from 'next';
@@ -35,9 +36,10 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchPar
 
 
   return (
-    <div className='w-full flex flex-col gap-y-10 max-w-5xl mx-auto p-4 sm:p-8 '>
+    <div className='w-full flex flex-col gap-y-10 max-w-5xl mx-auto p-4 sm:p-10 relative'>
         <div className='flex flex-col gap-y-5'>
             <h1 className='text-3xl font-bold hidden'>Past Questions</h1>
+            {/* <ModeToggle /> */}
             
             <BackButton />
 

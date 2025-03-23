@@ -76,7 +76,7 @@ const DashboardSidebar = ({ user }: Props) => {
   const pathname = usePathname()
 
   return (
-    <div className='h-screen lg:flex flex-col bg-white dark:bg-card p-2 lg:p-2.5 hidden w-[220px] custom-scrollbar justify-between z-20 overflow-hidden left-0 bottom-0 fixed border-r border-border'>
+    <div className='h-screen lg:flex flex-col bg-gray-100 dark:bg-card p-2 lg:p-2.5 hidden w-[220px] custom-scrollbar justify-between z-20 overflow-hidden left-0 bottom-0 fixed border-r border-border'>
       <div className="flex flex-col space-y-8">
         <div className="py-2.5 px-2">
           <Logo />

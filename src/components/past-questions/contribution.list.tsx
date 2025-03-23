@@ -19,7 +19,7 @@ interface Props {
 const ContributionListSkeleton = () => {
   return (
     <div className="space-y-6 mt-6">
-      <h3 className="text-xl font-semibold">Contributions</h3>
+      <h3 className="text-xl font-semibold hidden">Contributions</h3>
       
       <ul className="space-y-4">
         {Array(3).fill(0).map((_, index) => (
@@ -64,7 +64,7 @@ const ContributionList: React.FC<Props> = async ({ past_question }) => {
   
   return (
     <div className="space-y-6 mt-6">
-      <h3 className="text-xl font-semibold">Contributions</h3>
+      <h3 className="text-xl font-semibold hidden">Contributions</h3>
       
       {contributions?.length === 0 ? (
         <Empty

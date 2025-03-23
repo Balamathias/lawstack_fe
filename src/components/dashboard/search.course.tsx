@@ -42,7 +42,7 @@ const SearchCourse: React.FC = () => {
             >
                 <form 
                     onSubmit={handleSubmit}
-                    className="relative bg-secondary/45 rounded-lg overflow-hidden flex items-center p-2 py-[7px] focus:ring">
+                    className="relative bg-secondary/45 rounded-lg overflow-hidden flex items-center p-2 py-[7px] focus:ring border border-primary/20 dark:border-none">
                     <Search
                         className="h-5 w-5 text-muted-foreground ml-2 flex-shrink-0"
                         aria-hidden="true"

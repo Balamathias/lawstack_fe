@@ -45,7 +45,7 @@ const Bookmark = ({ isbookmarked, question_id }: Props) => {
   return (
     <button onClick={handleBookmarkQuestion} className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
         'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
-            'bg-amber-500/20 text-amber-500 hover:bg-amber-500/40 hover:text-white': optimisticState,
+            'bg-amber-500/20 text-amber-500 hover:bg-amber-500/40 hover:text-white': true,
         })}>
 
         <LucideBookmark size={18} fill={

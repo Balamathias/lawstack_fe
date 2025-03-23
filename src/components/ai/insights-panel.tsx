@@ -377,7 +377,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
   };
 
   return (
-    <div className={cn("flex flex-col h-full overflow-hidden w-full max-h-[90vh]", className)}>
+    <div className={cn("flex flex-col h-full overflow-hidden w-full", className)}>
       {/* Messages header with actions */}
       {messages.length > 0 && (
         <div className="p-2 border-b flex justify-between items-center">

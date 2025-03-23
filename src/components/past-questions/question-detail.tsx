@@ -64,7 +64,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
             </div>
         </div>
 
-        <footer className='w-full max-lg:left-0 flex justify-center items-center fixed bottom-0 max-w-5xl max-md:border-t backdrop-blur-md z-10'>
+        <footer className='w-full max-lg:left-0 flex justify-center items-center fixed bottom-0 max-w-5xl max-md:border-t max-sm:backdrop-blur-lg z-20'>
             <div className='flex items-center justify-between py-2 gap-8 md:gap-12  max-w-3xl mx-auto left-0 right-0'>
                 {
                     user ? (
