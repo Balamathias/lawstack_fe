@@ -130,7 +130,7 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
     },
     {
       title: 'Take a Quiz on any Course',
-      description: 'Get AI ock quizzes based on previous past-questions and set the grounds for success',
+      description: 'Get AI quizzes based on previous past-questions and set the grounds for success',
       icon: <Lightbulb className="h-6 w-6" />,
       onClick: () => router.push(`/dashboard/quizzes`),
       color: "text-amber-600 dark:text-amber-400",
