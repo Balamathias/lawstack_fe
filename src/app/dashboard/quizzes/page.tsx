@@ -17,7 +17,7 @@ export default async function QuizzesPage() {
   ])
   
   return (
-    <div className="py-8 animate-fade-in">
+    <div className="flex flex-col gap-y-5 py-8 animate-fade-in max-w-7xl mx-auto p-3 sm:p-8 pb-16 max-lg:mt-14">
       <h1 className="text-3xl font-bold mb-6">Law Quiz Dashboard</h1>
       <QuizDashboard 
         initialQuizzes={quizzesResponse} 

@@ -54,7 +54,7 @@ export default async function QuizResultsPage({ params }: PageProps) {
   }
   
   return (
-    <div className="py-8 max-w-5xl mx-auto animate-fade-in">
+    <div className="py-8 max-w-5xl mx-auto animate-fade-in p-3 sm:p-8 pb-16 max-lg:mt-14">
       <QuizResults initialQuiz={quiz} />
     </div>
   )
