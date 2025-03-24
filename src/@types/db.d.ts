@@ -110,3 +110,83 @@ export interface Message {
     feedback: string | null,
     sender: 'user' | 'ai',
 }
+
+export interface AIQuestion {
+  id: string,
+  question_text: string,
+  option_a: string,
+  option_b: string,
+  option_c: string,
+  option_d: string,
+  correct_answer?: string, // Only available after quiz completion
+  explanation?: string,    // Only available after quiz completion
+  source_question: string,
+  source_question_text: string,
+  course: string,
+  course_name: string,
+  difficulty: 'easy' | 'medium' | 'hard',
+  created_at: string
+}
+
+export interface QuizQuestion {
+  id: string,
+  order: number,
+  question_id: string,
+  question_text: string,
+  options: {
+    a: string,
+    b: string,
+    c: string,
+    d: string
+  },
+  correct_answer?: string, // Only available after completion
+  explanation?: string     // Only available after completion
+}
+
+export interface QuizAnswer {
+  selected_option: string,
+  is_correct: boolean,
+  time_taken: number
+}
+
+export interface Quiz {
+  id: string,
+  title: string,
+  course: string,
+  course_name: string,
+  status: 'pending' | 'in_progress' | 'completed' | 'expired',
+  total_questions: number,
+  correct_answers: number,
+  duration: number, // in minutes
+  started_at: string | null,
+  completed_at: string | null,
+  created_at: string,
+  completion_time: number | null, // in seconds
+  score: number,
+  questions: QuizQuestion[],
+  answers?: Record<string, QuizAnswer> // question_id -> answer data
+}
+
+export interface QuizStatistics {
+  quizzes_completed: number,
+  total_questions_answered: number,
+  total_correct_answers: number,
+  overall_accuracy: number,
+  course_performance: {
+    course_id: string,
+    course_name: string,
+    quizzes_taken: number,
+    total_questions: number,
+    correct_answers: number,
+    accuracy: number
+  }[],
+  recent_performance: {
+    quiz_id: string,
+    title: string,
+    course_name: string,
+    completed_at: string,
+    score: number,
+    total_questions: number,
+    correct_answers: number
+  }[]
+}

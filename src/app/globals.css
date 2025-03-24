@@ -102,6 +102,47 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Custom animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+  
+  /* Quiz-specific styling */
+  .quiz-option {
+    @apply transition-all duration-200;
+  }
+  
+  .quiz-option:hover {
+    @apply bg-primary/5;
+  }
+  
+  .quiz-option-selected {
+    @apply bg-primary/10 border-primary;
+  }
+  
+  .quiz-option-correct {
+    @apply bg-green-500/10 border-green-500/30;
+  }
+  
+  .quiz-option-incorrect {
+    @apply bg-red-500/10 border-red-500/30;
+  }
+  
+  /* Timer animation */
+  @keyframes pulse-warning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  
+  .timer-warning {
+    animation: pulse-warning 1s ease-in-out infinite;
+  }
 }
 
 @keyframes fadeIn {
@@ -238,4 +279,25 @@
 
 .animate-fade-in-text {
   animation: fadeInText 1.5s ease-in-out;
+}
+
+/* Timer animation - make it more noticeable */
+@keyframes pulse-warning {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+  
+.timer-warning {
+  animation: pulse-warning 1.2s ease-in-out infinite;
+}
+
+/* Add animation for selected answer */
+@keyframes highlight-selection {
+  0% { background-color: hsl(var(--primary) / 0.05); }
+  50% { background-color: hsl(var(--primary) / 0.2); }
+  100% { background-color: hsl(var(--primary) / 0.1); }
+}
+
+.quiz-option-selected {
+  animation: highlight-selection 0.5s ease-out;
 }

@@ -66,5 +66,14 @@ export const QUERY_KEYS = {
   get_contribution_insights_edge: "get_contribution_insights_edge",
 
   ai_insights: "ai_insights",
-  
-}
+
+  // Quiz related keys
+  get_quizzes: 'get_quizzes',
+  get_quiz: 'get_quiz',
+  create_quiz: 'create_quiz',
+  start_quiz: 'start_quiz',
+  submit_answer: 'submit_answer',
+  complete_quiz: 'complete_quiz',
+  get_quiz_stats: 'get_quiz_stats',
+  generate_mcq: 'generate_mcq',
+} as const

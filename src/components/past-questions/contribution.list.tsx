@@ -77,7 +77,7 @@ const ContributionList: React.FC<Props> = async ({ past_question }) => {
                       'bg-pink-500/20 text-pink-500 hover:bg-pink-500/40 hover:text-white': true,
                   })}>
                   <LucideHeart size={18} />
-              </span>
+            </span>
             }
             color='pink'
         />

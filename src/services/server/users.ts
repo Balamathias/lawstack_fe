@@ -39,6 +39,34 @@ export const getUser = async (id: string): Promise<StackResponse<User | null>> =
     }
 }
 
+export const getUserQuizStats = async (userId: string): Promise<StackResponse<any>> => {
+    try {
+        const { data } = await stackbase.get(`/users/${userId}/quiz-stats/`)
+        return data
+    } catch (error: any) {
+        return {
+            message: error?.response?.data?.message || error.response?.data?.detail,
+            error: error?.response?.data,
+            data: null,
+            status: error?.response?.status
+        }
+    }
+}
+
+export const getUserActivity = async (userId: string): Promise<StackResponse<any>> => {
+    try {
+        const { data } = await stackbase.get(`/users/${userId}/activity/`)
+        return data
+    } catch (error: any) {
+        return {
+            message: error?.response?.data?.message || error.response?.data?.detail,
+            error: error?.response?.data,
+            data: null,
+            status: error?.response?.status
+        }
+    }
+}
+
 export interface CreateUserPayload {
     username: string
     email: string

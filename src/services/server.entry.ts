@@ -24,6 +24,11 @@ serverClient.interceptors.request.use(
       config.headers['Authorization'] = `Bearer ${token}`;
     }
 
+    // Add special handling for quiz endpoints
+    if (config.url?.includes('/quizzes/')) {
+      console.log("Quiz API request:", config.method, config.url)
+    }
+
     return config;
   },
   (error) => {

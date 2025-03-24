@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from '@/lib/utils'
-import { Home, BookOpen, Search, BookMarked, User, MessageSquare, ShieldAlert } from 'lucide-react'
+import { Home, BookOpen, Search, BookMarked, User, MessageSquare, ShieldAlert, Stars } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -19,9 +19,9 @@ export const dashboardMobileLinks = [
     icon: BookOpen,
   },
   {
-    tooltip: "Chat",
+    tooltip: "AI",
     href: "/dashboard/chat",
-    icon: MessageSquare,
+    icon: Stars,
   },
   {
     tooltip: "Search",

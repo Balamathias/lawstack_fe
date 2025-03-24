@@ -129,10 +129,10 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
       tooltipContent: "Ideal when you have specific exam questions to study. The assistant will break down question patterns, suggest model answers, and help you understand marking criteria and examiners' expectations."
     },
     {
-      title: 'Start with a Topic',
-      description: 'Get insights on a topic, predict questions, get resources',
+      title: 'Take a Quiz on any Course',
+      description: 'Get AI ock quizzes based on previous past-questions and set the grounds for success',
       icon: <Lightbulb className="h-6 w-6" />,
-      onClick: () => console.log('Start with a topic clicked'),
+      onClick: () => router.push(`/dashboard/quizzes`),
       color: "text-amber-600 dark:text-amber-400",
       iconBg: "bg-amber-100 dark:bg-amber-900/30",
       tooltipContent: "Best for deep-diving into specific legal concepts. Select this to explore a particular area of law in depth, access comprehensive resources, and understand how the topic might appear in examinations."
