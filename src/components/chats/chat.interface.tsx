@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { Button } from '../ui/button';
 import ScrollToBottomButton from '../ui/scroll-to-bottom-button';
 import { convertMarkdownToPlainText } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   chatId?: string;
@@ -35,6 +36,8 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
 
   const { mutate: sendMessage, isPending: isLoading } = useSendMessage(chatId!);
 
+  const router = useRouter()
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -43,6 +46,8 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
   const [historicalMessages] = useState<Set<string>>(
     new Set(initialMessages.map(m => m.id?.toString() || ""))
   );
+
+  useEffect(() => { router.refresh() }, [])
 
   // Scroll to bottom only on initial mount or when user sends a message
   useEffect(() => {
@@ -55,6 +60,9 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
     }
   }, [messages, shouldAutoScroll]);
 
+  // Reference to track scroll direction
+  const lastScrollTop = useRef(0);
+
   // Check scroll position to show/hide scroll button
   useEffect(() => {
     const container = messagesContainerRef.current;
@@ -64,9 +72,14 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
       const { scrollTop, scrollHeight, clientHeight } = container;
       const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
       
-      if (isNearBottom && !shouldAutoScroll) {
+      // Detect scroll direction
+      const scrollingUp = scrollTop < lastScrollTop.current;
+      lastScrollTop.current = scrollTop;
+      
+      // Only enable auto-scroll if we're near bottom AND not actively scrolling up
+      if (isNearBottom && !scrollingUp && !shouldAutoScroll) {
         setShouldAutoScroll(true);
-      } else if (!isNearBottom && shouldAutoScroll) {
+      } else if (!isNearBottom && shouldAutoScroll || scrollingUp) {
         setShouldAutoScroll(false);
       }
     };
