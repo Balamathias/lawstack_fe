@@ -735,7 +735,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
       
       {/* Submit Confirmation Dialog */}
       <DynamicModal open={showCompleteDialog} setOpen={setShowCompleteDialog} title="Submit Quiz?">
-        <div className='p-4'>
+        <div className='p-4 flex flex-col gap-y-4'>
           <div>
             <div>
               You are about to submit your quiz. Make sure you have reviewed all of your answers.
