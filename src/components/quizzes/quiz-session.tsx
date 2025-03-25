@@ -750,7 +750,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
               )}
             </div>
           </div>
-          <footer>
+          <footer className='flex items-center gap-5'>
             <DialogClose disabled={isCompleting}>Cancel</DialogClose>
             <Button 
               onClick={handleQuizSubmit}
