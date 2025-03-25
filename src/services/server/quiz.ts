@@ -78,6 +78,7 @@ export const createQuiz = async (params: CreateQuizParams): Promise<StackRespons
     })
     return data
   } catch (error: any) {
+    console.error(error.toJSON())
     return {
       message: error?.response?.data?.message || error.response?.data?.detail,
       error: error?.response?.data,

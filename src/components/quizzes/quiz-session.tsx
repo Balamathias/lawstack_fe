@@ -29,6 +29,9 @@ import {
 } from '@/components/ui/alert-dialog'
 import MarkdownPreview from '../markdown-preview'
 import { useRouter } from 'nextjs-toploader/app'
+import LoadingOverlay from '../loading-overlay'
+import DynamicModal from '../dynamic-modal'
+import { DialogClose } from '@radix-ui/react-dialog'
 
 interface QuizSessionProps {
   initialQuiz: Quiz
@@ -455,6 +458,9 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   
   return (
     <>
+    {
+      isCompleting || isAutoSubmitting && (<LoadingOverlay />)
+    }
       <div className="max-w-4xl mx-auto mb-8">
         {/* Timer and progress bar */}
         <div className="flex justify-between items-center mb-2">
@@ -519,7 +525,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
                       answers[currentQuestion.id] === "A" ? "bg-primary text-primary-foreground" : "bg-muted"
                     )}>A</div>
                     <div className="flex-1">
-                        <p>{convertMarkdownToPlainText(currentQuestion.options.a)}</p>
+                        <p className="leading-normal tracking-normal font-normal text-foreground/90">{convertMarkdownToPlainText(currentQuestion.options.a)}</p>
                     </div>
                   </Label>
                 </div>
@@ -546,7 +552,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
                       answers[currentQuestion.id] === "B" ? "bg-primary text-primary-foreground" : "bg-muted"
                     )}>B</div>
                     <div className="flex-1">
-                        <p>{convertMarkdownToPlainText(currentQuestion.options.b)}</p>
+                        <p className="leading-normal tracking-normal font-normal text-foreground/90">{convertMarkdownToPlainText(currentQuestion.options.b)}</p>
                     </div>
                   </Label>
                 </div>
@@ -573,7 +579,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
                       answers[currentQuestion.id] === "C" ? "bg-primary text-primary-foreground" : "bg-muted"
                     )}>C</div>
                     <div className="flex-1">
-                        <p>{convertMarkdownToPlainText(currentQuestion.options.c)}</p>
+                        <p className="leading-normal tracking-normal font-normal text-foreground/90">{convertMarkdownToPlainText(currentQuestion.options.c)}</p>
                     </div>
                   </Label>
                 </div>
@@ -600,7 +606,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
                       answers[currentQuestion.id] === "D" ? "bg-primary text-primary-foreground" : "bg-muted"
                     )}>D</div>
                     <div className="flex-1">
-                      <p>{convertMarkdownToPlainText(currentQuestion.options.d)}</p>
+                      <p className="leading-normal tracking-normal font-normal text-foreground/90">{convertMarkdownToPlainText(currentQuestion.options.d)}</p>
                     </div>
                   </Label>
                 </div>
@@ -649,7 +655,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
                     {isCompleting || isAutoSubmitting ? (
                       <>
                         <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                        Submitting...
+                        {/* Submitting... */}
                       </>
                     ) : (
                       'Submit Quiz'
@@ -728,11 +734,10 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
       </div>
       
       {/* Submit Confirmation Dialog */}
-      <AlertDialog open={showCompleteDialog} onOpenChange={setShowCompleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Submit Quiz?</AlertDialogTitle>
-            <AlertDialogDescription>
+      <DynamicModal open={showCompleteDialog} setOpen={setShowCompleteDialog} title="Submit Quiz?">
+        <div className='p-4'>
+          <div>
+            <div>
               You are about to submit your quiz. Make sure you have reviewed all of your answers.
               
               {!allQuestionsAnswered && (
@@ -743,11 +748,11 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
                   </span>
                 </div>
               )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isCompleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            </div>
+          </div>
+          <footer>
+            <DialogClose disabled={isCompleting}>Cancel</DialogClose>
+            <Button 
               onClick={handleQuizSubmit}
               disabled={isCompleting || isAutoSubmitting}
               className={cn(
@@ -760,10 +765,10 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
                   Submitting...
                 </>
               ) : 'Submit Quiz'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </footer>
+        </div>
+      </DynamicModal>
     </>
   )
 }

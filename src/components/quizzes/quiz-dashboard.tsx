@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 import { 
   Card, 
   CardContent, 
@@ -50,6 +50,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
+import DynamicModal from '../dynamic-modal'
 
 interface QuizDashboardProps {
   initialQuizzes: PaginatedStackResponse<Quiz[]>
@@ -204,24 +205,22 @@ export default function QuizDashboard({
       
       {/* Recent Quizzes & Quiz Creation */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Your Quizzes</h2>
-        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-          <DialogTrigger asChild>
+        <h2 className="text-xl md:text-2xl font-bold">Your Quizzes</h2>
+        <DynamicModal 
+          open={createDialogOpen} 
+          setOpen={setCreateDialogOpen}
+          trigger={
             <Button className="gap-2">
               <BookOpen className="h-4 w-4" />
               Create New Quiz
             </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Create a new quiz</DialogTitle>
-              <DialogDescription>
-                Set up your personalized MCQ quiz with legal topics of your choice.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
+          }
+          title="New Quiz"
+        >
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="quiz-title" className="text-right">
+                <Label htmlFor="quiz-title" className="">
                   Title
                 </Label>
                 <Input
@@ -233,7 +232,7 @@ export default function QuizDashboard({
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="course" className="text-right">
+                <Label htmlFor="course" className="">
                   Course
                 </Label>
                 <Select 
@@ -253,7 +252,7 @@ export default function QuizDashboard({
                 </Select>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="difficulty" className="text-right">
+                <Label htmlFor="difficulty" className="">
                   Difficulty
                 </Label>
                 <Select 
@@ -271,7 +270,7 @@ export default function QuizDashboard({
                 </Select>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="question-count" className="text-right">
+                <Label htmlFor="question-count" className="">
                   Questions
                 </Label>
                 <div className="col-span-3 flex items-center gap-4">
@@ -288,7 +287,7 @@ export default function QuizDashboard({
                 </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="duration" className="text-right">
+                <Label htmlFor="duration" className="">
                   Duration
                 </Label>
                 <div className="col-span-3 flex items-center gap-4">
@@ -309,7 +308,7 @@ export default function QuizDashboard({
               <Button 
                 onClick={handleCreateQuiz} 
                 disabled={isCreating}
-                className="w-full"
+                className="w-full rounded-xl"
               >
                 {isCreating ? (
                   <>
@@ -319,8 +318,8 @@ export default function QuizDashboard({
                 ) : 'Create Quiz'}
               </Button>
             </DialogFooter>
-          </DialogContent>
-        </Dialog>
+          </div>
+        </DynamicModal>
       </div>
       
       {/* Tabs for Quiz Status */}
