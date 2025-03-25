@@ -76,4 +76,10 @@ export const QUERY_KEYS = {
   complete_quiz: 'complete_quiz',
   get_quiz_stats: 'get_quiz_stats',
   generate_mcq: 'generate_mcq',
+
+  // Search related keys
+  SEARCH: 'search',
+  SEARCH_FILTERS: 'search-filters',
+  DASHBOARD_STATS: 'dashboard-stats',
+  RECENT_ACTIVITY: 'recent-activity',
 } as const

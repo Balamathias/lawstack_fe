@@ -3,8 +3,6 @@ import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { getUser } from '@/services/server/auth'
 import ExploreCourses, { ExploreCoursesSkeleton } from '@/components/dashboard/explore-courses'
-import { Button } from '@/components/ui/button'
-import { LucidePlaneTakeoff } from 'lucide-react'
 import SearchCourse from '@/components/dashboard/search.course'
 
 export const metadata: Metadata = {

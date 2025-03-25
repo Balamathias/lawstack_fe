@@ -2,7 +2,6 @@ import React, { PropsWithChildren } from 'react'
 import DashboardSidebar from '@/components/dashboard/sidebar'
 import DashboardBottomBar from '@/components/dashboard/bottom-bar'
 import { getUser } from '@/services/server/auth'
-import { redirect } from 'next/navigation'
 import Navbar from '@/components/dashboard/navbar'
 
 const Layout = async ({ children }: PropsWithChildren) => {
