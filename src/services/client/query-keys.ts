@@ -1,3 +1,5 @@
+import { SearchFilters } from '@/@types/db';
+
 export const QUERY_KEYS = {
   // User & Auth keys
   get_users: "get_users",
@@ -82,4 +84,7 @@ export const QUERY_KEYS = {
   SEARCH_FILTERS: 'search-filters',
   DASHBOARD_STATS: 'dashboard-stats',
   RECENT_ACTIVITY: 'recent-activity',
+
+  search: (filters: SearchFilters) => ['search', filters],
+  aiAnalysis: (query: string) => ['ai', 'analysis', query],
 } as const

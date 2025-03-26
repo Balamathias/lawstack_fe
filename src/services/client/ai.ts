@@ -2,6 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { Question, User, Contribution } from "@/@types/db";
 import axios from "axios";
 import { QUERY_KEYS } from "./query-keys";
+import { useQuery } from '@tanstack/react-query';
+import { analyzeSearchQuery } from '../server/ai';
 
 interface AIInsightParams {
   prompt: string;
@@ -107,3 +109,29 @@ export const getChatCompletion = async ({
 
   return data.insights as string;
 };
+
+interface SearchAnalysisResults {
+  analysis: string;
+  relatedTopics: string[];
+  suggestedResources: string[];
+}
+
+/**
+ * Custom hook to get AI-powered analysis of a search term
+ * Only fetches data when explicitly requested by the user
+ */
+export function useAnalyzeSearch(query: string) {
+  return useQuery<SearchAnalysisResults>({
+    queryKey: QUERY_KEYS.aiAnalysis(query),
+    queryFn: async () => {
+      if (!query) return {
+        analysis: '',
+        relatedTopics: [],
+        suggestedResources: []
+      };
+      
+      const result = await analyzeSearchQuery(query);
+      return result.data;
+    },
+  });
+}

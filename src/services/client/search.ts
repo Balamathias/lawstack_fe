@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { SearchFilters, searchContent, getSearchFilterOptions } from '@/services/server/search';
+import { searchContent, getSearchFilterOptions } from '@/services/server/search';
 import { QUERY_KEYS } from './query-keys';
+import { SearchFilters } from '@/@types/db';
 
 /**
  * Hook to fetch search results using React Query
@@ -9,7 +10,7 @@ export function useSearch(filters: SearchFilters) {
   return useQuery({
     queryKey: [QUERY_KEYS.SEARCH, filters],
     queryFn: () => searchContent(filters),
-    enabled: Boolean(filters.q || filters.institution || filters.course || filters.year || filters.type),
+    enabled: Boolean(filters.query || filters.institution || filters.course || filters.year || filters.type),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 }

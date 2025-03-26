@@ -56,7 +56,8 @@ export interface Course {
     credit_units: number,
     ordering: number | null,
     created_at: string,
-    updated_at: string
+    updated_at: string,
+    institution_name?: string
 }
 
 export interface Bookmark {
@@ -190,3 +191,27 @@ export interface QuizStatistics {
     correct_answers: number
   }[]
 }
+
+export interface Institution {
+  id: string;
+  name: string;
+  courses_count?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export type SearchFilters = {
+  query?: string;
+  institution?: string;
+  course?: string;
+  year?: string;
+  type?: string;
+  page?: number;
+  limit?: number;
+};
+
+export type SearchResults = {
+  past_questions: Question[];
+  courses: Course[];
+  institutions: Institution[];
+};

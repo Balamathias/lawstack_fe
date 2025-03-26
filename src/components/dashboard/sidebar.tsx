@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { 
   Home, 
   BookOpen, 
@@ -11,7 +11,10 @@ import {
   Users,
   Sparkles,
   MessageSquare,
-  ShieldAlert
+  ShieldAlert,
+  ChevronLeft,
+  ChevronRight,
+  Menu
 } from "lucide-react"
 import Logo from '../logo'
 import { Button } from '../ui/button'
@@ -22,6 +25,9 @@ import { User } from '@/@types/db'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 
 export const dashboardLinks = [
   {
@@ -49,11 +55,6 @@ export const dashboardLinks = [
     href: "/dashboard/search",
     icon: Search,
   },
-  // {
-  //   tooltip: "Chat",
-  //   href: "/dashboard/chat",
-  //   icon: MessageSquare,
-  // },
   {
     tooltip: "Community",
     href: "/dashboard/community",
@@ -74,98 +75,259 @@ const DashboardSidebar = ({ user }: Props) => {
   const { mutate: logout, isPending: loggingOut } = useLogout()
   const router = useRouter()
   const pathname = usePathname()
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: (data) => {
+        if (data?.error) {
+          toast.error(data.message)
+          return
+        }
 
-  return (
-    <div className='h-screen lg:flex flex-col bg-gray-100 dark:bg-card p-2 lg:p-2.5 hidden w-[220px] custom-scrollbar justify-between z-20 overflow-hidden left-0 bottom-0 fixed border-r border-border'>
-      <div className="flex flex-col space-y-8">
-        <div className="py-2.5 px-2">
-          <Logo />
-        </div>
+        toast.success('Logged out successfully')
+        router.replace('/')
+        router.refresh()
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      }
+    })
+  }
 
-        <nav className='flex flex-col gap-1'>
-          {dashboardLinks.map((link, index) => {
-            const isActive = pathname === link.href || pathname.startsWith(`/${link.href}/`);
-            
-            return (
-              <Link 
-                key={index} 
-                href={link.href}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-md transition-all",
-                  isActive
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                )}
-              >
-                <link.icon className="h-4 w-4" />
-                <span className="text-sm">{link.tooltip}</span>
-                {isActive && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                )}
-              </Link>
-            )
-          })}
-          
-          {/* Admin Access Link - Only visible to staff and superusers */}
-          {user && (user.is_staff || user.is_superuser) && (
-            <Link 
-              href="/admin"
+  // Sidebar navigation links
+  const NavLinks = () => (
+    <nav className='flex flex-col gap-1 overflow-y-auto'>
+      {dashboardLinks.map((link, index) => {
+        const isActive = pathname === link.href || pathname.startsWith(`/${link.href}/`);
+        
+        return (
+          <Link 
+            key={index} 
+            href={link.href}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group",
+              isActive
+                ? "bg-primary/10 text-primary font-medium shadow-sm"
+                : "text-muted-foreground hover:bg-accent hover:text-foreground"
+            )}
+          >
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={{ scale: isActive ? 1.1 : 1 }}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-md transition-all mt-2 border-t border-border pt-3",
-                pathname.startsWith('/admin')
-                  ? "bg-red-500/10 text-red-500 font-medium"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                "flex items-center justify-center", 
+                isActive && "text-primary"
               )}
             >
-              <ShieldAlert className="h-4 w-4" />
-              <span className="text-sm">Admin Dashboard</span>
-              {pathname.startsWith('/admin') && (
-                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500"></span>
+              <link.icon className={cn("h-4 w-4", isActive && "stroke-[2.5px]")} />
+            </motion.div>
+            
+            <AnimatePresence initial={false}>
+              {!isCollapsed && (
+                <motion.span 
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  className="text-sm whitespace-nowrap overflow-hidden"
+                >
+                  {link.tooltip}
+                </motion.span>
               )}
-            </Link>
+            </AnimatePresence>
+            
+            {isActive && !isCollapsed && (
+              <motion.span 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="ml-auto w-1.5 h-1.5 rounded-full bg-primary"
+              />
+            )}
+          </Link>
+        )
+      })}
+      
+      {/* Admin Access Link - Only visible to staff and superusers */}
+      {user && (user.is_staff || user.is_superuser) && (
+        <Link 
+          href="/admin"
+          className={cn(
+            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all mt-2 border-t border-border pt-3 group",
+            pathname.startsWith('/admin')
+              ? "bg-red-500/10 text-red-500 font-medium shadow-sm"
+              : "text-muted-foreground hover:bg-accent hover:text-foreground"
           )}
-        </nav>
-      </div>
+        >
+          <motion.div
+            initial={{ scale: 1 }}
+            animate={{ scale: pathname.startsWith('/admin') ? 1.1 : 1 }}
+          >
+            <ShieldAlert className={cn(
+              "h-4 w-4", 
+              pathname.startsWith('/admin') && "stroke-[2.5px]"
+            )} />
+          </motion.div>
+          
+          <AnimatePresence initial={false}>
+            {!isCollapsed && (
+              <motion.span 
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                className="text-sm whitespace-nowrap overflow-hidden"
+              >
+                Admin Dashboard
+              </motion.span>
+            )}
+          </AnimatePresence>
+          
+          {pathname.startsWith('/admin') && !isCollapsed && (
+            <motion.span 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500"
+            />
+          )}
+        </Link>
+      )}
+    </nav>
+  )
 
-      <footer className="p-2 lg:p-2.5 flex gap-3 flex-col mt-auto">
-        <div className="flex items-center gap-3 px-2 py-2">
-          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-            {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
-          </div>
-          <div className="flex-1 truncate">
-            <p className="text-sm font-medium truncate">
-              {user?.first_name ? `${user.first_name} ${user.last_name || ''}` : user?.username || 'User'}
-            </p>
-            <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
-          </div>
+  // User profile and logout
+  const UserProfile = () => (
+    <div className="flex flex-col gap-2">
+      <div className={cn(
+        "rounded-lg p-2.5 bg-accent/50",
+        isCollapsed ? "items-center justify-center" : "flex items-center gap-3"
+      )}>
+        {isCollapsed ? (
+          <Avatar className="h-8 w-8 border border-border">
+            <AvatarImage src={user?.avatar || ''} />
+            <AvatarFallback className="text-xs bg-primary/10 text-primary">
+              {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
+            </AvatarFallback>
+          </Avatar>
+        ) : (
+          <>
+            <Avatar className="h-9 w-9 border border-border shrink-0">
+              <AvatarImage src={user?.avatar || ''} />
+              <AvatarFallback className="bg-primary/10 text-primary">
+                {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 truncate">
+              <p className="text-sm font-medium truncate">
+                {user?.first_name ? `${user.first_name} ${user.last_name || ''}` : user?.username || 'User'}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+            </div>
+          </>
+        )}
+      </div>
+      
+      <Button 
+        className={cn(
+          "rounded-lg transition-all", 
+          isCollapsed ? "w-10 h-10 p-0" : "w-full gap-2",
+          loggingOut && "opacity-70"
+        )}
+        variant="outline"
+        size={isCollapsed ? "icon" : "sm"}
+        onClick={handleLogout}
+        disabled={loggingOut}
+        title="Logout"
+      >
+        {!isCollapsed && (
+          <span>{loggingOut ? 'Logging out...' : 'Logout'}</span>
+        )}
+        <LogOut className='w-4 h-4' />
+      </Button>
+    </div>
+  )
+
+  // Desktop Sidebar
+  const DesktopSidebar = () => (
+    <motion.div 
+      layout
+      className={cn(
+        'h-screen flex-col bg-background/95 backdrop-blur-sm p-2.5 hidden lg:flex fixed left-0 bottom-0 top-0 border-r border-border shadow-sm z-30 transition-all',
+        isCollapsed ? 'w-[70px]' : 'w-[220px]'
+      )}
+      animate={{ width: isCollapsed ? 70 : 220 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
+      <div className="flex flex-col flex-1 min-h-0">
+        {/* Logo and Collapse button */}
+        <div className={cn(
+          "flex items-center py-2.5 px-2 mb-6",
+          isCollapsed ? "justify-center" : "justify-between"
+        )}>
+          {!isCollapsed && <Logo />}
+          {isCollapsed && <span className="font-bold text-xl">L</span>}
+          
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 rounded-full border border-border/50 opacity-70 hover:opacity-100"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            title={isCollapsed ? "Expand" : "Collapse"}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-3.5 w-3.5" />
+            ) : (
+              <ChevronLeft className="h-3.5 w-3.5" />
+            )}
+          </Button>
         </div>
         
-        <Button 
-          className="w-full rounded-md gap-2" 
-          variant="outline"
-          size="sm"
-          onClick={() => logout(undefined, {
-            onSuccess: (data) => {
-              if (data?.error) {
-                toast.error(data.message)
-                return
-              }
+        {/* Navigation */}
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar">
+          <NavLinks />
+        </div>
+        
+        {/* User Profile and Logout */}
+        <div className="mt-auto pt-4 border-t border-border">
+          <UserProfile />
+        </div>
+      </div>
+    </motion.div>
+  )
 
-              toast.success('Logged out successfully')
-              router.replace('/')
-              router.refresh()
-            },
-            onError: (error) => {
-              toast.error(error.message)
-            }
-          })}
-          disabled={loggingOut}
+  // Mobile Sidebar (Drawer/Sheet)
+  const MobileSidebar = () => (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="lg:hidden fixed top-3 left-4 z-50 h-9 w-9 rounded-full shadow-md bg-background"
         >
-          {loggingOut ? 'Logging out...' : 'Logout'}
-          <LogOut className='w-3.5 h-3.5' />
+          <Menu className="h-4 w-4" />
         </Button>
-      </footer>
-    </div>
+      </SheetTrigger>
+      <SheetContent side="left" className="p-0 sm:max-w-xs w-[280px]">
+        <div className="flex flex-col h-full overflow-hidden">
+          <div className="p-4 border-b border-border">
+            <Logo />
+          </div>
+          
+          <div className="p-3 flex-1 overflow-y-auto">
+            <NavLinks />
+          </div>
+          
+          <div className="p-3 border-t border-border">
+            <UserProfile />
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+
+  return (
+    <>
+      <DesktopSidebar />
+      <MobileSidebar />
+    </>
   )
 }
 

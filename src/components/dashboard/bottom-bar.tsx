@@ -49,7 +49,7 @@ const DashboardBottomBar = () => {
   const isAdmin = user && (user.is_staff || user.is_superuser);
 
   return (
-    <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-border">
+    <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-border dark:border-none">
       <div className={`h-16 bg-background/80 dark:bg-black/70 backdrop-blur-lg flex items-center justify-around px-2 ${isAdmin ? 'pb-safe' : ''}`}>
         {dashboardMobileLinks.map((link, idx) => {
           const isActive = pathname === link?.href || pathname.startsWith(`/${link.href}/`);
@@ -64,7 +64,7 @@ const DashboardBottomBar = () => {
             >
               <div className={cn(
                 "flex items-center justify-center p-2 transition-all duration-300",
-                isActive ? "text-emerald-500" : ""
+                isActive ? "text-foreground" : ""
               )}>
                 <link.icon 
                   size={isActive ? 22 : 20}   
@@ -80,7 +80,7 @@ const DashboardBottomBar = () => {
                 {link?.tooltip}
               </span>
               {isActive && (
-                <span className="absolute -top-0.5 left-1/2 w-1 h-1 bg-primary rounded-full transform -translate-x-1/2"></span>
+                <span className="absolute dark:hidden -top-0.5 left-1/2 w-1 h-1 bg-primary rounded-full transform -translate-x-1/2"></span>
               )}
             </Link>
           )
