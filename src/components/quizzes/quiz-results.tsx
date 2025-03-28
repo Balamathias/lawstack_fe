@@ -349,7 +349,7 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
                     </svg>
                     
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <div className={cn("text-4xl font-bold", scoreInfo.color)}>{score}%</div>
+                      <div className={cn("text-4xl font-bold", scoreInfo.color)}>{score?.toFixed(2)}%</div>
                       <div className="text-lg font-semibold">Grade: {scoreInfo.grade}</div>
                     </div>
                   </div>
