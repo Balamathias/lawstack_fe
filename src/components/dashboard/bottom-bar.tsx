@@ -19,7 +19,7 @@ export const dashboardMobileLinks = [
     icon: BookOpen,
   },
   {
-    tooltip: "AI",
+    tooltip: "SmartAI",
     href: "/dashboard/chat",
     icon: Stars,
   },
@@ -68,9 +68,8 @@ const DashboardBottomBar = () => {
               )}>
                 <link.icon 
                   size={isActive ? 22 : 20}   
-                  strokeWidth={isActive ? 2 : 1.5}                  
+                  strokeWidth={isActive ? 2.5 : 1.5}                  
                   className="transition-all duration-200"  
-                  fill={isActive ? 'currentColor' : undefined}              
                 />              
               </div>              
               <span className={cn(

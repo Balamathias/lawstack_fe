@@ -7,31 +7,20 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Quiz, QuizQuestion } from '@/@types/db'
 import { useQuiz, useStartQuiz, useSubmitAnswer, useCompleteQuiz } from '@/services/client/quiz'
-import { StackResponse } from '@/@types/generics'
 import { 
   Clock, AlertTriangle, ArrowLeft, ArrowRight, CheckCircle, XCircle, Flag,
-  Brain, BookOpen, Timer, ListTodo, Award, RefreshCw
+  Brain, BookOpen, Timer, ListTodo, Award, RefreshCw, ChevronRight, GraduationCap
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { Separator } from '@/components/ui/separator'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { cn, convertMarkdownToPlainText } from '@/lib/utils'
-import { 
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import MarkdownPreview from '../markdown-preview'
+import { DialogClose } from '@radix-ui/react-dialog'
 import { useRouter } from 'nextjs-toploader/app'
 import LoadingOverlay from '../loading-overlay'
 import DynamicModal from '../dynamic-modal'
-import { DialogClose } from '@radix-ui/react-dialog'
+import MarkdownPreview from '../markdown-preview'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface QuizSessionProps {
   initialQuiz: Quiz
@@ -41,8 +30,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   const router = useRouter()
   const [quiz, setQuiz] = useState<Quiz>(initialQuiz)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [answers, setAnswers] = useState<Record<string, string>>({})
-  const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now())
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isTimeWarning, setIsTimeWarning] = useState(false)
@@ -51,9 +39,13 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   const [selectionAnimation, setSelectionAnimation] = useState<string | null>(null)
   const [isStartingQuiz, setIsStartingQuiz] = useState(false)
   const [isAutoSubmitting, setIsAutoSubmitting] = useState(false)
+  const [questionStartTime, setQuestionStartTime] = useState(Date.now())
+  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null)
   
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const autoSubmitTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const touchStartXRef = useRef<number | null>(null)
   
   // Get latest quiz data with enabled option - we'll control this with the quiz ID
   const { data: quizResponse, isLoading: isLoadingQuiz, refetch } = useQuiz(quiz.id, {
@@ -147,6 +139,45 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
     }
   }, [quiz.status, quiz.started_at, quiz.duration])
   
+  // Touch event handlers for swipe navigation
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX
+  }
+  
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return
+    
+    const touchEndX = e.changedTouches[0].clientX
+    const diff = touchStartXRef.current - touchEndX
+    
+    // Minimum swipe distance (px)
+    const minSwipeDistance = 50
+    
+    if (Math.abs(diff) > minSwipeDistance) {
+      if (diff > 0) {
+        // Swiped left, go to next question
+        if (currentQuestionIndex < quiz.questions.length - 1) {
+          setSwipeDirection('left')
+          setTimeout(() => {
+            handleNextQuestion()
+            setSwipeDirection(null)
+          }, 50)
+        }
+      } else {
+        // Swiped right, go to previous question
+        if (currentQuestionIndex > 0) {
+          setSwipeDirection('right')
+          setTimeout(() => {
+            handlePreviousQuestion()
+            setSwipeDirection(null)
+          }, 50)
+        }
+      }
+    }
+    
+    touchStartXRef.current = null
+  }
+  
   // Start the quiz if it's pending
   const handleStartQuiz = () => {
     setIsStartingQuiz(true) // Set starting state to true
@@ -201,12 +232,6 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
     const timeTaken = Math.floor((now - questionStartTime) / 1000) // Time in seconds
     
     setIsSubmitting(true)
-    
-    console.log("Submitting answer:", {
-      quiz_question_id: currentQuestion.id,
-      selected_option: selectedOption,
-      time_taken: timeTaken
-    })
     
     submitAnswer({
       quiz_question_id: currentQuestion.id,
@@ -332,17 +357,21 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   // Show a more detailed loading state while quiz is starting
   if (isStartingQuiz || isLoadingQuiz) {
     return (
-      <div className="flex flex-col items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-        <p className="text-muted-foreground">{isStartingQuiz ? 'Starting quiz...' : 'Loading quiz...'}</p>
-      </div>
-    )
-  }
-  
-  if (isLoadingQuiz) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-6">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full border-t-2 border-primary animate-spin"></div>
+            <div className="rounded-full bg-primary/10 p-6">
+              <Timer className="h-8 w-8 text-primary" />
+            </div>
+          </div>
+          <h3 className="text-xl font-medium">{isStartingQuiz ? 'Starting your quiz...' : 'Loading quiz...'}</h3>
+          <p className="text-muted-foreground text-center max-w-xs">
+            {isStartingQuiz 
+              ? 'Preparing your questions. This will just take a moment.' 
+              : 'Retrieving your quiz data. Please wait.'}
+          </p>
+        </div>
       </div>
     )
   }
@@ -350,102 +379,118 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   // Show start screen if quiz is pending
   if (quiz.status === 'pending') {
     return (
-      <div className="max-w-4xl mx-auto">
-        <Card className="bg-gradient-to-br from-card to-background border shadow-md overflow-hidden">
-          <div className="md:grid md:grid-cols-5 items-stretch">
-            <div className="md:col-span-2 bg-gradient-to-br from-primary/5 to-primary/10 p-8 flex flex-col justify-center">
-              <div className="mb-6 text-center md:text-left">
-                <h2 className="text-2xl font-bold mb-2">{quiz.title}</h2>
-                <p className="text-muted-foreground">{quiz.course_name}</p>
+      <div className="max-w-4xl mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card className="border overflow-hidden shadow-lg bg-gradient-to-b from-card to-background">
+            <div className="md:grid md:grid-cols-5 items-stretch">
+              <div className="relative md:col-span-2 bg-gradient-to-br from-primary/5 to-primary/10 p-6 sm:p-8 md:p-10 flex flex-col justify-center overflow-hidden">
+                {/* Animated background wave effect */}
+                <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(56,189,248,0)_0%,rgba(56,189,248,.075)_20%,rgba(56,189,248,.15)_67%,rgba(56,189,248,0)_100%)] -translate-x-[100%] animate-[shimmer_2.5s_infinite]"></div>
+                
+                <div className="mb-8 text-center md:text-left relative z-10">
+                  <div className="inline-flex items-center justify-center p-2.5 mb-4 rounded-lg bg-primary/10 border border-primary/20">
+                    <GraduationCap className="h-6 w-6 text-primary" />
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight">{quiz.title}</h2>
+                  <p className="text-muted-foreground text-sm sm:text-base">{quiz.course_name}</p>
+                </div>
+                
+                <div className="space-y-5 relative z-10">
+                  <div className="flex items-start sm:items-center gap-3 bg-white/5 rounded-lg p-3 transition-all">
+                    <div className="p-2 rounded-full bg-primary/10 text-primary shrink-0">
+                      <ListTodo className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="font-medium">{quiz.total_questions} Questions</div>
+                      <div className="text-sm text-muted-foreground">Multiple choice format</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start sm:items-center gap-3 bg-white/5 rounded-lg p-3 transition-all">
+                    <div className="p-2 rounded-full bg-primary/10 text-primary shrink-0">
+                      <Timer className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="font-medium">{quiz.duration} Minutes</div>
+                      <div className="text-sm text-muted-foreground">Timed assessment</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start sm:items-center gap-3 bg-white/5 rounded-lg p-3 transition-all">
+                    <div className="p-2 rounded-full bg-primary/10 text-primary shrink-0">
+                      <Award className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="font-medium">60% Pass Rate</div>
+                      <div className="text-sm text-muted-foreground">Benchmark for success</div>
+                    </div>
+                  </div>
+                </div>
               </div>
               
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-full bg-primary/10 text-primary">
-                    <ListTodo className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-medium">{quiz.total_questions} Questions</div>
-                    <div className="text-sm text-muted-foreground">Multiple choice format</div>
-                  </div>
-                </div>
+              <div className="md:col-span-3 p-6 sm:p-8">
+                <CardHeader className="px-0 pt-0">
+                  <CardTitle className="flex items-center gap-2 text-xl sm:text-2xl mb-2">
+                    Quiz Instructions
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    Please review before starting your assessment
+                  </CardDescription>
+                </CardHeader>
                 
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-full bg-primary/10 text-primary">
-                    <Timer className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-medium">{quiz.duration} Minutes</div>
-                    <div className="text-sm text-muted-foreground">Timed assessment</div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-full bg-primary/10 text-primary">
-                    <Award className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-medium">60% Pass Rate</div>
-                    <div className="text-sm text-muted-foreground">Benchmark for success</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="md:col-span-3 p-8">
-              <CardHeader className="px-0 pt-0">
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <BookOpen className="h-5 w-5" />
-                  Quiz Instructions
-                </CardTitle>
-                <CardDescription>
-                  Please review before starting your assessment
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className="space-y-6 px-0">
-                <div className="space-y-4">
-                  <div className="border-l-2 border-primary/50 pl-4 py-1">
-                    <h3 className="font-medium">Time Management</h3>
-                    <p className="text-sm text-muted-foreground">The timer starts once you begin. You cannot pause once started.</p>
+                <CardContent className="space-y-6 px-0">
+                  <div className="space-y-4">
+                    <div className="border-l-2 border-primary/50 pl-4 py-1">
+                      <h3 className="font-medium text-base">Time Management</h3>
+                      <p className="text-sm text-muted-foreground">The timer starts once you begin. You cannot pause once started.</p>
+                    </div>
+                    
+                    <div className="border-l-2 border-primary/50 pl-4 py-1">
+                      <h3 className="font-medium text-base">Navigation</h3>
+                      <p className="text-sm text-muted-foreground">Use the navigation buttons or swipe left/right on mobile to move between questions.</p>
+                    </div>
+                    
+                    <div className="border-l-2 border-primary/50 pl-4 py-1">
+                      <h3 className="font-medium text-base">Answering</h3>
+                      <p className="text-sm text-muted-foreground">Select one correct answer for each question. Your answers save automatically.</p>
+                    </div>
+                    
+                    <div className="border-l-2 border-primary/50 pl-4 py-1">
+                      <h3 className="font-medium text-base">Completion</h3>
+                      <p className="text-sm text-muted-foreground">Submit when done. You'll see your results immediately after completion.</p>
+                    </div>
                   </div>
                   
-                  <div className="border-l-2 border-primary/50 pl-4 py-1">
-                    <h3 className="font-medium">Navigation</h3>
-                    <p className="text-sm text-muted-foreground">Use the previous/next buttons to move between questions. Flag difficult questions to revisit.</p>
-                  </div>
-                  
-                  <div className="border-l-2 border-primary/50 pl-4 py-1">
-                    <h3 className="font-medium">Answering</h3>
-                    <p className="text-sm text-muted-foreground">Select one correct answer for each question. Your answers are saved automatically.</p>
-                  </div>
-                  
-                  <div className="border-l-2 border-primary/50 pl-4 py-1">
-                    <h3 className="font-medium">Completion</h3>
-                    <p className="text-sm text-muted-foreground">Submit when done. You'll see your results immediately after completion.</p>
-                  </div>
-                </div>
-                
-                <div className="pt-2">
-                  <Button 
-                    onClick={handleStartQuiz} 
-                    disabled={isStarting} 
-                    className="w-full relative overflow-hidden group"
-                    size="lg"
+                  <motion.div 
+                    className="pt-2"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
                   >
-                    {isStarting ? (
-                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Brain className="h-4 w-4 mr-2 transition-transform group-hover:scale-110" />
-                    )}
-                    <span>{isStarting ? 'Starting Quiz...' : 'Begin Quiz'}</span>
-                    <span className="absolute inset-0 w-full h-full bg-white/10 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
-                  </Button>
-                </div>
-              </CardContent>
+                    <Button 
+                      onClick={handleStartQuiz} 
+                      disabled={isStarting} 
+                      className="w-full relative overflow-hidden group"
+                      size="lg"
+                    >
+                      {isStarting ? (
+                        <RefreshCw className="h-5 w-5 mr-2 animate-spin" />
+                      ) : (
+                        <Brain className="h-5 w-5 mr-2 transition-transform group-hover:scale-110" />
+                      )}
+                      <span className="font-medium">{isStarting ? 'Starting Quiz...' : 'Begin Quiz'}</span>
+                      <div className="absolute inset-0 w-full h-full bg-white/10 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                    </Button>
+                  </motion.div>
+                </CardContent>
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </motion.div>
       </div>
     )
   }
@@ -458,219 +503,198 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   
   return (
     <>
-    {
-      isCompleting || isAutoSubmitting && (<LoadingOverlay />)
-    }
-      <div className="max-w-4xl mx-auto mb-8">
-        {/* Timer and progress bar */}
-        <div className="flex justify-between items-center mb-2">
-          <div className="flex gap-1">
-            <Badge className="px-2 py-1">
-              Question {currentQuestionIndex + 1} of {quiz.questions?.length}
-            </Badge>
-            {flaggedQuestions.has(currentQuestionIndex) && (
-              <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-orange-500/20 px-2 py-1 flex items-center gap-1">
-                <Flag className="h-3 w-3" /> Flagged
-              </Badge>
-            )}
-          </div>
-          <div className={cn(
-            "flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium",
-            isTimeWarning ? "bg-red-500/10 text-red-500 timer-warning" : "bg-primary/10"
-          )}>
-            <Clock className="h-4 w-4" />
-            <span>{formatTimeRemaining(timeRemaining)}</span>
-          </div>
-        </div>
-        
-        <Progress value={progressPercentage} className="h-2 mb-6" />
-        
-        {/* Question card */}
-        {currentQuestion && (
-          <Card className="mb-6 shadow-sm transition-all hover:shadow-md">
-            <CardHeader>
-              <CardTitle className="text-xl">
-                Question {currentQuestionIndex + 1}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="text-lg font-medium">
-                <MarkdownPreview content={currentQuestion.question_text} />
-              </div>
-              
-              <RadioGroup 
-                value={answers[currentQuestion.id] || ""}
-                onValueChange={handleAnswerSelect}
-                className="space-y-3"
-              >
-                <div 
-                  className={cn(
-                    "bg-card border rounded-lg p-4 hover:bg-muted/50 transition-all cursor-pointer",
-                    answers[currentQuestion.id] === "A" && "bg-primary/10 border-primary/50 shadow-sm quiz-option-selected",
-                    selectionAnimation === "A" && "animate-pulse-custom"
-                  )}
-                  onClick={() => handleAnswerSelect("A")}
-                >
-                  <RadioGroupItem 
-                    value="A" 
-                    id="option-a" 
-                    className="peer sr-only" 
-                  />
-                  <Label 
-                    htmlFor="option-a" 
-                    className="flex items-start gap-2 cursor-pointer"
-                  >
-                    <div className={cn(
-                      "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
-                      answers[currentQuestion.id] === "A" ? "bg-primary text-primary-foreground" : "bg-muted"
-                    )}>A</div>
-                    <div className="flex-1">
-                        <p className="leading-normal tracking-normal font-normal text-foreground/90">{convertMarkdownToPlainText(currentQuestion.options.a)}</p>
-                    </div>
-                  </Label>
-                </div>
-                
-                <div 
-                  className={cn(
-                    "bg-card border rounded-lg p-4 hover:bg-muted/50 transition-all cursor-pointer",
-                    answers[currentQuestion.id] === "B" && "bg-primary/10 border-primary/50 shadow-sm quiz-option-selected",
-                    selectionAnimation === "B" && "animate-pulse-custom"
-                  )}
-                  onClick={() => handleAnswerSelect("B")}
-                >
-                  <RadioGroupItem 
-                    value="B" 
-                    id="option-b" 
-                    className="peer sr-only" 
-                  />
-                  <Label 
-                    htmlFor="option-b" 
-                    className="flex items-start gap-2 cursor-pointer"
-                  >
-                    <div className={cn(
-                      "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
-                      answers[currentQuestion.id] === "B" ? "bg-primary text-primary-foreground" : "bg-muted"
-                    )}>B</div>
-                    <div className="flex-1">
-                        <p className="leading-normal tracking-normal font-normal text-foreground/90">{convertMarkdownToPlainText(currentQuestion.options.b)}</p>
-                    </div>
-                  </Label>
-                </div>
-                
-                <div 
-                  className={cn(
-                    "bg-card border rounded-lg p-4 hover:bg-muted/50 transition-all cursor-pointer",
-                    answers[currentQuestion.id] === "C" && "bg-primary/10 border-primary/50 shadow-sm quiz-option-selected",
-                    selectionAnimation === "C" && "animate-pulse-custom"
-                  )}
-                  onClick={() => handleAnswerSelect("C")}
-                >
-                  <RadioGroupItem 
-                    value="C" 
-                    id="option-c" 
-                    className="peer sr-only" 
-                  />
-                  <Label 
-                    htmlFor="option-c" 
-                    className="flex items-start gap-2 cursor-pointer"
-                  >
-                    <div className={cn(
-                      "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
-                      answers[currentQuestion.id] === "C" ? "bg-primary text-primary-foreground" : "bg-muted"
-                    )}>C</div>
-                    <div className="flex-1">
-                        <p className="leading-normal tracking-normal font-normal text-foreground/90">{convertMarkdownToPlainText(currentQuestion.options.c)}</p>
-                    </div>
-                  </Label>
-                </div>
-                
-                <div 
-                  className={cn(
-                    "bg-card border rounded-lg p-4 hover:bg-muted/50 transition-all cursor-pointer",
-                    answers[currentQuestion.id] === "D" && "bg-primary/10 border-primary/50 shadow-sm quiz-option-selected",
-                    selectionAnimation === "D" && "animate-pulse-custom"
-                  )}
-                  onClick={() => handleAnswerSelect("D")}
-                >
-                  <RadioGroupItem 
-                    value="D" 
-                    id="option-d" 
-                    className="peer sr-only" 
-                  />
-                  <Label 
-                    htmlFor="option-d" 
-                    className="flex items-start gap-2 cursor-pointer"
-                  >
-                    <div className={cn(
-                      "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
-                      answers[currentQuestion.id] === "D" ? "bg-primary text-primary-foreground" : "bg-muted"
-                    )}>D</div>
-                    <div className="flex-1">
-                      <p className="leading-normal tracking-normal font-normal text-foreground/90">{convertMarkdownToPlainText(currentQuestion.options.d)}</p>
-                    </div>
-                  </Label>
-                </div>
-              </RadioGroup>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <div className="flex gap-2">
-                <Button
-                  variant={flaggedQuestions.has(currentQuestionIndex) ? "default" : "outline"}
-                  size="sm"
-                  onClick={toggleFlaggedQuestion}
-                  className={cn(
-                    flaggedQuestions.has(currentQuestionIndex) && "bg-orange-500 hover:bg-orange-600 text-white"
-                  )}
-                >
-                  <Flag className={cn(
-                    "h-4 w-4 mr-2",
-                    flaggedQuestions.has(currentQuestionIndex) && "text-white"
-                  )} />
-                  {flaggedQuestions.has(currentQuestionIndex) ? "Unflag" : "Flag"}
-                </Button>
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={handlePreviousQuestion}
-                  disabled={currentQuestionIndex === 0 || isSubmitting}
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Previous
-                </Button>
-                {currentQuestionIndex < quiz.questions.length - 1 ? (
-                  <Button
-                    onClick={handleNextQuestion}
-                    disabled={isSubmitting}
-                  >
-                    Next
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => setShowCompleteDialog(true)}
-                    disabled={isSubmitting || isCompleting || isAutoSubmitting}
-                    variant={allQuestionsAnswered ? "default" : "secondary"}
-                  >
-                    {isCompleting || isAutoSubmitting ? (
-                      <>
-                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                        {/* Submitting... */}
-                      </>
-                    ) : (
-                      'Submit Quiz'
-                    )}
-                  </Button>
+      {(isCompleting || isAutoSubmitting) && (<LoadingOverlay />)}
+      
+      <div className="max-w-4xl mx-auto mb-20 sm:mb-8 px-4">
+        {/* Header section with timer and progress */}
+        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm pt-2 pb-4">
+          <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-2 mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+              <div className="flex gap-1 items-center">
+                <Badge variant="outline" className="px-2 py-1 text-xs sm:text-sm">
+                  <span className="hidden sm:inline">Question </span>{currentQuestionIndex + 1} / {quiz.questions?.length}
+                </Badge>
+                {flaggedQuestions.has(currentQuestionIndex) && (
+                  <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-orange-500/20 px-2 py-1 flex items-center gap-1 text-xs sm:text-sm">
+                    <Flag className="h-3 w-3" /> Flagged
+                  </Badge>
                 )}
               </div>
-            </CardFooter>
-          </Card>
-        )}
+              
+              <div className="text-xs text-muted-foreground flex items-center mt-1 sm:mt-0">
+                <CheckCircle className="h-3 w-3 mr-1.5 text-green-500" /> 
+                <span>{answeredCount} of {quiz.questions?.length} answered</span>
+              </div>
+            </div>
+            
+            <div className={cn(
+              "flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-mono font-medium shadow-sm",
+              isTimeWarning 
+                ? "bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/20 timer-warning" 
+                : "bg-primary/10 border border-primary/20"
+            )}>
+              <Timer className="h-4 w-4" />
+              <span>{formatTimeRemaining(timeRemaining)}</span>
+            </div>
+          </div>
+          
+          <Progress value={progressPercentage} className="h-1.5" />
+        </div>
         
-        {/* Question navigation */}
+        {/* Question content area with touch support */}
+        <motion.div 
+          onTouchStart={handleTouchStart} 
+          onTouchEnd={handleTouchEnd}
+          animate={{ 
+            x: swipeDirection === 'left' ? -20 : swipeDirection === 'right' ? 20 : 0,
+            opacity: swipeDirection !== null ? 0.5 : 1
+          }}
+          transition={{ duration: 0.2 }}
+        >
+          {currentQuestion && (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentQuestionIndex}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Card className="mb-6 border shadow-sm hover:shadow-md transition-all duration-300">
+                  <CardHeader className="px-4 sm:px-6 py-4 sm:py-5">
+                    <CardTitle className="text-lg sm:text-xl">
+                      <MarkdownPreview content={currentQuestion.question_text} />
+                    </CardTitle>
+                  </CardHeader>
+                  
+                  <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6 pt-2 space-y-4">
+                    <RadioGroup 
+                      value={answers[currentQuestion.id] || ""}
+                      onValueChange={handleAnswerSelect}
+                      className="space-y-3"
+                    >
+                      {['A', 'B', 'C', 'D'].map((option) => (
+                        <motion.div
+                          key={option}
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={cn(
+                            "relative rounded-lg border cursor-pointer transition-all overflow-hidden",
+                            answers[currentQuestion.id] === option 
+                              ? "bg-primary/10 border-primary/50 shadow-sm" 
+                              : "bg-card hover:bg-muted/40 hover:border-muted-foreground/20"
+                          )}
+                          onClick={() => handleAnswerSelect(option)}
+                        >
+                          {answers[currentQuestion.id] === option && (
+                            <motion.div 
+                              className="absolute inset-0 bg-primary/5"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.3 }}
+                            />
+                          )}
+                          
+                          <div className="flex items-start p-4">
+                            <div className="flex-shrink-0 mr-3">
+                              <div className={cn(
+                                "flex items-center justify-center rounded-full w-7 h-7 text-sm font-semibold border transition-colors",
+                                answers[currentQuestion.id] === option
+                                  ? "bg-primary text-primary-foreground border-primary" 
+                                  : "bg-muted border-input"
+                              )}>
+                                {option}
+                              </div>
+                            </div>
+                            
+                            <div className="flex-1 text-base">
+                              <RadioGroupItem 
+                                value={option} 
+                                id={`option-${option}`} 
+                                className="sr-only" 
+                              />
+                              <Label 
+                                htmlFor={`option-${option}`} 
+                                className="cursor-pointer font-normal"
+                              >
+                                {convertMarkdownToPlainText(currentQuestion.options[option.toLowerCase()])}
+                              </Label>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </RadioGroup>
+                  </CardContent>
+                  
+                  <CardFooter className="px-4 sm:px-6 py-4 flex flex-wrap sm:flex-nowrap gap-2 justify-between border-t bg-muted/20">
+                    <Button
+                      variant={flaggedQuestions.has(currentQuestionIndex) ? "default" : "outline"}
+                      size="sm"
+                      onClick={toggleFlaggedQuestion}
+                      className={cn(
+                        "min-w-[100px]",
+                        flaggedQuestions.has(currentQuestionIndex) && "bg-orange-500 hover:bg-orange-600 text-white"
+                      )}
+                    >
+                      <Flag className={cn(
+                        "h-4 w-4 mr-2",
+                        flaggedQuestions.has(currentQuestionIndex) && "text-white"
+                      )} />
+                      {flaggedQuestions.has(currentQuestionIndex) ? "Unflag" : "Flag"}
+                    </Button>
+                    
+                    <div className="flex gap-2 w-full sm:w-auto justify-end">
+                      <Button
+                        variant="outline"
+                        onClick={handlePreviousQuestion}
+                        disabled={currentQuestionIndex === 0 || isSubmitting}
+                        className="flex-1 sm:flex-initial sm:min-w-[100px]"
+                      >
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Previous
+                      </Button>
+                      
+                      {currentQuestionIndex < quiz.questions.length - 1 ? (
+                        <Button
+                          onClick={handleNextQuestion}
+                          disabled={isSubmitting}
+                          className="flex-1 sm:flex-initial sm:min-w-[100px]"
+                        >
+                          Next
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => setShowCompleteDialog(true)}
+                          disabled={isSubmitting || isCompleting || isAutoSubmitting}
+                          variant={allQuestionsAnswered ? "default" : "secondary"}
+                          className="flex-1 sm:flex-initial sm:min-w-[120px]"
+                        >
+                          {isCompleting || isAutoSubmitting ? (
+                            <>
+                              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                              Submitting...
+                            </>
+                          ) : (
+                            <>Submit Quiz</>
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  </CardFooter>
+                </Card>
+              </motion.div>
+            </AnimatePresence>
+          )}
+        </motion.div>
+        
+        {/* Question navigation grid */}
         <div className="rounded-lg border bg-card p-4 shadow-sm">
-          <h3 className="font-medium mb-3">Question Navigation</h3>
-          <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
+          <h3 className="font-medium mb-3 text-sm sm:text-base flex items-center gap-2">
+            <ListTodo className="h-4 w-4" /> Question Navigation
+          </h3>
+          
+          <div className="grid grid-cols-8 sm:grid-cols-10 gap-1.5 sm:gap-2">
             {quiz.questions?.map((question, index) => {
               const questionId = question.id
               const isAnswered = !!answers[questionId]
@@ -680,36 +704,40 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
               return (
                 <Button
                   key={index}
-                  variant={isCurrent ? "default" : "outline"}
+                  variant="ghost"
                   size="icon"
                   className={cn(
-                    "transition-all relative",
-                    isCurrent && "ring-2 ring-primary/50 scale-110",
-                    isFlagged && !isCurrent && "ring-2 ring-orange-500/50",
-                    isAnswered && !isCurrent && "bg-primary/10",
-                    !isAnswered && !isCurrent && "bg-transparent",
-                    isFlagged && "after:content-[''] after:absolute after:top-0 after:right-0 after:w-2 after:h-2 after:bg-orange-500 after:rounded-full"
+                    "h-8 w-8 sm:h-9 sm:w-9 transition-all relative",
+                    isCurrent && "ring-2 ring-primary shadow-sm",
+                    isAnswered && !isCurrent && "bg-primary/10 border-primary/20",
+                    !isAnswered && !isCurrent && "bg-muted/30",
+                    isFlagged && "ring-1 ring-orange-500/50"
                   )}
                   onClick={() => goToQuestion(index)}
                 >
-                  {index + 1}
+                  <span className="text-xs sm:text-sm">{index + 1}</span>
+                  {isFlagged && (
+                    <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-orange-500"></span>
+                  )}
                 </Button>
               )
             })}
           </div>
           
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-4">
-            <div className="flex items-center gap-2 text-sm">
-              <div className="w-4 h-4 rounded bg-primary/10 border"></div>
-              <span>Answered ({answeredQuestions.length})</span>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-4 text-xs sm:text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-sm bg-primary/10 border border-primary/20"></div>
+              <span>Answered</span>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <div className="w-4 h-4 rounded border"></div>
-              <span>Unanswered ({unansweredQuestions.length})</span>
+            
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-sm bg-muted/30 border"></div>
+              <span>Unanswered</span>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <div className="w-4 h-4 rounded ring-2 ring-orange-500/50 border"></div>
-              <span>Flagged ({flaggedQuestions.size})</span>
+            
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-sm ring-1 ring-orange-500/50 border"></div>
+              <span>Flagged</span>
             </div>
             
             {allQuestionsAnswered ? (
@@ -720,44 +748,126 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
                 onClick={() => setShowCompleteDialog(true)}
                 disabled={isCompleting || isAutoSubmitting}
               >
-                <CheckCircle className="h-4 w-4 mr-2" />
+                <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
                 Ready to Submit
               </Button>
             ) : (
               <Badge variant="outline" className="ml-auto flex items-center gap-1 bg-amber-500/10 text-amber-600 border-amber-500/30">
                 <AlertTriangle className="h-3 w-3" />
-                {unansweredQuestions.length} questions unanswered
+                {unansweredQuestions.length} unanswered
               </Badge>
             )}
           </div>
         </div>
       </div>
       
+      {/* Mobile fixed navigation bar */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 border-t bg-background/80 backdrop-blur-sm shadow-lg p-3 z-20">
+        <div className="flex items-center justify-between">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handlePreviousQuestion}
+            disabled={currentQuestionIndex === 0 || isSubmitting}
+            className="w-16"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          
+          <div className="flex items-center">
+            {allQuestionsAnswered ? (
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-xs bg-green-500/10 text-green-600 hover:bg-green-500/20 border-green-500/30"
+                onClick={() => setShowCompleteDialog(true)}
+                disabled={isCompleting || isAutoSubmitting}
+              >
+                <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
+                Complete
+              </Button>
+            ) : (
+              <span className="text-xs text-muted-foreground">
+                {answeredCount}/{quiz.questions?.length} answered
+              </span>
+            )}
+          </div>
+          
+          {currentQuestionIndex < quiz.questions.length - 1 ? (
+            <Button
+              size="sm"
+              onClick={handleNextQuestion}
+              disabled={isSubmitting}
+              className="w-16"
+            >
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              onClick={() => setShowCompleteDialog(true)}
+              disabled={isSubmitting || isCompleting || isAutoSubmitting}
+              variant={allQuestionsAnswered ? "default" : "secondary"}
+              className="w-16"
+            >
+              <Flag className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </div>
+      
       {/* Submit Confirmation Dialog */}
-      <DynamicModal open={showCompleteDialog} setOpen={setShowCompleteDialog} title="Submit Quiz?">
+      <DynamicModal 
+        open={showCompleteDialog} 
+        setOpen={setShowCompleteDialog} 
+        title="Submit Quiz?"
+        className="sm:max-w-md"
+      >
         <div className='p-4 flex flex-col gap-y-4'>
-          <div>
-            <div>
-              You are about to submit your quiz. Make sure you have reviewed all of your answers.
+          <div className="space-y-4">
+            <p className="text-muted-foreground">
+              You are about to submit your quiz. Once submitted, you won't be able to make any changes.
+            </p>
+            
+            <div className="rounded-lg border bg-muted/30 p-3 space-y-2">
+              <div className="flex justify-between items-center">
+                <span>Questions Answered:</span> 
+                <Badge className={allQuestionsAnswered ? "bg-green-500/10 text-green-600" : "bg-amber-500/10 text-amber-600"}>
+                  {answeredCount}/{quiz.questions?.length}
+                </Badge>
+              </div>
               
-              {!allQuestionsAnswered && (
-                <div className="mt-2 flex items-center gap-2 text-amber-500">
-                  <AlertTriangle className="h-4 w-4" />
-                  <span className="font-medium">
-                    Warning: You have {unansweredQuestions.length} unanswered questions.
-                  </span>
+              {timeRemaining !== null && (
+                <div className="flex justify-between items-center">
+                  <span>Time Remaining:</span>
+                  <Badge variant="outline" className="font-mono">{formatTimeRemaining(timeRemaining)}</Badge>
                 </div>
               )}
             </div>
+            
+            {!allQuestionsAnswered && (
+              <div className="flex items-center gap-2 text-amber-500 bg-amber-500/10 p-3 rounded-lg">
+                <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+                <span>
+                  You have {unansweredQuestions.length} unanswered {unansweredQuestions.length === 1 ? 'question' : 'questions'}.
+                </span>
+              </div>
+            )}
           </div>
-          <footer className='flex items-center gap-5'>
-            <DialogClose disabled={isCompleting}>Cancel</DialogClose>
+          
+          <footer className='flex items-center justify-end gap-3 pt-2'>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowCompleteDialog(false)}
+              disabled={isCompleting}
+            >
+              Cancel
+            </Button>
+            
             <Button 
               onClick={handleQuizSubmit}
               disabled={isCompleting || isAutoSubmitting}
-              className={cn(
-                isCompleting && "opacity-70 cursor-not-allowed"
-              )}
+              className="min-w-[100px]"
             >
               {isCompleting || isAutoSubmitting ? (
                 <>

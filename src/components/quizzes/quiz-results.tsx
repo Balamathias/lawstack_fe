@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { 
   Card, 
   CardContent, 
@@ -10,23 +10,27 @@ import {
   CardTitle 
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { 
   CheckCircle, 
   XCircle, 
   Clock, 
   Trophy, 
-  BarChart, 
+  BarChart2, 
   ArrowLeft, 
   ArrowRight, 
   FileText, 
   Brain,
   Home,
   RotateCcw,
-  AlertTriangle
+  AlertTriangle,
+  PieChart,
+  Timer,
+  Award,
+  Sparkles
 } from 'lucide-react'
-import { Quiz, QuizQuestion } from '@/@types/db'
-import { StackResponse } from '@/@types/generics'
+import { Quiz } from '@/@types/db'
 import { useQuiz, useCreateQuiz } from '@/services/client/quiz'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
@@ -34,6 +38,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import MarkdownPreview from '../markdown-preview'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface QuizResultsProps {
   initialQuiz: Quiz
@@ -42,6 +47,8 @@ interface QuizResultsProps {
 export default function QuizResults({ initialQuiz }: QuizResultsProps) {
   const router = useRouter()
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const touchStartXRef = useRef<number | null>(null)
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null)
   
   // Get the latest quiz data
   const { data: quizResponse, isLoading } = useQuiz(initialQuiz.id)
@@ -54,23 +61,70 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
   // Make sure the quiz is completed
   if (!quiz || quiz.status !== 'completed') {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Results Not Available</CardTitle>
-          <CardDescription>
-            This quiz has not been completed yet.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Please complete the quiz to view your results.</p>
-        </CardContent>
-        <CardFooter>
-          <Button onClick={() => router.push(`/dashboard/quizzes/${quiz.id}`)}>
-            Go Back to Quiz
-          </Button>
-        </CardFooter>
-      </Card>
+      <div className="max-w-md mx-auto my-16 p-6">
+        <Card className="border-amber-500/30 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-amber-500">
+              <AlertTriangle className="h-5 w-5" />
+              Results Not Available
+            </CardTitle>
+            <CardDescription>
+              This quiz has not been completed yet.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-6">Please complete the quiz to view your results.</p>
+          </CardContent>
+          <CardFooter>
+            <Button 
+              onClick={() => router.push(`/dashboard/quizzes/${quiz?.id}`)}
+              className="w-full"
+            >
+              Go Back to Quiz
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
     )
+  }
+  
+  // Touch event handlers for swipe navigation
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX
+  }
+  
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return
+    
+    const touchEndX = e.changedTouches[0].clientX
+    const diff = touchStartXRef.current - touchEndX
+    
+    // Minimum swipe distance (px)
+    const minSwipeDistance = 50
+    
+    if (Math.abs(diff) > minSwipeDistance) {
+      if (diff > 0) {
+        // Swiped left, go to next question
+        if (currentQuestionIndex < quiz.questions.length - 1) {
+          setSwipeDirection('left')
+          setTimeout(() => {
+            goToNextQuestion()
+            setSwipeDirection(null)
+          }, 150)
+        }
+      } else {
+        // Swiped right, go to previous question
+        if (currentQuestionIndex > 0) {
+          setSwipeDirection('right')
+          setTimeout(() => {
+            goToPreviousQuestion()
+            setSwipeDirection(null)
+          }, 150)
+        }
+      }
+    }
+    
+    touchStartXRef.current = null
   }
   
   // Current question from the list
@@ -124,7 +178,9 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
     }, {
       onSuccess: (response) => {
         if (response.data) {
-          toast.success('New quiz created!')
+          toast.success('New quiz created!', {
+            description: 'Get ready to try again!'
+          })
           router.push(`/dashboard/quizzes/${response.data.id}`)
         } else {
           toast.error(response.message || 'Failed to create quiz')
@@ -141,140 +197,303 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
     if (score >= 80) {
       return {
         color: "text-green-500",
+        bgColor: "bg-green-500/10",
+        borderColor: "border-green-500/20",
         message: "Excellent! You have a strong grasp of the material.",
-        icon: <Trophy className="h-8 w-8 text-green-500" />
+        icon: <Trophy className="h-8 w-8 text-green-500" />,
+        grade: "A"
       }
     } else if (score >= 70) {
       return {
         color: "text-green-500",
+        bgColor: "bg-green-500/10",
+        borderColor: "border-green-500/20",
         message: "Very good! Keep up the good work.",
-        icon: <Trophy className="h-8 w-8 text-green-500" />
+        icon: <Award className="h-8 w-8 text-green-500" />,
+        grade: "B"
       }
     } else if (score >= 60) {
       return {
         color: "text-amber-500",
+        bgColor: "bg-amber-500/10",
+        borderColor: "border-amber-500/20",
         message: "Good job! You're on the right track.",
-        icon: <Trophy className="h-8 w-8 text-amber-500" />
+        icon: <CheckCircle className="h-8 w-8 text-amber-500" />,
+        grade: "C"
       }
     } else if (score >= 50) {
       return {
         color: "text-amber-500",
+        bgColor: "bg-amber-500/10",
+        borderColor: "border-amber-500/20",
         message: "You passed! Try focusing on the areas you missed.",
-        icon: <AlertTriangle className="h-8 w-8 text-amber-500" />
+        icon: <AlertTriangle className="h-8 w-8 text-amber-500" />,
+        grade: "D"
       }
     } else {
       return {
         color: "text-red-500",
+        bgColor: "bg-red-500/10",
+        borderColor: "border-red-500/20",
         message: "You didn't pass. Review the topics and try again.",
-        icon: <AlertTriangle className="h-8 w-8 text-red-500" />
+        icon: <XCircle className="h-8 w-8 text-red-500" />,
+        grade: "F"
       }
     }
   }
   
   const scoreInfo = getScoreInfo(score)
   
+  // Get the percentage breakdown of correct vs incorrect
+  const correctPercentage = (correctAnswers / totalQuestions) * 100
+  const incorrectPercentage = (wrongAnswers / totalQuestions) * 100
+  
+  // Most challenging questions - find the ones that took the longest time
+  const challengingQuestions = [...quiz.questions]
+    .map((q, index) => ({
+      index,
+      question: q,
+      answer: quiz.answers?.[q.id],
+      time: quiz.answers?.[q.id]?.time_taken || 0
+    }))
+    .sort((a, b) => b.time - a.time)
+    .slice(0, 3) // Top 3 most time-consuming
+  
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-6">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full border-t-2 border-primary animate-spin"></div>
+            <div className="rounded-full bg-primary/10 p-6">
+              <BarChart2 className="h-8 w-8 text-primary" />
+            </div>
+          </div>
+          <h3 className="text-xl font-medium">Loading results...</h3>
+          <p className="text-muted-foreground text-center max-w-xs">
+            Retrieving your quiz performance data. Please wait.
+          </p>
+        </div>
       </div>
     )
   }
   
   return (
-    <>
-      <div className="flex flex-col space-y-8 max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto px-4 pb-8">
+      <motion.div 
+        className="flex flex-col space-y-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {/* Results Summary Card */}
-        <Card className="overflow-hidden border shadow-md">
-          <div className="bg-gradient-to-r from-primary/5 to-transparent p-6">
+        <Card className="overflow-hidden border shadow-lg">
+          <div className={cn(
+            "relative p-6",
+            scoreInfo.bgColor,
+            scoreInfo.borderColor,
+            "bg-gradient-to-r from-card/70 to-transparent"
+          )}>
             <CardHeader className="p-0">
               <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
                 <div>
-                  <CardTitle className="text-2xl">{quiz.title} - Results</CardTitle>
-                  <CardDescription>{quiz.course_name}</CardDescription>
+                  <CardTitle className="text-2xl sm:text-3xl tracking-tight">{quiz.title} - Results</CardTitle>
+                  <CardDescription className="text-base opacity-90">{quiz.course_name}</CardDescription>
                 </div>
                 <div className="flex flex-col items-end">
-                  <div className="text-sm text-muted-foreground">
-                    Completed {quiz.completed_at && format(new Date(quiz.completed_at), 'PPP')}
-                  </div>
+                  <Badge className={cn("font-normal px-2 py-1", scoreInfo.bgColor, scoreInfo.color, scoreInfo.borderColor)}>
+                    {quiz.completed_at && format(new Date(quiz.completed_at), 'MMM d, yyyy')}
+                  </Badge>
                 </div>
               </div>
             </CardHeader>
           </div>
-          <CardContent className="space-y-6 pt-6">
-            {/* Score */}
-            <div className="flex flex-col items-center pb-4">
-              <div className={cn(
-                "text-4xl font-bold flex items-center gap-2",
-                scoreInfo.color
-              )}>
-                {scoreInfo.icon}
-                {score}%
-              </div>
-              <div className="text-muted-foreground mt-1 text-center max-w-md">
-                {scoreInfo.message}
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="bg-card/50">
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-center">
-                    <div className="text-2xl font-bold text-green-500 flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5" />
-                      {correctAnswers}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Correct
+          
+          <CardContent className="space-y-8 p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 items-center">
+              {/* Score Circle */}
+              <div className="md:col-span-1">
+                <motion.div 
+                  className="flex flex-col items-center"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
+                >
+                  <div className="relative">
+                    {/* Circular progress background */}
+                    <svg width="160" height="160" viewBox="0 0 160 160" className="transform -rotate-90">
+                      <circle
+                        cx="80"
+                        cy="80"
+                        r="70"
+                        stroke="currentColor"
+                        strokeWidth="12"
+                        fill="none"
+                        className="text-muted/20"
+                      />
+                      
+                      <motion.circle
+                        cx="80"
+                        cy="80"
+                        r="70"
+                        stroke="currentColor"
+                        strokeWidth="12"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeDasharray="440"
+                        initial={{ strokeDashoffset: 440 }}
+                        animate={{ strokeDashoffset: 440 - (score / 100) * 440 }}
+                        transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                        className={scoreInfo.color}
+                      />
+                    </svg>
+                    
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <div className={cn("text-4xl font-bold", scoreInfo.color)}>{score}%</div>
+                      <div className="text-lg font-semibold">Grade: {scoreInfo.grade}</div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                  
+                  <div className="mt-3 text-muted-foreground text-center max-w-xs">
+                    <div className="flex items-center justify-center gap-2">
+                      {scoreInfo.icon}
+                      <span>{scoreInfo.message}</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
               
-              <Card className="bg-card/50">
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-center">
-                    <div className="text-2xl font-bold text-red-500 flex items-center gap-2">
-                      <XCircle className="h-5 w-5" />
-                      {wrongAnswers}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Incorrect
-                    </div>
+              {/* Stats Cards */}
+              <div className="md:col-span-2">
+                <div className="grid grid-cols-2 gap-4">
+                  <motion.div 
+                    custom={0}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.4 }}
+                  >
+                    <Card className="bg-card/50 hover:bg-card/80 transition-colors">
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-center">
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">Correct</p>
+                            <div className="text-2xl font-bold text-green-500 flex items-center gap-2">
+                              <CheckCircle className="h-5 w-5" />
+                              {correctAnswers}
+                            </div>
+                          </div>
+                          <div className="text-green-500/20 bg-green-500/5 rounded-full p-2">
+                            <CheckCircle className="h-8 w-8" />
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                  
+                  <motion.div 
+                    custom={1}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4, duration: 0.4 }}
+                  >
+                    <Card className="bg-card/50 hover:bg-card/80 transition-colors">
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-center">
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">Incorrect</p>
+                            <div className="text-2xl font-bold text-red-500 flex items-center gap-2">
+                              <XCircle className="h-5 w-5" />
+                              {wrongAnswers}
+                            </div>
+                          </div>
+                          <div className="text-red-500/20 bg-red-500/5 rounded-full p-2">
+                            <XCircle className="h-8 w-8" />
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                  
+                  <motion.div 
+                    custom={2}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.4 }}
+                  >
+                    <Card className="bg-card/50 hover:bg-card/80 transition-colors">
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-center">
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">Total Time</p>
+                            <div className="text-2xl font-bold flex items-center gap-2">
+                              <Clock className="h-5 w-5" />
+                              {totalTime ? formatTime(totalTime) : 'N/A'}
+                            </div>
+                          </div>
+                          <div className="text-primary/20 bg-primary/5 rounded-full p-2">
+                            <Timer className="h-8 w-8" />
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                  
+                  <motion.div 
+                    custom={3}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6, duration: 0.4 }}
+                  >
+                    <Card className="bg-card/50 hover:bg-card/80 transition-colors">
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-center">
+                          <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">Avg. Question Time</p>
+                            <div className="text-2xl font-bold flex items-center gap-2">
+                              <Clock className="h-5 w-5" />
+                              {avgTimePerQuestion ? formatTime(avgTimePerQuestion) : 'N/A'}
+                            </div>
+                          </div>
+                          <div className="text-primary/20 bg-primary/5 rounded-full p-2">
+                            <Sparkles className="h-8 w-8" />
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </div>
+                
+                {/* Score breakdown */}
+                <div className="mt-4 bg-muted/30 rounded-lg p-4 border">
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    <PieChart className="h-4 w-4" />
+                    Score Breakdown
+                  </h3>
+                  
+                  <div className="h-2 rounded-full overflow-hidden mb-2 bg-muted flex">
+                    <motion.div 
+                      className="h-full bg-green-500"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${correctPercentage}%` }}
+                      transition={{ duration: 0.8, delay: 0.7 }}
+                    />
+                    <motion.div 
+                      className="h-full bg-red-500"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${incorrectPercentage}%` }}
+                      transition={{ duration: 0.8, delay: 0.7 }}
+                    />
                   </div>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-card/50">
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-center">
-                    <div className="text-2xl font-bold flex items-center gap-2">
-                      <Clock className="h-5 w-5" />
-                      {totalTime ? formatTime(totalTime) : 'N/A'}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Total Time
-                    </div>
+                  
+                  <div className="flex justify-between text-xs">
+                    <span className="text-green-500">{Math.round(correctPercentage)}% Correct</span>
+                    <span className="text-red-500">{Math.round(incorrectPercentage)}% Incorrect</span>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-            
-            {/* Score Progress Bar */}
-            <div className="space-y-1">
-              <div className="flex justify-between text-sm">
-                <span>Score</span>
-                <span className="font-medium">{score}%</span>
+                </div>
               </div>
-              <Progress 
-                value={score} 
-                className="h-2" 
-                // indicatorClassName={cn(
-                //   score >= 60 ? "bg-green-500" : score >= 50 ? "bg-amber-500" : "bg-red-500"
-                // )}
-              />
             </div>
           </CardContent>
+          
           <CardFooter className="flex flex-wrap gap-2 justify-center border-t bg-muted/20 p-4">
             <Button 
               variant="outline" 
@@ -297,175 +516,230 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
         
         {/* Question Review */}
         <Tabs defaultValue="review" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
             <TabsTrigger value="review" className="flex gap-2">
               <FileText className="h-4 w-4" />
               Review Questions
             </TabsTrigger>
             <TabsTrigger value="stats" className="flex gap-2">
-              <BarChart className="h-4 w-4" />
-              Performance Stats
+              <BarChart2 className="h-4 w-4" />
+              Performance Insights
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="review" className="space-y-4 pt-4">
-            <Card className="border shadow-sm transition-all hover:shadow-md">
-              <CardHeader className="pb-3">
-                <div className="flex justify-between">
-                  <CardTitle className="text-lg font-medium">
-                    Question {currentQuestionIndex + 1} of {quiz.questions.length}
-                  </CardTitle>
-                  <div className={cn(
-                    "px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1",
-                    isCorrect 
-                      ? "bg-green-500/10 text-green-500" 
-                      : "bg-red-500/10 text-red-500"
-                  )}>
-                    {isCorrect 
-                      ? <><CheckCircle className="h-3 w-3" /> Correct</> 
-                      : <><XCircle className="h-3 w-3" /> Incorrect</>}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="pb-2">
-                <div className="text-lg mb-4">
-                  <MarkdownPreview content={currentQuestion.question_text} />
-                </div>
-                
-                <div className="space-y-3">
-                  {/* Option A */}
-                  <div className={cn(
-                    "p-3 rounded-lg border transition-colors",
-                    currentQuestion.correct_answer === "A" && "bg-green-500/10 border-green-500/30",
-                    userAnswer?.selected_option === "A" && currentQuestion.correct_answer !== "A" && "bg-red-500/10 border-red-500/30"
-                  )}>
-                    <div className="flex items-center gap-2">
-                      <div className={cn(
-                        "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
-                        currentQuestion.correct_answer === "A" && "bg-green-500/20 border-green-500/30 text-green-600",
-                        userAnswer?.selected_option === "A" && currentQuestion.correct_answer !== "A" && "bg-red-500/20 border-red-500/30 text-red-600"
-                      )}>A</div>
-                      <div className="flex-1">
-                        <MarkdownPreview content={currentQuestion.options.a} />
-                      </div>
-                      {currentQuestion.correct_answer === "A" && <CheckCircle className="h-4 w-4 text-green-500" />}
-                      {userAnswer?.selected_option === "A" && currentQuestion.correct_answer !== "A" && <XCircle className="h-4 w-4 text-red-500" />}
-                    </div>
-                  </div>
-                  
-                  {/* Option B */}
-                  <div className={cn(
-                    "p-3 rounded-lg border transition-colors",
-                    currentQuestion.correct_answer === "B" && "bg-green-500/10 border-green-500/30",
-                    userAnswer?.selected_option === "B" && currentQuestion.correct_answer !== "B" && "bg-red-500/10 border-red-500/30"
-                  )}>
-                    <div className="flex items-center gap-2">
-                      <div className={cn(
-                        "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
-                        currentQuestion.correct_answer === "B" && "bg-green-500/20 border-green-500/30 text-green-600",
-                        userAnswer?.selected_option === "B" && currentQuestion.correct_answer !== "B" && "bg-red-500/20 border-red-500/30 text-red-600"
-                      )}>B</div>
-                      <div className="flex-1">
-                        <MarkdownPreview content={currentQuestion.options.b} />
-                      </div>
-                      {currentQuestion.correct_answer === "B" && <CheckCircle className="h-4 w-4 text-green-500" />}
-                      {userAnswer?.selected_option === "B" && currentQuestion.correct_answer !== "B" && <XCircle className="h-4 w-4 text-red-500" />}
-                    </div>
-                  </div>
-                  
-                  {/* Option C */}
-                  <div className={cn(
-                    "p-3 rounded-lg border transition-colors",
-                    currentQuestion.correct_answer === "C" && "bg-green-500/10 border-green-500/30",
-                    userAnswer?.selected_option === "C" && currentQuestion.correct_answer !== "C" && "bg-red-500/10 border-red-500/30"
-                  )}>
-                    <div className="flex items-center gap-2">
-                      <div className={cn(
-                        "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
-                        currentQuestion.correct_answer === "C" && "bg-green-500/20 border-green-500/30 text-green-600",
-                        userAnswer?.selected_option === "C" && currentQuestion.correct_answer !== "C" && "bg-red-500/20 border-red-500/30 text-red-600"
-                      )}>C</div>
-                      <div className="flex-1">
-                        <MarkdownPreview content={currentQuestion.options.c} />
-                      </div>
-                      {currentQuestion.correct_answer === "C" && <CheckCircle className="h-4 w-4 text-green-500" />}
-                      {userAnswer?.selected_option === "C" && currentQuestion.correct_answer !== "C" && <XCircle className="h-4 w-4 text-red-500" />}
-                    </div>
-                  </div>
-                  
-                  {/* Option D */}
-                  <div className={cn(
-                    "p-3 rounded-lg border transition-colors",
-                    currentQuestion.correct_answer === "D" && "bg-green-500/10 border-green-500/30",
-                    userAnswer?.selected_option === "D" && currentQuestion.correct_answer !== "D" && "bg-red-500/10 border-red-500/30"
-                  )}>
-                    <div className="flex items-center gap-2">
-                      <div className={cn(
-                        "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
-                        currentQuestion.correct_answer === "D" && "bg-green-500/20 border-green-500/30 text-green-600",
-                        userAnswer?.selected_option === "D" && currentQuestion.correct_answer !== "D" && "bg-red-500/20 border-red-500/30 text-red-600"
-                      )}>D</div>
-                      <div className="flex-1">
-                        <MarkdownPreview content={currentQuestion.options.d} />
-                      </div>
-                      {currentQuestion.correct_answer === "D" && <CheckCircle className="h-4 w-4 text-green-500" />}
-                      {userAnswer?.selected_option === "D" && currentQuestion.correct_answer !== "D" && <XCircle className="h-4 w-4 text-red-500" />}
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Explanation */}
-                {currentQuestion.explanation && (
-                  <div className="mt-6 p-4 bg-muted/50 rounded-lg border">
-                    <h4 className="font-semibold mb-2 flex items-center gap-2">
-                      <Brain className="h-4 w-4" />
-                      Explanation
-                    </h4>
-                    <div className="text-sm">
-                      <MarkdownPreview content={currentQuestion.explanation} />
-                    </div>
-                  </div>
-                )}
-                
-                {/* Your answer and time */}
-                <div className="mt-4 text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-2">
-                  <div>
-                    Your answer: <span className={cn(
-                      "font-medium",
-                      isCorrect ? "text-green-500" : "text-red-500"
-                    )}>{userAnswer?.selected_option || 'Not answered'}</span>
-                  </div>
-                  <div>
-                    Correct answer: <span className="font-medium text-green-500">{currentQuestion.correct_answer}</span>
-                  </div>
-                  <div>
-                    Time spent: <span className="font-medium">{userAnswer?.time_taken ? formatTime(userAnswer.time_taken) : 'N/A'}</span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between pt-0">
-                <Button
-                  variant="outline"
-                  onClick={goToPreviousQuestion}
-                  disabled={currentQuestionIndex === 0}
+          <TabsContent value="review" className="space-y-4 pt-2">
+            <motion.div 
+              onTouchStart={handleTouchStart} 
+              onTouchEnd={handleTouchEnd}
+              animate={{ 
+                x: swipeDirection === 'left' ? -20 : swipeDirection === 'right' ? 20 : 0,
+                opacity: swipeDirection !== null ? 0.5 : 1
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentQuestionIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Previous
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={goToNextQuestion}
-                  disabled={currentQuestionIndex === quiz.questions.length - 1}
-                >
-                  Next
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </CardFooter>
-            </Card>
+                  <Card className="border shadow-md transition-all hover:shadow-lg">
+                    <CardHeader className="pb-3 border-b">
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-lg font-medium flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-sm">
+                            {currentQuestionIndex + 1}
+                          </span>
+                          <span>Question {currentQuestionIndex + 1} of {quiz.questions.length}</span>
+                        </CardTitle>
+                        <Badge 
+                          className={cn(
+                            "px-2 py-1 flex items-center gap-1.5 text-xs",
+                            isCorrect 
+                              ? "bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20" 
+                              : "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20"
+                          )}
+                        >
+                          {isCorrect 
+                            ? <><CheckCircle className="h-3 w-3" /> Correct</> 
+                            : <><XCircle className="h-3 w-3" /> Incorrect</>}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="pt-4 pb-2">
+                      <div className="text-lg mb-6">
+                        <MarkdownPreview content={currentQuestion.question_text} />
+                      </div>
+                      
+                      <div className="space-y-3">
+                        {/* Option A */}
+                        <div className={cn(
+                          "p-3 rounded-lg border transition-colors",
+                          currentQuestion.correct_answer === "A" && "bg-green-500/10 border-green-500/30",
+                          userAnswer?.selected_option === "A" && currentQuestion.correct_answer !== "A" && "bg-red-500/10 border-red-500/30"
+                        )}>
+                          <div className="flex items-center gap-2">
+                            <div className={cn(
+                              "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
+                              currentQuestion.correct_answer === "A" && "bg-green-500/20 border-green-500/30 text-green-600",
+                              userAnswer?.selected_option === "A" && currentQuestion.correct_answer !== "A" && "bg-red-500/20 border-red-500/30 text-red-600"
+                            )}>A</div>
+                            <div className="flex-1">
+                              <MarkdownPreview content={currentQuestion.options.a} />
+                            </div>
+                            {currentQuestion.correct_answer === "A" && <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />}
+                            {userAnswer?.selected_option === "A" && currentQuestion.correct_answer !== "A" && <XCircle className="h-4 w-4 text-red-500 flex-shrink-0" />}
+                          </div>
+                        </div>
+                        
+                        {/* Option B */}
+                        <div className={cn(
+                          "p-3 rounded-lg border transition-colors",
+                          currentQuestion.correct_answer === "B" && "bg-green-500/10 border-green-500/30",
+                          userAnswer?.selected_option === "B" && currentQuestion.correct_answer !== "B" && "bg-red-500/10 border-red-500/30"
+                        )}>
+                          <div className="flex items-center gap-2">
+                            <div className={cn(
+                              "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
+                              currentQuestion.correct_answer === "B" && "bg-green-500/20 border-green-500/30 text-green-600",
+                              userAnswer?.selected_option === "B" && currentQuestion.correct_answer !== "B" && "bg-red-500/20 border-red-500/30 text-red-600"
+                            )}>B</div>
+                            <div className="flex-1">
+                              <MarkdownPreview content={currentQuestion.options.b} />
+                            </div>
+                            {currentQuestion.correct_answer === "B" && <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />}
+                            {userAnswer?.selected_option === "B" && currentQuestion.correct_answer !== "B" && <XCircle className="h-4 w-4 text-red-500 flex-shrink-0" />}
+                          </div>
+                        </div>
+                        
+                        {/* Option C */}
+                        <div className={cn(
+                          "p-3 rounded-lg border transition-colors",
+                          currentQuestion.correct_answer === "C" && "bg-green-500/10 border-green-500/30",
+                          userAnswer?.selected_option === "C" && currentQuestion.correct_answer !== "C" && "bg-red-500/10 border-red-500/30"
+                        )}>
+                          <div className="flex items-center gap-2">
+                            <div className={cn(
+                              "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
+                              currentQuestion.correct_answer === "C" && "bg-green-500/20 border-green-500/30 text-green-600",
+                              userAnswer?.selected_option === "C" && currentQuestion.correct_answer !== "C" && "bg-red-500/20 border-red-500/30 text-red-600"
+                            )}>C</div>
+                            <div className="flex-1">
+                              <MarkdownPreview content={currentQuestion.options.c} />
+                            </div>
+                            {currentQuestion.correct_answer === "C" && <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />}
+                            {userAnswer?.selected_option === "C" && currentQuestion.correct_answer !== "C" && <XCircle className="h-4 w-4 text-red-500 flex-shrink-0" />}
+                          </div>
+                        </div>
+                        
+                        {/* Option D */}
+                        <div className={cn(
+                          "p-3 rounded-lg border transition-colors",
+                          currentQuestion.correct_answer === "D" && "bg-green-500/10 border-green-500/30",
+                          userAnswer?.selected_option === "D" && currentQuestion.correct_answer !== "D" && "bg-red-500/10 border-red-500/30"
+                        )}>
+                          <div className="flex items-center gap-2">
+                            <div className={cn(
+                              "flex items-center justify-center rounded-full w-6 h-6 text-xs font-semibold border",
+                              currentQuestion.correct_answer === "D" && "bg-green-500/20 border-green-500/30 text-green-600",
+                              userAnswer?.selected_option === "D" && currentQuestion.correct_answer !== "D" && "bg-red-500/20 border-red-500/30 text-red-600"
+                            )}>D</div>
+                            <div className="flex-1">
+                              <MarkdownPreview content={currentQuestion.options.d} />
+                            </div>
+                            {currentQuestion.correct_answer === "D" && <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />}
+                            {userAnswer?.selected_option === "D" && currentQuestion.correct_answer !== "D" && <XCircle className="h-4 w-4 text-red-500 flex-shrink-0" />}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Explanation */}
+                      {currentQuestion.explanation && (
+                        <motion.div 
+                          className="mt-6 p-4 rounded-lg border bg-primary/5"
+                          initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                          animate={{ opacity: 1, height: "auto", marginTop: 24 }}
+                          transition={{ duration: 0.3, delay: 0.2 }}
+                        >
+                          <h4 className="font-medium mb-2 flex items-center gap-2 text-primary">
+                            <Brain className="h-4 w-4" />
+                            Explanation
+                          </h4>
+                          <div className="text-sm">
+                            <MarkdownPreview content={currentQuestion.explanation} />
+                          </div>
+                        </motion.div>
+                      )}
+                      
+                      {/* Your answer and time */}
+                      <div className="mt-6 text-sm text-muted-foreground grid grid-cols-1 sm:grid-cols-3 gap-2 bg-muted/30 p-3 rounded-lg">
+                        <div className="flex items-center gap-1.5">
+                          <span>Your answer:</span> 
+                          <Badge className={cn(
+                            "px-2 py-0.5",
+                            isCorrect 
+                              ? "bg-green-500/10 text-green-600" 
+                              : "bg-red-500/10 text-red-600"
+                          )}>
+                            {userAnswer?.selected_option || 'Not answered'}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span>Correct answer:</span> 
+                          <Badge className="bg-green-500/10 text-green-600 px-2 py-0.5">
+                            {currentQuestion.correct_answer}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span>Time spent:</span> 
+                          <Badge variant="outline" className="font-mono px-2 py-0.5">
+                            {userAnswer?.time_taken ? formatTime(userAnswer.time_taken) : 'N/A'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                    
+                    <CardFooter className="flex justify-between pt-2 border-t mt-4">
+                      <Button
+                        variant="outline"
+                        onClick={goToPreviousQuestion}
+                        disabled={currentQuestionIndex === 0}
+                        className="h-10 px-4"
+                      >
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Previous
+                      </Button>
+                      
+                      <div className="hidden sm:flex items-center gap-1">
+                        <span className="text-xs text-muted-foreground">
+                          Swipe to navigate
+                        </span>
+                      </div>
+                      
+                      <Button
+                        variant="outline"
+                        onClick={goToNextQuestion}
+                        disabled={currentQuestionIndex === quiz.questions.length - 1}
+                        className="h-10 px-4"
+                      >
+                        Next
+                        <ArrowRight className="h-4 w-4 ml-2" />
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
             
             {/* Question Navigation */}
-            <div className="rounded-lg border bg-card p-4">
-              <h3 className="font-medium mb-3">Question Navigator</h3>
+            <div className="rounded-lg border bg-card p-4 shadow-sm mt-6">
+              <h3 className="font-medium mb-3 flex items-center gap-2 text-sm">
+                <FileText className="h-4 w-4" />
+                Question Navigator
+              </h3>
               <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
                 {quiz.questions.map((_, index) => {
                   const q = quiz.questions[index]
@@ -476,116 +750,179 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
                   return (
                     <Button
                       key={index}
-                      variant={isCurrent ? "default" : "outline"}
+                      variant="ghost"
                       size="icon"
                       className={cn(
-                        "transition-all duration-200",
-                        isCurrent && "scale-110",
-                        !isCurrent && isCorrect && "bg-green-500/10 text-green-500 border-green-500/20",
-                        !isCurrent && !isCorrect && qAnswer && "bg-red-500/10 text-red-500 border-red-500/20"
+                        "transition-all h-9 w-9 rounded-md relative",
+                        isCurrent && "ring-2 ring-primary shadow-sm scale-110",
+                        !isCurrent && isCorrect && "bg-green-500/10 text-green-600 border-green-500/30",
+                        !isCurrent && !isCorrect && qAnswer && "bg-red-500/10 text-red-600 border-red-500/30"
                       )}
                       onClick={() => setCurrentQuestionIndex(index)}
                     >
                       {index + 1}
+                      {!isCurrent && isCorrect && (
+                        <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-green-500"></span>
+                      )}
+                      {!isCurrent && !isCorrect && qAnswer && (
+                        <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500"></span>
+                      )}
                     </Button>
                   )
                 })}
               </div>
+              
+              <div className="flex flex-wrap justify-end gap-4 mt-4 text-xs">
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded-sm bg-green-500/20 border border-green-500/30"></div>
+                  <span>Correct</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded-sm bg-red-500/20 border border-red-500/30"></div>
+                  <span>Incorrect</span>
+                </div>
+              </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="stats" className="pt-4">
-            <Card>
+          <TabsContent value="stats" className="pt-2">
+            <Card className="border shadow-md">
               <CardHeader>
-                <CardTitle>Performance Statistics</CardTitle>
-                <CardDescription>Detailed analysis of your quiz performance</CardDescription>
+                <CardTitle className="text-xl flex items-center gap-2">
+                  <BarChart2 className="h-5 w-5 text-primary" />
+                  Performance Analysis
+                </CardTitle>
+                <CardDescription>
+                  Detailed breakdown of your quiz performance
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Time Stats */}
+              
+              <CardContent className="space-y-8">
+                {/* Time stats visualization */}
                 <div>
-                  <h3 className="text-lg font-medium mb-2">Time Management</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 bg-muted rounded-lg">
-                      <div className="text-sm text-muted-foreground">Total Time</div>
-                      <div className="text-xl font-semibold">
-                        {totalTime ? formatTime(totalTime) : 'N/A'}
+                  <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                    <Timer className="h-4 w-4" />
+                    Time Management
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="p-5 bg-muted/30 rounded-lg border">
+                      <div className="text-sm text-muted-foreground mb-1">Total Time</div>
+                      <div className="flex items-end gap-2">
+                        <div className="text-3xl font-bold">
+                          {totalTime ? `${Math.floor(totalTime / 60)}` : '0'}
+                        </div>
+                        <div className="text-xl font-medium">min</div>
+                        <div className="text-3xl font-bold ml-2">
+                          {totalTime ? `${totalTime % 60}` : '0'}
+                        </div>
+                        <div className="text-xl font-medium">sec</div>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-2">
+                        Quiz duration: {quiz.duration} minutes
                       </div>
                     </div>
-                    <div className="p-4 bg-muted rounded-lg">
-                      <div className="text-sm text-muted-foreground">Avg. Time per Question</div>
-                      <div className="text-xl font-semibold">
-                        {avgTimePerQuestion ? formatTime(avgTimePerQuestion) : 'N/A'}
+                    
+                    <div className="p-5 bg-muted/30 rounded-lg border">
+                      <div className="text-sm text-muted-foreground mb-1">Avg. Time per Question</div>
+                      <div className="flex items-end gap-2">
+                        <div className="text-3xl font-bold">
+                          {avgTimePerQuestion ? `${Math.floor(avgTimePerQuestion / 60)}` : '0'}
+                        </div>
+                        <div className="text-xl font-medium">min</div>
+                        <div className="text-3xl font-bold ml-2">
+                          {avgTimePerQuestion ? `${avgTimePerQuestion % 60}` : '0'}
+                        </div>
+                        <div className="text-xl font-medium">sec</div>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-2">
+                        {quiz.total_questions} questions total
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                {/* Correct/Incorrect Distribution */}
+                {/* Most challenging questions */}
                 <div>
-                  <h3 className="text-lg font-medium mb-2">Answer Distribution</h3>
-                  <div className="flex h-4 rounded-full overflow-hidden">
-                    <div 
-                      className="bg-green-500 h-full" 
-                      style={{width: `${(correctAnswers / totalQuestions) * 100}%`}}
-                    />
-                    <div 
-                      className="bg-red-500 h-full" 
-                      style={{width: `${(wrongAnswers / totalQuestions) * 100}%`}}
-                    />
-                  </div>
-                  <div className="flex justify-between text-sm mt-1">
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      <span>{correctAnswers} Correct ({Math.round((correctAnswers / totalQuestions) * 100)}%)</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <span>{wrongAnswers} Incorrect ({Math.round((wrongAnswers / totalQuestions) * 100)}%)</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Question-by-Question Breakdown */}
-                <div>
-                  <h3 className="text-lg font-medium mb-3">Question-by-Question Breakdown</h3>
-                  <div className="space-y-2 max-h-80 overflow-y-auto pr-2">
-                    {quiz.questions.map((question, index) => {
-                      const answer = quiz.answers?.[question.id]
-                      return (
-                        <div 
-                          key={question.id} 
-                          className={cn(
-                            "p-3 rounded-lg border flex items-center gap-3 cursor-pointer hover:bg-muted/50 transition-colors",
-                            answer?.is_correct ? "border-green-500/20" : "border-red-500/20"
-                          )}
-                          onClick={() => setCurrentQuestionIndex(index)}
-                        >
-                          <div className="flex-shrink-0">
-                            {answer?.is_correct ? (
-                              <CheckCircle className="h-5 w-5 text-green-500" />
-                            ) : (
-                              <XCircle className="h-5 w-5 text-red-500" />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">Question {index + 1}</p>
-                            <p className="text-xs text-muted-foreground truncate">
-                              {question.question_text.replace(/[#*_`]/g, '')} {/* Remove markdown formatting for truncated preview */}
-                            </p>
-                          </div>
-                          <div className="flex-shrink-0 text-xs text-muted-foreground">
-                            {answer?.time_taken ? formatTime(answer.time_taken) : 'N/A'}
+                  <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4" />
+                    Most Challenging Questions
+                  </h3>
+                  
+                  <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+                    {challengingQuestions.map((item, index) => (
+                      <div 
+                        key={item.question.id} 
+                        className={cn(
+                          "p-4 rounded-lg border flex items-start gap-3 cursor-pointer hover:bg-muted/50 transition-colors",
+                          item.answer?.is_correct ? "border-green-500/20" : "border-red-500/20"
+                        )}
+                        onClick={() => setCurrentQuestionIndex(item.index)}
+                      >
+                        <div className="flex-shrink-0 bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center">
+                          {index + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium mb-1">Question {item.index + 1}</p>
+                          <p className="text-sm text-muted-foreground line-clamp-2">
+                            {item.question.question_text.replace(/[#*_`]/g, '')}
+                          </p>
+                          <div className="flex items-center gap-3 mt-2">
+                            <Badge variant="outline" className="font-mono">
+                              Time: {formatTime(item.time)}
+                            </Badge>
+                            <Badge 
+                              className={cn(
+                                item.answer?.is_correct 
+                                  ? "bg-green-500/10 text-green-600 border-green-500/30" 
+                                  : "bg-red-500/10 text-red-600 border-red-500/30"
+                              )}
+                            >
+                              {item.answer?.is_correct ? 'Correct' : 'Incorrect'}
+                            </Badge>
                           </div>
                         </div>
-                      )
-                    })}
+                      </div>
+                    ))}
                   </div>
+                </div>
+                
+                {/* Areas to review based on incorrect answers */}
+                <div>
+                  <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                    <Brain className="h-4 w-4" />
+                    Study Recommendations
+                  </h3>
+                  
+                  <Card className="bg-amber-500/5 border-amber-500/20">
+                    <CardContent className="p-4">
+                      <p className="text-sm mb-3">
+                        Based on your performance, we recommend reviewing these topics:
+                      </p>
+                      <div className="space-y-2">
+                        {wrongAnswers > 0 ? (
+                          quiz.questions
+                            .filter(q => !quiz.answers?.[q.id]?.is_correct)
+                            .map((q, i) => (
+                              <div key={i} className="flex items-start gap-2">
+                                <div className="text-amber-500 mt-0.5">•</div>
+                                <div className="text-sm">{q.question_text.replace(/[#*_`]/g, '').substring(0, 100)}...</div>
+                              </div>
+                            ))
+                        ) : (
+                          <p className="text-sm text-muted-foreground">
+                            Great job! You answered all questions correctly. Continue practicing to maintain your knowledge.
+                          </p>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
-      </div>
-    </>
+      </motion.div>
+    </div>
   )
 }

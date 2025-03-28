@@ -20,7 +20,7 @@ import { useRouter } from 'nextjs-toploader/app';
 const actionItems = [
   {
     title: 'Courses',
-    description: 'Explore law courses and materials',
+    description: 'Explore law courses and materials and past questions.',
     icon: BookOpen,
     href: '/dashboard/courses',
     color: 'from-blue-500 to-indigo-600',
@@ -30,7 +30,7 @@ const actionItems = [
   },
   {
     title: 'Quizzes',
-    description: 'Test your knowledge with AI quizzes',
+    description: 'Test your knowledge with Smart Intelligence quizzes inferred from past questions',
     icon: BrainCircuit,
     href: '/dashboard/quizzes',
     color: 'from-amber-500 to-orange-600',
@@ -39,8 +39,8 @@ const actionItems = [
     delay: 0.2,
   },
   {
-    title: 'AI Chat',
-    description: 'Get answers from our legal AI assistant',
+    title: 'Smart Assist',
+    description: 'Get smart insights from LawStack intelligence, chat and more',
     icon: Sparkles,
     href: '/dashboard/chat',
     color: 'from-violet-500 to-purple-600',
@@ -50,7 +50,7 @@ const actionItems = [
   },
   {
     title: 'Past Questions',
-    description: 'Access previous exam questions',
+    description: 'Access previous exam questions and SmartAI insights',
     icon: FileQuestion,
     href: '/dashboard/past-questions',
     color: 'from-emerald-500 to-green-600',
@@ -60,7 +60,7 @@ const actionItems = [
   },
   {
     title: 'Bookmarks',
-    description: 'View your saved content',
+    description: 'Save your favorite resources for later access',
     icon: BookMarked,
     href: '/dashboard/bookmarks',
     color: 'from-pink-500 to-rose-600',
@@ -70,7 +70,7 @@ const actionItems = [
   },
   {
     title: 'Advanced Search',
-    description: 'Find specific content across all resources',
+    description: 'Find specific content across all resources plus smart overview',
     icon: Search,
     href: '/dashboard/search',
     color: 'from-cyan-500 to-teal-600',

@@ -15,7 +15,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
-  LucideScale
+  LucideScale,
+  Shield
 } from "lucide-react"
 import Logo from '../logo'
 import { Button } from '../ui/button'
@@ -42,7 +43,7 @@ export const dashboardLinks = [
     icon: BookOpen,
   },
   {
-    tooltip: "AI Assistant",
+    tooltip: "Smart Assistant",
     href: "/dashboard/chat",
     icon: Sparkles,
   },
@@ -50,6 +51,16 @@ export const dashboardLinks = [
     tooltip: "Bookmarks",
     href: "/dashboard/bookmarks",
     icon: BookMarked,
+  },
+  {
+    tooltip: "Courses",
+    href: "/dashboard/courses",
+    icon: BookOpen,
+  },
+  {
+    tooltip: "Quizzes",
+    href: "/dashboard/quizzes",
+    icon: Shield
   },
   {
     tooltip: "Search",
