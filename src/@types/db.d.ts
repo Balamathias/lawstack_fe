@@ -103,6 +103,15 @@ export interface Chat {
     messages: Message[]
   }
   
+export interface MessageAttachment {
+  id: string;
+  filename: string;
+  file_type: string;
+  size: number;
+  url: string;
+  created_at: string;
+}
+
 export interface Message {
     id: string,
     content: string,
@@ -110,6 +119,7 @@ export interface Message {
     updated_at: string | null,
     feedback: string | null,
     sender: 'user' | 'ai',
+    attachments?: MessageAttachment[] | null
 }
 
 export interface AIQuestion {
