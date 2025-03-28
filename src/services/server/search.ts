@@ -28,7 +28,10 @@ export async function searchContent(filters: SearchFilters): Promise<StackRespon
       data: {
         past_questions: [],
         courses: [],
-        institutions: []
+        institutions: [],
+        count: 0,
+        next: null,
+        previous: null
       },
       status: error?.response?.status
     };
