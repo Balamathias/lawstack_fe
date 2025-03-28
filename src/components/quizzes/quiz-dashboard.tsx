@@ -29,7 +29,7 @@ import {
 
 interface QuizDashboardProps {
   initialQuizzes: { data: Quiz[] }
-  initialStats: { data: QuizStatistics }
+  initialStats: { data: QuizStatistics | null }
   initialCourses: { data: Course[] }
 }
 
@@ -47,9 +47,9 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
   const [statusFilter, setStatusFilter] = useState('all')
   
   // Query hooks with initial data
-  const { data: quizzesData, isLoading: loadingQuizzes } = useQuizzes({}, initialQuizzes)
-  const { data: statsData, isLoading: loadingStats } = useQuizStatistics(initialStats)
-  const { data: coursesData, isLoading: loadingCourses } = useCourses({}, initialCourses)
+  const { data: quizzesData, isLoading: loadingQuizzes } = useQuizzes()
+  const { data: statsData, isLoading: loadingStats } = useQuizStatistics()
+  const { data: coursesData, isLoading: loadingCourses } = useCourses()
   
   // Mutation hooks
   const createQuizMutation = useCreateQuiz()
