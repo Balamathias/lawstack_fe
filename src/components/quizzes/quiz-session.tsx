@@ -87,6 +87,14 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
       const durationMs = quiz.duration * 60 * 1000
       const endTime = startTime + durationMs
       
+      // Only set up timer if end time is in the future
+      const now = Date.now()
+      if (endTime <= now) {
+        // Quiz should have already ended - don't set up the timer
+        setTimeRemaining(0)
+        return;
+      }
+      
       const updateTimer = () => {
         const now = Date.now()
         const remaining = endTime - now
@@ -137,7 +145,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
         }
       }
     }
-  }, [quiz.status, quiz.started_at, quiz.duration])
+  }, [quiz.status, quiz.started_at, quiz.duration, isAutoSubmitting, handleQuizSubmit])
   
   // Touch event handlers for swipe navigation
   const handleTouchStart = (e: React.TouchEvent) => {
