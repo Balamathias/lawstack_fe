@@ -56,7 +56,8 @@ export interface Course {
     credit_units: number,
     ordering: number | null,
     created_at: string,
-    updated_at: string
+    updated_at: string,
+    institution_name?: string
 }
 
 export interface Bookmark {
