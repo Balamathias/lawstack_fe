@@ -27,7 +27,7 @@ export const useQuizzes = (params?: Record<string, string | number | boolean>) =
 /**
  * Hook to fetch a single quiz by ID
  */
-export const useQuiz = (id: string, options = {}) => {
+export const useQuiz = (id: string, options: any) => {
   return useQuery({
     queryKey: [QUERY_KEYS.get_quiz, id],
     queryFn: async () => getQuiz(id),
