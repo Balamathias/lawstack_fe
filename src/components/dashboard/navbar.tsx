@@ -46,7 +46,6 @@ const Navbar = ({ user }: NavbarProps) => {
         className="flex flex-row p-4 h-14 w-full fixed top-0 z-30 border-b bg-background dark:bg-dark/70 lg:hidden  dark:border-none backdrop-blur-md"
     >
         <div className="flex flex-row justify-between items-center w-full mx-auto gap-4">
-          <div />
           <Logo />
 
           <Link href={user ? `/profile/${user.username}` : '#'}>

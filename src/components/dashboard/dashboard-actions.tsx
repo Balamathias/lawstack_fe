@@ -127,7 +127,7 @@ const DashboardAction = () => {
               boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" 
             }}
             className={cn(
-              'relative overflow-hidden rounded-2xl h-44 cursor-pointer bg-gradient-to-br border border-transparent',
+              'relative overflow-hidden rounded-2xl cursor-pointer bg-gradient-to-br border border-transparent',
               isCurrentPath ? `${action.hoverColor} shadow-lg` : action.color,
               isCurrentPath && 'border-white/20 shadow-xl'
             )}

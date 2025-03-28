@@ -17,7 +17,7 @@ export default async function QuizzesPage() {
   ])
   
   return (
-    <div className="flex flex-col gap-y-5 py-8 animate-fade-in max-w-7xl mx-auto p-3 sm:p-8 pb-16 max-lg:mt-14">
+    <div className="flex flex-col gap-y-5 py-8 animate-fade-in max-w-7xl mx-auto p-4 sm:p-8 pb-16 max-lg:mt-14">
       <QuizDashboard 
         initialQuizzes={quizzesResponse} 
         initialStats={statsResponse}

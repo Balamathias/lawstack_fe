@@ -340,7 +340,7 @@ const DashboardSidebar = ({ user }: Props) => {
   return (
     <>
       <DesktopSidebar />
-      <MobileSidebar />
+      {/* <MobileSidebar /> */}
     </>
   )
 }

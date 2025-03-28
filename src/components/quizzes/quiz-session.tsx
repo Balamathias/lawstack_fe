@@ -513,7 +513,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
     <>
       {(isCompleting || isAutoSubmitting) && (<LoadingOverlay />)}
       
-      <div className="max-w-4xl mx-auto mb-20 sm:mb-8 px-4">
+      <div className="max-w-4xl mx-auto mb-20 sm:mb-8">
         {/* Header section with timer and progress */}
         <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm pt-2 pb-4">
           <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-2 mb-2">
