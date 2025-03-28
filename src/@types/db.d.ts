@@ -190,3 +190,22 @@ export interface QuizStatistics {
     correct_answers: number
   }[]
 }
+
+export interface SearchFilters {
+  query: string,
+  institution: string,
+  course: string,
+  year: string,
+  type: string,
+  page: number,
+  limit: number
+}
+
+export interface SearchResults {
+  count: number,
+  next: string | null,
+  previous: string | null,
+  past_questions: Question[],
+  courses: Course[],
+  institutions: Institution[]
+}

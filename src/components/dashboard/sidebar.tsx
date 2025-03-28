@@ -14,7 +14,8 @@ import {
   ShieldAlert,
   ChevronLeft,
   ChevronRight,
-  Menu
+  Menu,
+  LucideScale
 } from "lucide-react"
 import Logo from '../logo'
 import { Button } from '../ui/button'
@@ -231,7 +232,7 @@ const DashboardSidebar = ({ user }: Props) => {
           isCollapsed ? "w-10 h-10 p-0" : "w-full gap-2",
           loggingOut && "opacity-70"
         )}
-        variant="outline"
+        variant="default"
         size={isCollapsed ? "icon" : "sm"}
         onClick={handleLogout}
         disabled={loggingOut}
@@ -263,7 +264,9 @@ const DashboardSidebar = ({ user }: Props) => {
           isCollapsed ? "justify-center" : "justify-between"
         )}>
           {!isCollapsed && <Logo />}
-          {isCollapsed && <span className="font-bold text-xl">L</span>}
+          {isCollapsed && <span className="font-bold text-xl">
+            <LucideScale />
+          </span>}
           
           <Button
             variant="ghost"
