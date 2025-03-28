@@ -279,7 +279,7 @@ export default function QuizDashboard({
                     value={[questionCount]}
                     onValueChange={(values) => setQuestionCount(values[0])}
                     min={5}
-                    max={25}
+                    max={45}
                     step={5}
                     className="flex-1"
                   />
