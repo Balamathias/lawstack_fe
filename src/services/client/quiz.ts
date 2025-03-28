@@ -27,15 +27,14 @@ export const useQuizzes = (params?: Record<string, string | number | boolean>) =
 /**
  * Hook to fetch a single quiz by ID
  */
-export const useQuiz = (id: string, options: any) => {
+export const useQuiz = (id: string, options?: any) => {
   return useQuery({
     queryKey: [QUERY_KEYS.get_quiz, id],
-    queryFn: async () => getQuiz(id),
+    queryFn: () => getQuiz(id),
     enabled: !!id,
     retry: 1, // Only retry once for 404s
     staleTime: 5 * 1000, // 5 seconds
     refetchOnWindowFocus: false, // Don't refetch on window focus to avoid disruptions during quiz
-    ...options
   })
 }
 

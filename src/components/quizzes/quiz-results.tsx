@@ -51,7 +51,7 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null)
   
   // Get the latest quiz data
-  const { data: quizResponse, isLoading } = useQuiz(initialQuiz.id)
+  const { data: quizResponse, isLoading } = useQuiz(initialQuiz.id, {})
   
   // For creating a new quiz with the same settings
   const { mutate: createQuiz, isPending: isCreating } = useCreateQuiz()

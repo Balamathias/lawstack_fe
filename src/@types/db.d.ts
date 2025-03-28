@@ -192,13 +192,13 @@ export interface QuizStatistics {
 }
 
 export interface SearchFilters {
-  query: string,
-  institution: string,
-  course: string,
-  year: string,
-  type: string,
-  page: number,
-  limit: number
+  query?: string,
+  institution?: string,
+  course?: string,
+  year?: string,
+  type?: string,
+  page?: number,
+  limit?: number
 }
 
 export interface SearchResults {

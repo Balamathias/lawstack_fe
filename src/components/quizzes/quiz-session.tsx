@@ -145,7 +145,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
         }
       }
     }
-  }, [quiz.status, quiz.started_at, quiz.duration, isAutoSubmitting, handleQuizSubmit])
+  }, [quiz.status, quiz.started_at, quiz.duration, isAutoSubmitting])
   
   // Touch event handlers for swipe navigation
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -625,7 +625,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
                                 htmlFor={`option-${option}`} 
                                 className="cursor-pointer font-normal"
                               >
-                                {convertMarkdownToPlainText(currentQuestion.options[option.toLowerCase()])}
+                                {convertMarkdownToPlainText(currentQuestion.options[option.toLowerCase() as keyof typeof currentQuestion.options])}
                               </Label>
                             </div>
                           </div>
@@ -829,7 +829,6 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
         open={showCompleteDialog} 
         setOpen={setShowCompleteDialog} 
         title="Submit Quiz?"
-        className="sm:max-w-md"
       >
         <div className='p-4 flex flex-col gap-y-4'>
           <div className="space-y-4">
