@@ -29,6 +29,8 @@ import { convertMarkdownToPlainText, getSemester } from '@/lib/utils';
 import { useRouter } from 'nextjs-toploader/app';
 import { useAnalyzeSearch } from '@/services/client/ai';
 
+import MarkdownPreview from '@/components/markdown-preview'
+
 interface SearchResultsDisplayProps {
   results: SearchResults;
   currentPage: number;
