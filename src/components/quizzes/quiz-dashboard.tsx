@@ -165,7 +165,7 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
         
         <Dialog open={isCreating} onOpenChange={setIsCreating}>
           <DialogTrigger asChild>
-            <Button className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md">
+            <Button className="gap-2 rounded-xl">
               <PlusCircle className="h-4 w-4" />
               <span>Create Quiz</span>
             </Button>

@@ -17,6 +17,7 @@ import { Input } from '../ui/input';
 import Image from 'next/image';
 import { Progress } from '../ui/progress';
 import { toast } from 'sonner';
+import Logo from '../logo';
 
 interface Props {
   chatId?: string;
@@ -476,10 +477,8 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
     <div className="flex flex-col h-full bg-inherit backdrop-blur-sm rounded-xl overflow-hidden relative">
       <div className="flex items-center justify-between p-2 sm:p-4 ">
         <div className="flex items-center space-x-2">
-          <div className="bg-primary/10 p-1.5 rounded-full backdrop-blur-sm">
-            <LucideScale size={20} className="text-primary" />
-          </div>
-          <h2 className="text-lg font-semibold text-card-foreground">LawStack Assistant</h2>
+          <Logo />
+          <h2 className="text-xl font-muted-foreground">AI</h2>
         </div>
         <ChatHistory
           user={user!}

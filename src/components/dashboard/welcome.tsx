@@ -177,7 +177,7 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  Welcome to LegalX - your ultimate legal education platform. Sign in to access all features.
+                  Welcome to LawStack - your ultimate legal education platform. Sign in to access all features.
                 </motion.p>
                 
                 <div className="flex flex-wrap gap-3 pt-2">
