@@ -74,7 +74,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
         initialAnswers[questionId] = answerData.selected_option
       })
       
-      if (Object.keys(initialAnswers).length > 0) {
+      if (Object.keys(initialAnswers)?.length > 0) {
         setAnswers(prev => ({...prev, ...initialAnswers}))
       }
     }
@@ -164,7 +164,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
     if (Math.abs(diff) > minSwipeDistance) {
       if (diff > 0) {
         // Swiped left, go to next question
-        if (currentQuestionIndex < quiz.questions.length - 1) {
+        if (currentQuestionIndex < quiz.questions?.length - 1) {
           setSwipeDirection('left')
           setTimeout(() => {
             handleNextQuestion()
@@ -264,7 +264,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   const handleNextQuestion = async () => {
     await saveCurrentAnswer()
     
-    if (currentQuestionIndex < quiz.questions.length - 1) {
+    if (currentQuestionIndex < quiz.questions?.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
       setQuestionStartTime(Date.now())
     }
@@ -350,7 +350,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   const allQuestionsAnswered = quiz.questions && 
     quiz.questions.every(q => !!answers[q.id])
   
-  const answeredCount = Object.keys(answers).length
+  const answeredCount = Object.keys(answers)?.length
   const progressPercentage = quiz.questions?.length > 0 
     ? (answeredCount / quiz.questions.length) * 100 
     : 0
@@ -762,7 +762,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
             ) : (
               <Badge variant="outline" className="ml-auto flex items-center gap-1 bg-amber-500/10 text-amber-600 border-amber-500/30">
                 <AlertTriangle className="h-3 w-3" />
-                {unansweredQuestions.length} unanswered
+                {unansweredQuestions?.length} unanswered
               </Badge>
             )}
           </div>
@@ -801,7 +801,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
             )}
           </div>
           
-          {currentQuestionIndex < quiz.questions.length - 1 ? (
+          {currentQuestionIndex < quiz.questions?.length - 1 ? (
             <Button
               size="sm"
               onClick={handleNextQuestion}
@@ -856,7 +856,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
               <div className="flex items-center gap-2 text-amber-500 bg-amber-500/10 p-3 rounded-lg">
                 <AlertTriangle className="h-5 w-5 flex-shrink-0" />
                 <span>
-                  You have {unansweredQuestions.length} unanswered {unansweredQuestions.length === 1 ? 'question' : 'questions'}.
+                  You have {unansweredQuestions?.length} unanswered {unansweredQuestions?.length === 1 ? 'question' : 'questions'}.
                 </span>
               </div>
             )}

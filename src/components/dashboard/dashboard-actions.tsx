@@ -29,8 +29,8 @@ const actionItems = [
     delay: 0.1,
   },
   {
-    title: 'Quizzes',
-    description: 'Test your knowledge with Smart Intelligence quizzes inferred from past questions',
+    title: 'Quizzes (CBT)',
+    description: 'Test your knowledge with Smart Intelligence quizzes inferred from past questions (CBT).',
     icon: BrainCircuit,
     href: '/dashboard/quizzes',
     color: 'from-amber-500 to-orange-600',

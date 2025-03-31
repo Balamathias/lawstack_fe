@@ -172,7 +172,7 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
           <DialogTrigger asChild>
             <Button className="gap-2 rounded-xl">
               <PlusCircle className="h-4 w-4" />
-              <span>Create Quiz</span>
+              <span>New Quiz</span>
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]">
