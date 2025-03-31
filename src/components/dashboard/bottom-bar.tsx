@@ -14,8 +14,8 @@ export const dashboardMobileLinks = [
     icon: Home,
   },
   {
-    tooltip: "Questions",
-    href: "/dashboard/past-questions",
+    tooltip: "Courses",
+    href: "/dashboard/courses",
     icon: BookOpen,
   },
   {

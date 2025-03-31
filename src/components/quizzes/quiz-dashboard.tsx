@@ -42,6 +42,9 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
   const [selectedCourse, setSelectedCourse] = useState('')
   const [numQuestions, setNumQuestions] = useState(10)
   const [quizDuration, setQuizDuration] = useState(15)
+
+  const [difficulty, setDifficulty] = useState('easy')
+  const [semester, setSemester] = useState('1')
   
   // States for filtering
   const [statusFilter, setStatusFilter] = useState('all')
@@ -79,7 +82,9 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
         title: quizTitle || `Law Quiz - ${new Date().toLocaleDateString()}`,
         course: selectedCourse,
         total_questions: numQuestions,
-        duration: quizDuration
+        duration: quizDuration,
+        semester,
+        difficulty
       })
       
       if (result.data) {
@@ -251,6 +256,41 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
                         <SelectItem value="30">30 minutes</SelectItem>
                         <SelectItem value="45">45 minutes</SelectItem>
                         <SelectItem value="60">60 minutes</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="difficulty">Difficulty</Label>
+                    <Select 
+                      value={difficulty} 
+                      onValueChange={(value) => setDifficulty(value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Difficulty" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="easy">Easy</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>    
+                        <SelectItem value="hard">Hard</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="semester">Semester</Label>
+                    <Select 
+                      value={semester} 
+                      onValueChange={(value) => setSemester(value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Semester..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">First Semester</SelectItem>
+                        <SelectItem value="2">Second Semester</SelectItem>  
                       </SelectContent>
                     </Select>
                   </div>
