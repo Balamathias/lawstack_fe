@@ -35,7 +35,7 @@ const Page = async ({ params: _params, searchParams: _searchParams }: Props) => 
             Discover comprehensive law courses tailored for Nigerian law students. Browse through past questions, study materials, and resources.
           </p>
           
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-8">
             <Card className="bg-card/50 border border-primary/10">
               <CardContent className="p-4 flex items-center gap-3">
                 <div className="bg-primary/10 p-2 rounded-full">

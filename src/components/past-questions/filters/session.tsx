@@ -1,95 +1,111 @@
 'use client'
 
-import DynamicModal from "@/components/dynamic-modal"
-import { DialogClose } from "@/components/ui/dialog"
-import { addQueryParams, cn } from "@/lib/utils"
-import { useSearchParams } from "next/navigation"
-import { useRouter } from "nextjs-toploader/app"
-import React, { useTransition, useState } from "react"
-import { useOptimistic } from 'react'
+import React, { useCallback, useState } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { Badge } from '@/components/ui/badge';
+import { CalendarDays, ChevronDown, ChevronUp } from 'lucide-react';
+import BaseFilter from './base-filter';
+import { cn } from '@/lib/utils';
+import { useRouter } from 'nextjs-toploader/app'
 
 export const FilterBySession = () => {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition()
-  const [optimisticSession, setOptimisticSession] = useOptimistic<string | null>(null)
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const [showMore, setShowMore] = useState(false);
+  
+  // Get selected session from URL
+  const selectedSession = searchParams?.get('session') || '';
 
-  const selectedSession = optimisticSession ?? (searchParams?.get('session') ? searchParams?.get('session') : null)
-  const qs = searchParams?.toString()
+  // Create sessions (current academic year and 9 past ones)
+  const currentYear = new Date().getFullYear();
+  const sessions = Array.from({ length: 20 }, (_, i) => {
+    const startYear = currentYear - i;
+    return `${startYear}/${startYear + 1}`;
+  });
 
-  const handleSessionFilter = (session: string) => {
-    startTransition(() => {
-      setOptimisticSession(session)
-      const url = addQueryParams(qs, { session })
-      router.replace(url)
-    })
-  }
-
-  // Generate sessions from 2009/2010 to current year
-  const generateSessions = () => {
-    const currentYear = new Date().getFullYear()
-    const sessions = []
-    for (let startYear = currentYear; startYear >= 2009; startYear--) {
-      sessions.push(`${startYear}/${startYear + 1}`)
-    }
-    return sessions
-  }
-
-  const sessions = generateSessions()
-
+  // Create new search params
+  const createQueryString = useCallback(
+    (params: Record<string, string | null>) => {
+      const newSearchParams = new URLSearchParams(searchParams?.toString());
+      
+      Object.entries(params).forEach(([key, value]) => {
+        if (value === null) {
+          newSearchParams.delete(key);
+        } else {
+          newSearchParams.set(key, value);
+        }
+      });
+      
+      return newSearchParams.toString();
+    },
+    [searchParams]
+  );
+  
+  // Handle session selection
+  const handleSessionChange = (session: string) => {
+    const queryString = createQueryString({
+      session: selectedSession === session ? null : session
+    });
+    router.push(`${pathname}?${queryString}`, { scroll: false });
+  };
+  
+  const displayedSessions = showMore ? sessions : sessions.slice(0, 9);
+  
   return (
-    <div className="flex flex-col gap-1.5">
-      <h3 className="text-lg font-semibold">Session</h3>
-      <div className="grid grid-cols-3 gap-1.5">
-        {sessions.slice(0, 5).map((session) => (
-          <button 
-            key={session} 
-            className={cn(
-              "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-              "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
-              session === selectedSession && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
-            )}
-            onClick={() => handleSessionFilter(session)}
-          >
-            {session}
-          </button>
-        ))}
-
-        <DynamicModal
-          trigger={
-            <button 
+    <BaseFilter 
+      title="Academic Session" 
+      icon={CalendarDays} 
+      defaultOpen={!!selectedSession}
+      contentClassName="pb-2"
+      badge={selectedSession && (
+        <Badge variant="outline" className="bg-primary/10 text-primary text-xs font-normal">
+          {selectedSession}
+        </Badge>
+      )}
+    >
+      <div className="space-y-4 overflow-auto h-auto">
+        <div className="text-sm text-muted-foreground mb-4">
+          Select an academic session
+        </div>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {displayedSessions.map((session) => (
+            <Badge
+              key={session}
+              variant="outline"
               className={cn(
-                "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
-                selectedSession && sessions.slice(5)?.includes(selectedSession) && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
+                "justify-center py-1.5 cursor-pointer hover:bg-primary/10 transition-colors text-sm",
+                selectedSession === session
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                  : "bg-card"
               )}
+              onClick={() => handleSessionChange(session)}
             >
-              { selectedSession && sessions.slice(5)?.includes(selectedSession) ? selectedSession : 'More'}
-            </button>
-          }
-          title="Filter by Session"
-          dialogClassName='w-full max-w-3xl'
-        >
-          <div className="flex flex-col max-h-[80vh] overflow-y-auto gap-3 p-2.5">
-            <div className="grid grid-cols-3 gap-1.5">
-              {sessions.slice(5).map((session) => (
-                <DialogClose asChild key={session}>
-                  <button 
-                    className={cn(
-                      "px-2.5 py-1.5 rounded-lg cursor-pointer transition-all",
-                      "bg-secondary/50 text-muted-foreground hover:text-green-500 hover:bg-green-500/10",
-                      session === selectedSession && 'bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-500'
-                    )}
-                    onClick={() => handleSessionFilter(session)}
-                  >
-                    {session}
-                  </button>
-                </DialogClose>
-              ))}
-            </div>
-          </div>
-        </DynamicModal>
+              {session}
+            </Badge>
+          ))}
+        </div>
+
+        {sessions.length > 9 && (
+          <button 
+            onClick={() => setShowMore(!showMore)}
+            className="w-full flex items-center justify-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors py-2 border-t border-border/50 mt-2 pt-2"
+          >
+            {showMore ? (
+              <>
+                <ChevronUp className="h-3 w-3" />
+                <span>Show fewer</span>
+              </>
+            ) : (
+              <>
+                <ChevronDown className="h-3 w-3" />
+                <span>Show more sessions</span>
+              </>
+            )}
+          </button>
+        )}
       </div>
-    </div>
-  )
-}
+    </BaseFilter>
+  );
+};

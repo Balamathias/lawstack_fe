@@ -12,12 +12,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import { useRouter } from 'nextjs-toploader/app'
 
 interface WelcomeProps {
   user: User | null;
 }
 
 const DashboardWelcome = ({ user }: WelcomeProps) => {
+  const router = useRouter()
   const [isFocused, setIsFocused] = useState(false);
   const isGuest = !user;
 
@@ -115,7 +117,7 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                   isFocused ? "text-indigo-600" : "text-white/70"
                 )} />
                 
-                <motion.div
+                <motion.form
                   initial={false}
                   animate={isFocused ? { 
                     scale: 1.02, 
@@ -125,6 +127,9 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                     boxShadow: "0 0 0 rgba(0, 0, 0, 0)"
                   }}
                   transition={{ duration: 0.2 }}
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                  }}
                 >
                   <Input 
                     placeholder="Search questions, topics..." 
@@ -135,7 +140,7 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                   />
-                </motion.div>
+                </motion.form>
               </div>
             </motion.div>
           )}

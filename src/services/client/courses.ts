@@ -103,3 +103,13 @@ export const useDeleteCourse = () => {
     },
   });
 };
+
+// Hook for fetching courses with client-side data loading
+export const useGetCourses = (params?: Record<string, any>) => {
+  return useQuery({
+    queryKey: ['courses', params],
+    queryFn: async () => {
+      return getCourses({ params });
+    }
+  });
+};

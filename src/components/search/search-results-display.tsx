@@ -274,6 +274,7 @@ function QuestionCard({ question, index }: { question: Question, index: number }
               className="flex items-center gap-1 text-xs"
               onClick={(e) => {
                 e.preventDefault();
+                e.stopPropagation()
                 setShowAnalysis(!showAnalysis);
               }}
             >
@@ -356,9 +357,7 @@ function QuestionAnalysis({ questionId, text }: { questionId: string, text: stri
         <Sparkles className="h-3.5 w-3.5 text-primary" />
         AI Analysis
       </h4>
-      <p className="text-xs leading-relaxed text-muted-foreground">
-        {data?.analysis || "No analysis available"}
-      </p>
+      <MarkdownPreview content={data?.analysis} />
       
       {data?.relatedTopics && data.relatedTopics.length > 0 && (
         <div className="pt-2 mt-2">
@@ -423,7 +422,10 @@ function CourseCard({ course, index }: { course: Course, index: number }) {
               variant="ghost" 
               size="sm"
               className="w-full flex items-center gap-1 text-xs justify-center"
-              onClick={() => setShowAnalysis(!showAnalysis)}
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowAnalysis(!showAnalysis)
+              }}
             >
               <Sparkles className="h-3.5 w-3.5" />
               {showAnalysis ? "Hide AI Insights" : "AI Course Insights"}
@@ -501,9 +503,8 @@ function CourseAnalysis({ courseId, name, description }: { courseId: string, nam
         <Sparkles className="h-3.5 w-3.5 text-primary" />
         AI Course Insights
       </h4>
-      <p className="text-xs leading-relaxed text-muted-foreground">
-        {data?.analysis || "No analysis available"}
-      </p>
+
+      <MarkdownPreview content={data?.analysis} />
       
       {data?.suggestedResources && data.suggestedResources.length > 0 && (
         <div className="pt-2 mt-2">
