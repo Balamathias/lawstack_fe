@@ -129,6 +129,13 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                   transition={{ duration: 0.2 }}
                   onSubmit={(e) => {
                     e.preventDefault()
+                    // Get the input value
+                    const formElement = e.currentTarget;
+                    const inputElement = formElement.querySelector('input');
+                    const query = inputElement?.value || '';
+
+                    // Navigate to search page with query parameter
+                    router.push(`/dashboard/search?query=${encodeURIComponent(query)}`);
                   }}
                 >
                   <Input 

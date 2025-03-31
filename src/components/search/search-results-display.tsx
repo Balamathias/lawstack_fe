@@ -326,7 +326,10 @@ function QuestionAnalysis({ questionId, text }: { questionId: string, text: stri
         <Button
           variant="outline"
           size="sm"
-          onClick={handleAnalyzeClick}
+          onClick={e => {
+            e.stopPropagation()
+            handleAnalyzeClick()
+          }}
           className="text-xs"
         >
           <Sparkles className="h-3.5 w-3.5 mr-1.5" />
@@ -359,7 +362,7 @@ function QuestionAnalysis({ questionId, text }: { questionId: string, text: stri
         <Sparkles className="h-3.5 w-3.5 text-primary" />
         AI Analysis
       </h4>
-      <MarkdownPreview content={data?.analysis} />
+      <MarkdownPreview content={data?.analysis || ''} />
       
       {data?.relatedTopics && data.relatedTopics.length > 0 && (
         <div className="pt-2 mt-2">
@@ -506,7 +509,7 @@ function CourseAnalysis({ courseId, name, description }: { courseId: string, nam
         AI Course Insights
       </h4>
 
-      <MarkdownPreview content={data?.analysis} />
+      <MarkdownPreview content={data?.analysis || ''} />
       
       {data?.suggestedResources && data.suggestedResources.length > 0 && (
         <div className="pt-2 mt-2">
