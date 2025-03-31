@@ -13,12 +13,7 @@ import { motion } from 'framer-motion';
 import { useGetCourses } from '@/services/client/courses';
 import { useRouter } from 'nextjs-toploader/app'
 
-interface Course {
-  id: string;
-  name: string;
-  code?: string;
-  level?: number;
-}
+import { Course } from '@/@types/db'
 
 export const FilterByCourse = () => {
   const searchParams = useSearchParams();
