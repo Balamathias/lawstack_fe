@@ -53,24 +53,33 @@ export enum status {
   HTTP_104_CHECKPOINT = 104,
 }
 
-export const addQueryParams = (qs: string, params: Record<string, string | number | undefined>): string => {
-  const urlParams = new URLSearchParams(qs);
-
+/**
+ * Adds a query parameter to an existing query string
+ * @param qs Existing query string
+ * @param params Parameters to add
+ * @returns Updated query string URL
+ */
+export function addQueryParams(qs: string | undefined | null, params: Record<string, any>): string {
+  const urlSearchParams = new URLSearchParams(qs || '');
+  
   Object.entries(params).forEach(([key, value]) => {
     if (value === undefined || value === null || value === '') {
-      urlParams.delete(key);
+      urlSearchParams.delete(key);
     } else {
-      const existingValue = urlParams.get(key);
-      if (existingValue === value.toString()) {
-        urlParams.delete(key);
-      } else {
-        urlParams.set(key, value.toString());
-      }
+      urlSearchParams.set(key, String(value));
     }
   });
+  
+  return `?${urlSearchParams.toString()}`;
+}
 
-  return `?${urlParams.toString()}`;
-};
+/**
+ * Truncates a string to a specified length and adds ellipsis
+ */
+export function truncateString(str: string, length: number): string {
+  if (!str) return '';
+  return str.length > length ? str.substring(0, length) + '...' : str;
+}
 
 export const clipString = (text: string, by=50) => {
   if (text.length <= by) return text
@@ -144,11 +153,6 @@ export const setCookies = (cookies: any, token?: string | null, refreshToken?: s
     cookies.set('token', token)
     cookies.set('refreshToken', refreshToken)
   }
-}
-
-export const truncateString = (str: string, length: number) => {
-  if (str.length <= length) return str
-  return str.slice(0, length) + '...'
 }
 
 export const getSemester = (semester: number | string) => {
