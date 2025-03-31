@@ -43,7 +43,7 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
   const [numQuestions, setNumQuestions] = useState(10)
   const [quizDuration, setQuizDuration] = useState(15)
 
-  const [difficulty, setDifficulty] = useState('easy')
+  const [difficulty, setDifficulty] = useState('medium')
   const [semester, setSemester] = useState('1')
   
   // States for filtering
