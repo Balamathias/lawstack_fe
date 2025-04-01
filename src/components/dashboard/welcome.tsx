@@ -206,9 +206,9 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                       asChild
                       className="bg-indigo-900/30 text-white border border-white/20 backdrop-blur-sm hover:bg-indigo-900/40 flex gap-2 h-10"
                     >
-                      <Link href="/signup">
+                      <Link href="/register">
                         <UserPlus className="h-4 w-4" />
-                        <span>Sign Up</span>
+                        <span>Register</span>
                       </Link>
                     </Button>
                   </motion.div>
@@ -254,7 +254,7 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                 
                 <motion.div 
                   variants={itemVariants}
-                  className="flex flex-wrap gap-1.5 md:gap-3"
+                  className="flex_ flex-wrap gap-1.5 md:gap-3 hidden"
                 >
                   <Badge className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm text-xs md:text-sm py-1">
                     <BookOpen className="h-3 w-3 md:h-3.5 md:w-3.5 mr-1" />
@@ -351,9 +351,9 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                   asChild
                   className="bg-indigo-900/30 text-white border border-white/20 backdrop-blur-sm hover:bg-indigo-900/40 flex gap-2 h-11"
                 >
-                  <Link href="/signup">
+                  <Link href="/register">
                     <UserPlus className="h-4 w-4" />
-                    <span>Sign Up</span>
+                    <span>Register</span>
                   </Link>
                 </Button>
               </motion.div>

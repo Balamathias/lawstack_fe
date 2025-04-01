@@ -189,11 +189,11 @@ const GuestPrompt = ({ onLoginClick }: { onLoginClick: () => void }) => {
               >
                 <Button 
                   onClick={onLoginClick}
-                  className="bg-primary text-white flex gap-2"
+                  className="flex gap-2 rounded-xl"
                   size="lg"
                 >
                   <LogIn className="h-4 w-4" />
-                  <span>Sign In</span>
+                  <span>Log In</span>
                 </Button>
               </motion.div>
               
@@ -204,12 +204,12 @@ const GuestPrompt = ({ onLoginClick }: { onLoginClick: () => void }) => {
                 <Button 
                   variant="outline" 
                   asChild
-                  className="flex gap-2 border-primary/20 text-primary"
+                  className="flex gap-2 border-primary/20 text-primary rounded-xl"
                   size="lg"
                 >
-                  <Link href="/signup">
+                  <Link href="/register">
                     <UserPlus className="h-4 w-4" />
-                    <span>Create Account</span>
+                    <span>Register</span>
                   </Link>
                 </Button>
               </motion.div>
@@ -230,7 +230,7 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
   const isGuest = !user;
   
   const handleLoginClick = () => {
-    router.push('/login');
+    router.push('/login?next=/dashboard/chat');
   };
     
   const options = [

@@ -14,7 +14,8 @@ import {
     FormField,
     FormItem,
     FormLabel,
-    FormMessage
+    FormMessage,
+    FormDescription,
 } from "@/components/ui/form"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -132,6 +133,9 @@ const OTPForm = () => {
                                     </InputOTPGroup>
                                 </InputOTP>
                             </FormControl>
+                            <FormDescription className='text-sm'>
+                                Please enter the OTP sent to your email. You may check your spam folder if you {"don't"} see it in your inbox.
+                            </FormDescription>
                             <FormMessage className='text-red-500/70' />
                             </FormItem>
                         )}
