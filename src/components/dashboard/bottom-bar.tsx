@@ -96,7 +96,7 @@ const DashboardBottomBar = () => {
         })}
 
         {/* Admin link for mobile - Only for staff/superusers */}
-        {isAdmin && (
+        {/* {isAdmin && (
           <Link 
             href="/admin"
             className={cn(
@@ -124,7 +124,7 @@ const DashboardBottomBar = () => {
               <span className="absolute -top-0.5 left-1/2 w-1 h-1 bg-red-500 rounded-full transform -translate-x-1/2"></span>
             )}
           </Link>
-        )}
+        )} */}
       </div>
     </nav>
   )

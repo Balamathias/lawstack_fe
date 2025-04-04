@@ -3,12 +3,14 @@ import { StackResponse } from '@/@types/generics'
 import BackButton from '@/components/back-button'
 import React, { Suspense, use } from 'react'
 import CourseQuestions, { CourseQuestionsSkeleton } from './course-questions'
-import { LucideBookLock, LucideStars, LucideWeight, LucideBook, LucideInfo } from 'lucide-react'
+import { LucideBookLock, LucideStars, LucideWeight, LucideBook, LucideInfo, BrainCircuit } from 'lucide-react'
 import Filters from '@/components/past-questions/filters'
 import Empty from '@/components/empty'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 interface Props {
     promisedCourse: Promise<StackResponse<Course | null>>,
@@ -53,42 +55,58 @@ const CourseDetail = ({ promisedCourse, searchParams }: Props) => {
               {course?.description || 'Course Description'}
             </p>
 
-            <div className='flex items-center gap-4 flex-wrap mt-4 animate-slide-in-up'>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Badge variant="outline" className="px-3 py-1.5 border-primary/30 hover:border-primary transition-all hover:shadow-sm group">
-                      <LucideStars className="h-4 w-4 mr-2 text-yellow-500 group-hover:scale-110 transition-transform" />
-                      <span className="font-medium">{course?.level} level</span>
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>Course level</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+            <div className='flex items-center justify-between gap-4 flex-wrap mt-4 animate-slide-in-up'>
+              <div className='flex items-center gap-4 flex-wrap'>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="outline" className="px-3 py-1.5 border-primary/30 hover:border-primary transition-all hover:shadow-sm group">
+                        <LucideStars className="h-4 w-4 mr-2 text-yellow-500 group-hover:scale-110 transition-transform" />
+                        <span className="font-medium">{course?.level} level</span>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>Course level</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="outline" className="px-3 py-1.5 border-primary/30 hover:border-primary transition-all hover:shadow-sm group">
+                        <LucideWeight className="h-4 w-4 mr-2 text-blue-500 group-hover:scale-110 transition-transform" />
+                        <span className="font-medium">{course?.credit_units} Credit Units</span>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>Credit units for this course</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="outline" className="px-3 py-1.5 border-primary/30 hover:border-primary transition-all flex items-center gap-2 hover:shadow-sm group">
+                        <LucideInfo className="h-4 w-4 text-green-500 group-hover:scale-110 transition-transform" />
+                        <span className="font-medium">Course Code: {course?.code}</span>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>Course Code</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Badge variant="outline" className="px-3 py-1.5 border-primary/30 hover:border-primary transition-all hover:shadow-sm group">
-                      <LucideWeight className="h-4 w-4 mr-2 text-blue-500 group-hover:scale-110 transition-transform" />
-                      <span className="font-medium">{course?.credit_units} Credit Units</span>
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>Credit units for this course</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Badge variant="outline" className="px-3 py-1.5 border-primary/30 hover:border-primary transition-all flex items-center gap-2 hover:shadow-sm group">
-                      <LucideInfo className="h-4 w-4 text-green-500 group-hover:scale-110 transition-transform" />
-                      <span className="font-medium">Course Code: {course?.code}</span>
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>Course Code</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              {/* Take CBT Button */}
+              <div className="animate-fade-in-up opacity-0 [animation-delay:500ms] [animation-fill-mode:forwards] hover:scale-105 hover:-translate-y-1 transition-transform">
+                <Button 
+                  asChild
+                  className="bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90 text-primary-foreground shadow-md border border-primary/10 gap-2 transition-all px-5 py-2 h-auto"
+                >
+                  <Link href={`/dashboard/quizzes?course=${course?.id}`}>
+                    <BrainCircuit className="h-4 w-4 text-primary-foreground" />
+                    <span>Take CBT</span>
+                    <span className="ml-0.5 rounded-full bg-white/20 px-1.5 py-0.5 text-xs font-medium backdrop-blur-sm">AI</span>
+                  </Link>
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

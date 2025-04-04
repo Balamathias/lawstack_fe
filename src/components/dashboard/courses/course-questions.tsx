@@ -53,9 +53,9 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
   const QuestionItem = ({ question, number }: { question: Question; number: number }) => {
     return (
       <Link href={`/dashboard/past-questions/${question.id}`} className="group" passHref>
-        <div className="h-full p-5 bg-white dark:bg-secondary/25 rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-green-500/50 dark:hover:border-green-500/50 flex flex-col">
+        <div className="h-full p-5 bg-white dark:bg-secondary/25 rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/50 flex flex-col">
           <div className="flex items-center mb-3">
-            <div className="flex items-center justify-center w-8 h-8 bg-green-500/15 dark:bg-green-600/15 rounded-full text-green-600 font-bold mr-3 group-hover:bg-green-500/30 transition-colors">
+            <div className="flex items-center justify-center w-8 h-8 bg-primary/15 dark:bg-primary/15 rounded-full text-primary font-bold mr-3 group-hover:bg-primary/30 transition-colors">
               {number}
             </div>
             {question?.session && (
@@ -72,7 +72,7 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
           </div>
           
           <div className="mt-3 text-sm text-muted-foreground flex justify-end">
-            <span className="group-hover:text-green-500 transition-colors flex items-center gap-1">
+            <span className="group-hover:text-primary transition-colors flex items-center gap-1">
               View question
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transform group-hover:translate-x-1 transition-transform">
                 <path d="m9 18 6-6-6-6"/>

@@ -404,7 +404,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
       <div
         className={`max-w-[90%] px-4 py-2.5 backdrop-blur-sm ${
           message.sender === 'user'
-            ? 'bg-secondary/40 rounded-2xl rounded-tr-sm shadow-sm'
+            ? 'dark:bg-secondary/40 bg-primary/95 dark:text-foreground text-white rounded-2xl rounded-tr-sm shadow-sm'
             : 'text-card-foreground rounded-2xl border-none'
         } ${isStreaming ? 'relative overflow-hidden' : ''}`}
       >
@@ -416,33 +416,9 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
         ) : (
           <div className={isStreaming ? 'animate-fade-in-text' : ''}>
             <div
-              // className={
-              //   isHistorical && isExpanded[message.id as string]
-              //     ? ''
-              //     : isHistorical && message.content && message.content.length > 500
-              //     ? 'max-h-[300px] overflow-hidden relative'
-              //     : ''
-              // }
             >
               <MarkdownPreview content={message?.content!} />
-
-              {/* {isHistorical &&
-                !isExpanded[message.id as string] &&
-                message.content &&
-                message.content.length > 500 && (
-                  <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-background/80 to-transparent pointer-events-none"></div>
-                )} */}
             </div>
-
-            {/* {isHistorical && message.content && message.content.length > 500 && (
-              <button
-                onClick={() => toggleExpand(message.id as string)}
-                className="text-xs text-primary mt-1 hover:text-emerald-500 transition-all cursor-pointer"
-              >
-                {isExpanded[message.id as string] ? 'Show less' : 'Read more'}
-              </button>
-            )} */}
-
             {isStreaming && (
               <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
             )}

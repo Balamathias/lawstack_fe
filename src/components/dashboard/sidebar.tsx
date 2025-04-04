@@ -263,7 +263,7 @@ const DashboardSidebar = ({ user }: Props) => {
     <motion.div 
       layout
       className={cn(
-        'h-screen flex-col bg-background/95 backdrop-blur-sm p-2.5 hidden lg:flex fixed left-0 bottom-0 top-0 border-r border-border shadow-sm z-30 transition-all',
+        'h-screen flex-col bg-background backdrop-blur-sm p-2.5 hidden lg:flex fixed left-0 bottom-0 top-0 border-r border-border shadow-sm z-30 transition-all',
         isCollapsed ? 'w-[70px]' : 'w-[220px]'
       )}
       animate={{ width: isCollapsed ? 70 : 220 }}
