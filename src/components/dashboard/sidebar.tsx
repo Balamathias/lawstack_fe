@@ -109,7 +109,10 @@ const DashboardSidebar = ({ user }: Props) => {
   const NavLinks = () => (
     <nav className='flex flex-col gap-1 overflow-y-auto'>
       {dashboardLinks.map((link, index) => {
-        const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+        // Fix isActive logic to avoid marking parent routes as active
+        const isActive = 
+          pathname === link.href || 
+          (pathname.startsWith(`${link.href}/`) && link.href !== "/dashboard");
         
         return (
           <Link 
