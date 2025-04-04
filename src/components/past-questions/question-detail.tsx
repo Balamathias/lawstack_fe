@@ -46,7 +46,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
         <div className='flex flex-col gap-4 mb-14'>
 
             <div className=''>
-                <div className='flex items-center justify-between gap-3 mb-3'>
+                <div className='flex md:items-center justify-between gap-3 mb-3 flex-col md:flex-row'>
                   <h2 className='font-medium font-serif text-2xl py-2'>{course?.name} ({course?.code}) {data?.session} ({data?.year}) ({getSemester(data?.semester)})</h2>
                   
                   {/* Take CBT Button */}
