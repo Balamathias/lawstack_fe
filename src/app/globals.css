@@ -1,0 +1,560 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(240 10% 3.9%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(0 0% 3.9%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(0 0% 3.9%);
+  --primary: hsl(221.2 83.2% 53.3%);
+  --primary-foreground: hsl(210 40% 98%);
+  --secondary: hsl(0 0% 96.1%);
+  --secondary-foreground: hsl(0 0% 9%);
+  --muted: hsl(0 0% 96.1%);
+  --muted-foreground: hsl(0 0% 45.1%);
+  --accent: hsl(0 0% 96.1%);
+  --accent-foreground: hsl(0 0% 9%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(0 0% 89.8%);
+  --input: hsl(0 0% 89.8%);
+  --ring: hsl(0 0% 3.9%);
+  --chart-1: hsl(12 76% 61%);
+  --chart-2: hsl(173 58% 39%);
+  --chart-3: hsl(197 37% 24%);
+  --chart-4: hsl(43 74% 66%);
+  --chart-5: hsl(27 87% 67%);
+  --radius: 0.6rem;
+}
+
+.dark {
+  --background: hsl(240 10% 10%);
+  --foreground: hsl(210 40% 98%);
+  --card: hsl(0 0% 3.9%);
+  --card-foreground: hsl(0 0% 98%);
+  --popover: hsl(0 0% 3.9%);
+  --popover-foreground: hsl(0 0% 98%);
+  --primary: hsl(0 0% 98%);
+  --primary-foreground: hsl(0 0% 9%);
+  --secondary: hsl(0 0% 14.9%);
+  --secondary-foreground: hsl(0 0% 98%);
+  --muted: hsl(0 0% 14.9%);
+  --muted-foreground: hsl(0 0% 63.9%);
+  --accent: hsl(0 0% 14.9%);
+  --accent-foreground: hsl(0 0% 98%);
+  --destructive: hsl(0 62.8% 30.6%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(0 0% 14.9%);
+  --input: hsl(0 0% 14.9%);
+  --ring: hsl(0 0% 83.1%);
+  --chart-1: hsl(220 70% 50%);
+  --chart-2: hsl(160 60% 45%);
+  --chart-3: hsl(30 80% 55%);
+  --chart-4: hsl(280 65% 60%);
+  --chart-5: hsl(340 75% 55%);
+}
+
+.dark.lights-out {
+  --background: hsl(0 0% 0%);
+  --foreground: hsl(210 40% 98%);
+  --card: hsl(0 0% 3.9%);
+  --card-foreground: hsl(0 0% 98%);
+  --popover: hsl(0 0% 3.9%);
+  --popover-foreground: hsl(0 0% 98%);
+  --primary: hsl(0 0% 98%);
+  --primary-foreground: hsl(0 0% 9%);
+  --secondary: hsl(0 0% 14.9%);
+  --secondary-foreground: hsl(0 0% 98%);
+  --muted: hsl(0 0% 14.9%);
+  --muted-foreground: hsl(0 0% 63.9%);
+  --accent: hsl(0 0% 14.9%);
+  --accent-foreground: hsl(0 0% 98%);
+  --destructive: hsl(0 62.8% 30.6%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(0 0% 14.9%);
+  --input: hsl(0 0% 14.9%);
+  --ring: hsl(0 0% 83.1%);
+  --chart-1: hsl(220 70% 50%);
+  --chart-2: hsl(160 60% 45%);
+  --chart-3: hsl(30 80% 55%);
+  --chart-4: hsl(280 65% 60%);
+  --chart-5: hsl(340 75% 55%);
+}
+
+.dark.subtle {
+  --background: hsl(240 10% 10%);
+  --foreground: hsl(210 40% 98%);
+  --primary: hsl(217.2 91.2% 59.8%);
+  --primary-foreground: hsl(210 40% 98%);
+  --card: hsl(0 0% 3.9%);
+  --card-foreground: hsl(0 0% 98%);
+  --popover: hsl(0 0% 3.9%);
+  --popover-foreground: hsl(0 0% 98%);
+  --secondary: hsl(0 0% 14.9%);
+  --secondary-foreground: hsl(0 0% 98%);
+  --muted: hsl(0 0% 14.9%);
+  --muted-foreground: hsl(0 0% 63.9%);
+  --accent: hsl(0 0% 14.9%);
+  --accent-foreground: hsl(0 0% 98%);
+  --destructive: hsl(0 62.8% 30.6%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(0 0% 14.9%);
+  --input: hsl(0 0% 14.9%);
+  --ring: hsl(0 0% 83.1%);
+  --chart-1: hsl(220 70% 50%);
+  --chart-2: hsl(160 60% 45%);
+  --chart-3: hsl(30 80% 55%);
+  --chart-4: hsl(280 65% 60%);
+  --chart-5: hsl(340 75% 55%);
+}
+
+/* Blue theme - Light */
+.theme-blue {
+  --background: hsl(210 100% 99%);
+  --foreground: hsl(222 10% 3.9%);
+  --card: hsl(210 100% 99%);
+  --card-foreground: hsl(222 10% 3.9%);
+  --popover: hsl(210 100% 99%);
+  --popover-foreground: hsl(222 10% 3.9%);
+  --primary: hsl(221.2 83.2% 53.3%);
+  --primary-foreground: hsl(210 40% 98%);
+  --secondary: hsl(214 100% 96%);
+  --secondary-foreground: hsl(222 47.4% 11.2%);
+  --muted: hsl(214 100% 96%);
+  --muted-foreground: hsl(222 16.3% 46.9%);
+  --accent: hsl(214 100% 96%);
+  --accent-foreground: hsl(222 47.4% 11.2%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(210 100% 99%);
+  --border: hsl(222 31.8% 91.4%);
+  --input: hsl(222 31.8% 91.4%);
+  --ring: hsl(221.2 83.2% 53.3%);
+}
+
+/* Purple theme - Light */
+.theme-purple {
+  --background: hsl(260 100% 99%);
+  --foreground: hsl(272 10% 3.9%);
+  --card: hsl(260 100% 99%);
+  --card-foreground: hsl(272 10% 3.9%);
+  --popover: hsl(260 100% 99%);
+  --popover-foreground: hsl(272 10% 3.9%);
+  --primary: hsl(272 91% 65%);
+  --primary-foreground: hsl(260 100% 99%);
+  --secondary: hsl(252 100% 96%);
+  --secondary-foreground: hsl(272 47.4% 11.2%);
+  --muted: hsl(252 100% 96%);
+  --muted-foreground: hsl(272 16.3% 46.9%);
+  --accent: hsl(252 100% 96%);
+  --accent-foreground: hsl(272 47.4% 11.2%);
+  --destructive: hsl(350 89% 60%);
+  --destructive-foreground: hsl(260 100% 99%);
+  --border: hsl(272 31.8% 91.4%);
+  --input: hsl(272 31.8% 91.4%);
+  --ring: hsl(272 91% 65%);
+}
+
+/* Orange theme - Light */
+.theme-orange {
+  --background: hsl(38 100% 99%);
+  --foreground: hsl(30 10% 3.9%);
+  --card: hsl(38 100% 99%);
+  --card-foreground: hsl(30 10% 3.9%);
+  --popover: hsl(38 100% 99%);
+  --popover-foreground: hsl(30 10% 3.9%);
+  --primary: hsl(30 95% 60%);
+  --primary-foreground: hsl(38 100% 99%);
+  --secondary: hsl(38 100% 96%);
+  --secondary-foreground: hsl(30 47.4% 11.2%);
+  --muted: hsl(38 100% 96%);
+  --muted-foreground: hsl(30 16.3% 46.9%);
+  --accent: hsl(38 100% 96%);
+  --accent-foreground: hsl(30 47.4% 11.2%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(38 100% 99%);
+  --border: hsl(30 31.8% 91.4%);
+  --input: hsl(30 31.8% 91.4%);
+  --ring: hsl(30 95% 60%);
+}
+
+/* Pink theme - Light */
+.theme-pink {
+  --background: hsl(336 100% 99%);
+  --foreground: hsl(336 10% 3.9%);
+  --card: hsl(336 100% 99%);
+  --card-foreground: hsl(336 10% 3.9%);
+  --popover: hsl(336 100% 99%);
+  --popover-foreground: hsl(336 10% 3.9%);
+  --primary: hsl(336 80% 65%);
+  --primary-foreground: hsl(336 100% 99%);
+  --secondary: hsl(330 100% 96%);
+  --secondary-foreground: hsl(336 47.4% 11.2%);
+  --muted: hsl(330 100% 96%);
+  --muted-foreground: hsl(336 16.3% 46.9%);
+  --accent: hsl(330 100% 96%);
+  --accent-foreground: hsl(336 47.4% 11.2%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(336 100% 99%);
+  --border: hsl(336 31.8% 91.4%);
+  --input: hsl(336 31.8% 91.4%);
+  --ring: hsl(336 80% 65%);
+}
+
+/* Emerald theme - Light */
+.theme-emerald {
+  --background: hsl(160 100% 99%);
+  --foreground: hsl(170 10% 3.9%);
+  --card: hsl(160 100% 99%);
+  --card-foreground: hsl(170 10% 3.9%);
+  --popover: hsl(160 100% 99%);
+  --popover-foreground: hsl(170 10% 3.9%);
+  --primary: hsl(160 84% 39%);
+  --primary-foreground: hsl(355 100% 100%);
+  --secondary: hsl(160 84% 96%);
+  --secondary-foreground: hsl(170 47.4% 11.2%);
+  --muted: hsl(160 84% 96%);
+  --muted-foreground: hsl(170 16.3% 46.9%);
+  --accent: hsl(160 84% 96%);
+  --accent-foreground: hsl(170 47.4% 11.2%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(355 100% 100%);
+  --border: hsl(170 31.8% 91.4%);
+  --input: hsl(170 31.8% 91.4%);
+  --ring: hsl(160 84% 39%);
+}
+
+/* Dark Mode - Subtle (Default) */
+.dark.theme-blue {
+  --primary: hsl(221.2 83.2% 53.3%);
+  --ring: hsl(221.2 83.2% 53.3%);
+  --background: hsl(221 20% 7%);
+  --card: hsl(221 20% 9%);
+  --popover: hsl(221 20% 9%);
+  --border: hsl(221 20% 15%);
+  --input: hsl(221 20% 15%);
+}
+
+/* Dark Mode - Lights Out */
+.dark.lights-out.theme-blue {
+  --primary: hsl(252 82% 51%);
+  --ring: hsl(221 71% 54%);
+  --background: hsl(0 0% 0%);
+}
+
+/* Dark theme variants for each color scheme */
+.dark.theme-purple {
+  --primary: hsl(272 91% 65%);
+  --ring: hsl(272 91% 65%);
+  --background: hsl(272 20% 7%);
+  --card: hsl(272 20% 9%);
+  --popover: hsl(272 20% 9%);
+  --border: hsl(272 20% 15%);
+  --input: hsl(272 20% 15%);
+}
+
+.dark.lights-out.theme-purple {
+  --primary: hsl(272 91% 65%);
+  --ring: hsl(272 91% 65%);
+  --background: hsl(0 0% 0%);
+}
+
+.dark.theme-orange {
+  --primary: hsl(30 95% 60%);
+  --ring: hsl(30 95% 60%);
+  --background: hsl(30 20% 7%);
+  --card: hsl(30 20% 9%);
+  --popover: hsl(30 20% 9%);
+  --border: hsl(30 20% 15%);
+  --input: hsl(30 20% 15%);
+}
+
+.dark.lights-out.theme-orange {
+  --primary: hsl(30 95% 60%);
+  --ring: hsl(30 95% 60%);
+  --background: hsl(0 0% 0%);
+}
+
+.dark.theme-pink {
+  --primary: hsl(336 80% 65%);
+  --ring: hsl(336 80% 65%);
+  --background: hsl(336 20% 7%);
+  --card: hsl(336 20% 9%);
+  --popover: hsl(336 20% 9%);
+  --border: hsl(336 20% 15%);
+  --input: hsl(336 20% 15%);
+}
+
+.dark.lights-out.theme-pink {
+  --primary: hsl(336 80% 65%);
+  --ring: hsl(336 80% 65%);
+  --background: hsl(0 0% 0%);
+}
+
+.dark.theme-emerald {
+  --primary: hsl(160 84% 39%);
+  --ring: hsl(160 84% 39%);
+  --background: hsl(160 20% 7%);
+  --card: hsl(160 20% 9%);
+  --popover: hsl(160 20% 9%);
+  --border: hsl(160 20% 15%);
+  --input: hsl(160 20% 15%);
+}
+
+.dark.lights-out.theme-emerald {
+  --primary: hsl(160 84% 39%);
+  --ring: hsl(160 84% 39%);
+  --background: hsl(0 0% 0%);
+}
+
+/* Animations for themes */
+.theme-transition * {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Custom animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+  
+  /* Quiz-specific styling */
+  .quiz-option {
+    @apply transition-all duration-200;
+  }
+  
+  .quiz-option:hover {
+    @apply bg-primary/5;
+  }
+  
+  .quiz-option-selected {
+    @apply bg-primary/10 border-primary;
+  }
+  
+  .quiz-option-correct {
+    @apply bg-green-500/10 border-green-500/30;
+  }
+  
+  .quiz-option-incorrect {
+    @apply bg-red-500/10 border-red-500/30;
+  }
+  
+  /* Timer animation */
+  @keyframes pulse-warning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  
+  .timer-warning {
+    animation: pulse-warning 1s ease-in-out infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Custom Scrollbar Styling */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px; /* thin scrollbar width */
+  height: 6px; /* for horizontal scrollbars */
+}
+
+.scrollbar-thumb-secondary\/60::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--secondary) / 0.6);
+  border-radius: 3px;
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Hide scrollbar completely while maintaining scroll functionality */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Firefox scrollbar compatibility */
+.scrollbar-thin.scrollbar-thumb-secondary\/60.scrollbar-track-transparent {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--secondary) / 0.6) transparent;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+  
+  .animate-fade-in-delay {
+    animation: fadeIn 0.3s ease-out 0.15s forwards;
+    opacity: 0;
+  }
+  
+  .animate-fade-in-delay-longer {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out 0.4s forwards;
+  }
+  
+  .animate-slide-in-left {
+    animation: slideInLeft 0.5s ease-out forwards;
+  }
+  
+  .animate-slide-in-up {
+    opacity: 0;
+    animation: slideInUp 0.5s ease-out 0.3s forwards;
+  }
+
+  .animate-pulse-custom {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+}
+
+/* For scrolling to bottom button */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-float {
+  animation: float 2s ease-in-out infinite;
+}
+
+/* For AI message typing effect */
+.typing-dots {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+
+/* Typing dots animation */
+.typing-dots div {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  opacity: 0.6;
+  animation: bounce 1s infinite ease-in-out;
+}
+
+.typing-dots div:nth-child(1) { animation-delay: 0s; }
+.typing-dots div:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots div:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes fadeInText {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in-text {
+  animation: fadeInText 1.5s ease-in-out;
+}
+
+/* Timer animation - make it more noticeable */
+@keyframes pulse-warning {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+  
+.timer-warning {
+  animation: pulse-warning 1.2s ease-in-out infinite;
+}
+
+/* Add animation for selected answer */
+@keyframes highlight-selection {
+  0% { background-color: hsl(var(--primary) / 0.05); }
+  50% { background-color: hsl(var(--primary) / 0.2); }
+  100% { background-color: hsl(var(--primary) / 0.1); }
+}
+
+.quiz-option-selected {
+  animation: highlight-selection 0.5s ease-out;
+}
