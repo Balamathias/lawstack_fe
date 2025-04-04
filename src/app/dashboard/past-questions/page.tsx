@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 }
 
 interface Props {
-  params: Promise<Record<string, any>>,
-  searchParams: Promise<Record<string, any>>,
+  params: Promise<{[key: string]: any}>,
+  searchParams: Promise<{[key: string]: any}>,
 }
 
 export default async function PastQuestionsPage({ params: _params, searchParams }: Props) {

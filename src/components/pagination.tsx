@@ -72,7 +72,7 @@ const Pagination = ({ totalPages, initialPage = 1, className }: PaginationProps)
             <button
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 
+                className="p-2 rounded-lg bg-white dark:bg-secondary border border-gray-200 
                            dark:border-gray-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 
                            disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 aria-label="First page"
@@ -83,7 +83,7 @@ const Pagination = ({ totalPages, initialPage = 1, className }: PaginationProps)
             <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 
+                className="p-2 rounded-lg bg-white dark:bg-secondary border border-gray-200 
                            dark:border-gray-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700
                            disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 aria-label="Previous page"
@@ -99,7 +99,7 @@ const Pagination = ({ totalPages, initialPage = 1, className }: PaginationProps)
                         className={`px-3.5 py-2 rounded-lg font-medium text-sm transition-all cursor-pointer ${
                             currentPage === page 
                             ? 'bg-gradient-to-r from-rose-400 to-pink-500 text-white shadow-lg' 
-                            : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
+                            : 'bg-white dark:bg-secondary border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
                         }`}
                     >
                         {page}
@@ -110,7 +110,7 @@ const Pagination = ({ totalPages, initialPage = 1, className }: PaginationProps)
             <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 
+                className="p-2 rounded-lg bg-white dark:bg-secondary border border-gray-200 
                            dark:border-gray-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 
                            disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 aria-label="Next page"
@@ -121,7 +121,7 @@ const Pagination = ({ totalPages, initialPage = 1, className }: PaginationProps)
             <button
                 onClick={() => handlePageChange(totalPages)}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 
+                className="p-2 rounded-lg bg-white dark:bg-secondary border border-gray-200 
                            dark:border-gray-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 
                            disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 aria-label="Last page"
