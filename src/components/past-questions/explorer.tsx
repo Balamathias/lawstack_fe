@@ -19,7 +19,7 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
 
     const { data, count } = await getQuestions({
         params: {
-            page_size: 12,
+            page_size: 15,
             ...searchParams
         }
     });
