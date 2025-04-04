@@ -12,9 +12,9 @@ const BackButton = () => {
   }
 
   return (
-    <button className='flex items-center flex-row gap-x-1 mb-3 hover:text-primary cursor-pointer transition-all w-fit' onClick={handleBack}>
+    <button className='flex items-center flex-row gap-x-1 mb-3 hover:text-green-500 cursor-pointer transition-all w-fit' onClick={handleBack}>
       <ChevronLeft />
-      <span className='text-muted-foreground hover:text-primary'>Back</span>
+      <span className='text-muted-foreground hover:text-green-500'>Back</span>
     </button>
   )
 }

@@ -34,7 +34,7 @@ export default function RootLayout({
         <TanstackQueryProvider>
           <ThemeProvider
               attribute="class"
-              defaultTheme="dark lights-out"
+              defaultTheme="dark"
               enableSystem
               disableTransitionOnChange
             >
