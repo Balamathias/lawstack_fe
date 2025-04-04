@@ -25,6 +25,8 @@ const actionItems = [
     href: '/dashboard/courses',
     color: 'bg-blue-500/10 text-blue-500 dark:bg-blue-500/20 dark:text-blue-400',
     hoverGradient: 'hover:bg-gradient-to-br hover:from-blue-600/20 hover:to-blue-400/20',
+    pattern: 'radial-gradient(circle, transparent 20%, currentColor 20%, currentColor 21%, transparent 21%, transparent) 0 0/30px 30px',
+    patternColor: 'text-blue-500/[0.03] dark:text-blue-400/[0.03]',
     delay: 0.1,
   },
   {
@@ -34,6 +36,8 @@ const actionItems = [
     href: '/dashboard/quizzes',
     color: 'bg-amber-500/10 text-amber-500 dark:bg-amber-500/20 dark:text-amber-400',
     hoverGradient: 'hover:bg-gradient-to-br hover:from-amber-600/20 hover:to-amber-400/20',
+    pattern: 'linear-gradient(45deg, currentColor 25%, transparent 25%, transparent 75%, currentColor 75%, currentColor) 0 0/20px 20px',
+    patternColor: 'text-amber-500/[0.03] dark:text-amber-400/[0.03]',
     delay: 0.2,
   },
   {
@@ -43,6 +47,8 @@ const actionItems = [
     href: '/dashboard/chat',
     color: 'bg-violet-500/10 text-violet-500 dark:bg-violet-500/20 dark:text-violet-400',
     hoverGradient: 'hover:bg-gradient-to-br hover:from-violet-600/20 hover:to-violet-400/20',
+    pattern: 'radial-gradient(circle at center, currentColor 0, currentColor 1px, transparent 1px, transparent) 0 0/24px 24px',
+    patternColor: 'text-violet-500/[0.03] dark:text-violet-400/[0.03]',
     delay: 0.3,
   },
   {
@@ -52,6 +58,8 @@ const actionItems = [
     href: '/dashboard/past-questions',
     color: 'bg-emerald-500/10 text-emerald-500 dark:bg-emerald-500/20 dark:text-emerald-400',
     hoverGradient: 'hover:bg-gradient-to-br hover:from-emerald-600/20 hover:to-emerald-400/20',
+    pattern: 'linear-gradient(0deg, currentColor 2px, transparent 2px) 0 0/24px 24px, linear-gradient(90deg, currentColor 2px, transparent 2px) 0 0/24px 24px',
+    patternColor: 'text-emerald-500/[0.03] dark:text-emerald-400/[0.03]',
     delay: 0.4,
   },
   {
@@ -61,6 +69,8 @@ const actionItems = [
     href: '/dashboard/bookmarks',
     color: 'bg-pink-500/10 text-pink-500 dark:bg-pink-500/20 dark:text-pink-400',
     hoverGradient: 'hover:bg-gradient-to-br hover:from-pink-600/20 hover:to-pink-400/20',
+    pattern: 'radial-gradient(circle at 50% 50%, transparent 45%, currentColor 45%, currentColor 55%, transparent 55%) 0 0/30px 30px',
+    patternColor: 'text-pink-500/[0.03] dark:text-pink-400/[0.03]',
     delay: 0.5,
   },
   {
@@ -70,6 +80,8 @@ const actionItems = [
     href: '/dashboard/search',
     color: 'bg-teal-500/10 text-teal-500 dark:bg-teal-500/20 dark:text-teal-400',
     hoverGradient: 'hover:bg-gradient-to-br hover:from-teal-600/20 hover:to-teal-400/20',
+    pattern: 'linear-gradient(45deg, currentColor 12%, transparent 12%, transparent 88%, currentColor 88%), linear-gradient(-45deg, currentColor 12%, transparent 12%, transparent 88%, currentColor 88%) 0 0/20px 20px',
+    patternColor: 'text-teal-500/[0.03] dark:text-teal-400/[0.03]',
     delay: 0.6,
   },
 ];
@@ -128,20 +140,35 @@ const DashboardAction = () => {
               }}
               className={cn(
                 'relative overflow-hidden rounded-xl cursor-pointer border transition-all',
-                'bg-card dark:bg-card/40 backdrop-blur-sm hover:shadow-md',
-                isCurrentPath ? 'border-primary/30 shadow' : 'border-border/60',
+                'bg-card dark:bg-card/40 backdrop-blur-sm hover:shadow-lg',
+                isCurrentPath ? 'border-primary/30 shadow-md' : 'border-border/60',
                 action.hoverGradient
               )}
               onClick={() => router.push(action.href)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
+              {/* Pattern background */}
+              <div className={cn(
+                "absolute inset-0 pointer-events-none opacity-70",
+                action.patternColor
+              )}>
+                <div 
+                  className="absolute inset-0 bg-repeat opacity-60" 
+                  style={{ backgroundImage: action.pattern }}
+                />
+              </div>
+              
+              {/* Decorative shape elements */}
+              <div className="absolute -top-6 -right-6 w-12 h-12 rotate-45 bg-foreground/5 rounded-lg" />
+              <div className="absolute -bottom-6 -left-6 w-12 h-12 rotate-12 bg-foreground/5 rounded-full" />
+              
               {/* Accent top border with animate-in effect */}
               <div className={cn(
                 "absolute top-0 left-0 w-full h-1 transform origin-left",
                 "bg-gradient-to-r from-primary/40 via-primary to-primary/40",
                 isHovered || isCurrentPath ? "scale-x-100" : "scale-x-0",
-                "transition-transform duration-300 ease-out"
+                "transition-transform duration-300 ease-out z-10"
               )} />
               
               {/* Current page indicator */}
@@ -150,15 +177,26 @@ const DashboardAction = () => {
               )}
               
               {/* Card content */}
-              <div className="p-6">
+              <div className="p-6 relative z-10">
                 <div className="flex flex-col h-full">
                   <div className="mb-4">
                     <div className={cn(
-                      "p-3 w-min rounded-lg transition-transform duration-300",
+                      "p-3 w-min rounded-lg transition-all duration-300 relative overflow-hidden",
                       action.color,
                       (isHovered || isCurrentPath) && "scale-110"
                     )}>
-                      <action.icon className="h-6 w-6" />
+                      <motion.div
+                        animate={{ 
+                          rotate: isHovered ? 10 : 0,
+                          scale: isHovered ? 1.1 : 1
+                        }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                      >
+                        <action.icon className="h-6 w-6 relative z-10" />
+                      </motion.div>
+                      {/* Icon background pattern */}
+                      <div className="absolute inset-0 opacity-10 bg-repeat" 
+                         style={{ backgroundImage: `radial-gradient(circle, ${isCurrentPath ? 'var(--primary)' : 'currentColor'} 1px, transparent 1px)`, backgroundSize: '6px 6px' }} />
                     </div>
                   </div>
                   
@@ -188,8 +226,17 @@ const DashboardAction = () => {
                 </div>
               </div>
               
-              {/* Subtle background decoration */}
-              <div className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-10 bg-gradient-to-br from-foreground/20 to-foreground/5"></div>
+              {/* Large background icon */}
+              <motion.div 
+                className="absolute -bottom-8 -right-8 opacity-[0.04] pointer-events-none"
+                animate={{ 
+                  rotate: isHovered ? 10 : 0,
+                  scale: isHovered ? 1.1 : 1
+                }}
+                transition={{ duration: 0.5 }}
+              >
+                <action.icon className="h-32 w-32" />
+              </motion.div>
             </motion.div>
           );
         })}

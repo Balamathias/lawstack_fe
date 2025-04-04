@@ -23,16 +23,16 @@ export const dashboardMobileLinks = [
     href: "/dashboard/chat",
     icon: Stars,
   },
-  {
-    tooltip: "Search",
-    href: "/dashboard/search",
-    icon: Search,
-  },
-  {
-    tooltip: "Bookmarks",
-    href: "/dashboard/bookmarks",
-    icon: BookMarked,
-  },
+  // {
+  //   tooltip: "Search",
+  //   href: "/dashboard/search",
+  //   icon: Search,
+  // },
+  // {
+  //   tooltip: "Bookmarks",
+  //   href: "/dashboard/bookmarks",
+  //   icon: BookMarked,
+  // },
   {
     tooltip: "Settings",
     href: "/dashboard/settings",
@@ -58,7 +58,11 @@ const DashboardBottomBar = () => {
     <nav className="fixed bottom-0 w-full lg:hidden z-40 border-t border-border dark:border-none">
       <div className={`h-16 bg-background/80 dark:bg-black/70 backdrop-blur-lg flex items-center justify-around px-2 ${isAdmin ? 'pb-safe' : ''}`}>
         {dashboardMobileLinks.map((link, idx) => {
-          const isActive = pathname === link?.href || pathname.startsWith(`/${link.href}/`);
+          // Fix isActive logic to avoid marking parent routes as active
+          const isActive = 
+            pathname === link.href || 
+            (pathname.startsWith(`${link.href}/`) && link.href !== "/dashboard");
+            
           return (
             <Link 
               key={idx} 

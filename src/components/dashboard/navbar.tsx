@@ -120,7 +120,10 @@ const MobileSidebar = ({ user }: { user: User | null }) => {
           <div className="flex-1 overflow-y-auto px-2 py-4">
             <nav className="flex flex-col gap-1">
               {dashboardLinks.map((link, index) => {
-                const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+                // Fix isActive logic to avoid marking parent routes as active
+                const isActive = 
+                  pathname === link.href || 
+                  (pathname.startsWith(`${link.href}/`) && link.href !== "/dashboard");
                 
                 return (
                   <button
