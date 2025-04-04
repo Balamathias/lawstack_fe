@@ -155,7 +155,7 @@ const QuickStartOption = ({
         }}
         transition={{ duration: 0.5 }}
       >
-        {React.cloneElement(icon as React.ReactElement, { className: "h-full w-full" })}
+        {React.cloneElement(icon as React.ReactElement)}
       </motion.div>
     </motion.div>
   )
