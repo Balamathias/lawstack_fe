@@ -20,62 +20,56 @@ import { useRouter } from 'nextjs-toploader/app';
 const actionItems = [
   {
     title: 'Courses',
-    description: 'Explore law courses and materials and past questions.',
+    description: 'Explore law courses and materials.',
     icon: BookOpen,
     href: '/dashboard/courses',
-    color: 'from-blue-500 to-indigo-600',
-    hoverColor: 'from-blue-600 to-indigo-700',
-    lightColor: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+    color: 'bg-blue-500/10 text-blue-500 dark:bg-blue-500/20 dark:text-blue-400',
+    hoverGradient: 'hover:bg-gradient-to-br hover:from-blue-600/20 hover:to-blue-400/20',
     delay: 0.1,
   },
   {
-    title: 'Quizzes (CBT)',
-    description: 'Test your knowledge with Smart Intelligence quizzes inferred from past questions (CBT).',
+    title: 'Quizzes',
+    description: 'Test your knowledge with AI-powered quizzes.',
     icon: BrainCircuit,
     href: '/dashboard/quizzes',
-    color: 'from-amber-500 to-orange-600',
-    hoverColor: 'from-amber-600 to-orange-700',
-    lightColor: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+    color: 'bg-amber-500/10 text-amber-500 dark:bg-amber-500/20 dark:text-amber-400',
+    hoverGradient: 'hover:bg-gradient-to-br hover:from-amber-600/20 hover:to-amber-400/20',
     delay: 0.2,
   },
   {
     title: 'Smart Assist',
-    description: 'Get smart insights from LawStack intelligence, chat and more',
+    description: 'Chat with LawStack AI for personalized help.',
     icon: Sparkles,
     href: '/dashboard/chat',
-    color: 'from-violet-500 to-purple-600',
-    hoverColor: 'from-violet-600 to-purple-700',
-    lightColor: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300',
+    color: 'bg-violet-500/10 text-violet-500 dark:bg-violet-500/20 dark:text-violet-400',
+    hoverGradient: 'hover:bg-gradient-to-br hover:from-violet-600/20 hover:to-violet-400/20',
     delay: 0.3,
   },
   {
     title: 'Past Questions',
-    description: 'Access previous exam questions and SmartAI insights',
+    description: 'Access previous exam questions.',
     icon: FileQuestion,
     href: '/dashboard/past-questions',
-    color: 'from-emerald-500 to-green-600',
-    hoverColor: 'from-emerald-600 to-green-700',
-    lightColor: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300',
+    color: 'bg-emerald-500/10 text-emerald-500 dark:bg-emerald-500/20 dark:text-emerald-400',
+    hoverGradient: 'hover:bg-gradient-to-br hover:from-emerald-600/20 hover:to-emerald-400/20',
     delay: 0.4,
   },
   {
     title: 'Bookmarks',
-    description: 'Save your favorite resources for later access',
+    description: 'Access your saved resources.',
     icon: BookMarked,
     href: '/dashboard/bookmarks',
-    color: 'from-pink-500 to-rose-600',
-    hoverColor: 'from-pink-600 to-rose-700',
-    lightColor: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300',
+    color: 'bg-pink-500/10 text-pink-500 dark:bg-pink-500/20 dark:text-pink-400',
+    hoverGradient: 'hover:bg-gradient-to-br hover:from-pink-600/20 hover:to-pink-400/20',
     delay: 0.5,
   },
   {
-    title: 'Advanced Search',
-    description: 'Find specific content across all resources plus smart overview',
+    title: 'Search',
+    description: 'Find specific content across resources.',
     icon: Search,
     href: '/dashboard/search',
-    color: 'from-cyan-500 to-teal-600',
-    hoverColor: 'from-cyan-600 to-teal-700',
-    lightColor: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300',
+    color: 'bg-teal-500/10 text-teal-500 dark:bg-teal-500/20 dark:text-teal-400',
+    hoverGradient: 'hover:bg-gradient-to-br hover:from-teal-600/20 hover:to-teal-400/20',
     delay: 0.6,
   },
 ];
@@ -102,97 +96,105 @@ const DashboardAction = () => {
   };
   
   return (
-    <motion.div 
-      className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'
-      variants={container}
-      initial="hidden"
-      animate="show"
-    >
-      {actionItems.map((action, index) => {
-        const isCurrentPath = pathname === action.href;
-        const isHovered = hoveredIndex === index;
-        
-        return (
-          <motion.div
-            key={index}
-            variants={item}
-            transition={{ 
-              duration: 0.5, 
-              ease: "easeOut",
-              delay: action.delay 
-            }}
-            whileHover={{ 
-              scale: 1.03, 
-              y: -5,
-              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" 
-            }}
-            className={cn(
-              'relative overflow-hidden rounded-2xl cursor-pointer bg-gradient-to-br border border-transparent',
-              isCurrentPath ? `${action.hoverColor} shadow-lg` : action.color,
-              isCurrentPath && 'border-white/20 shadow-xl'
-            )}
-            onClick={() => router.push(action.href)}
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
-          >
-            {/* Card overlay with gradient */ }
-            <div className={cn(
-              "absolute inset-0 transition-all duration-300",
-              isHovered || isCurrentPath ? "bg-black/10" : "bg-black/20"
-            )} />
-            
-            {/* Current page indicator */}
-            {isCurrentPath && (
-              <div className="absolute top-3 right-3 rounded-full h-2.5 w-2.5 bg-white/90 shadow-glow" />
-            )}
-            
-            {/* Card content */}
-            <div className="relative z-10 flex flex-col justify-between h-full p-6 text-white">
-              <div>
-                <div className="flex justify-between items-start">
-                  <div className={cn(
-                    "p-2 rounded-full w-10 h-10 flex items-center justify-center mb-4",
-                    action.lightColor
-                  )}>
-                    <action.icon className="h-5 w-5" />
+    <div className="space-y-4">
+      <div className="flex items-center gap-2 mb-2">
+        <div className="h-6 w-1 bg-gradient-to-b from-primary to-primary/30 rounded-full"></div>
+        <h2 className="text-xl font-bold text-foreground">Features & Tools</h2>
+      </div>
+      
+      <motion.div 
+        className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'
+        variants={container}
+        initial="hidden"
+        animate="show"
+      >
+        {actionItems.map((action, index) => {
+          const isCurrentPath = pathname === action.href;
+          const isHovered = hoveredIndex === index;
+          
+          return (
+            <motion.div
+              key={index}
+              variants={item}
+              transition={{ 
+                duration: 0.5, 
+                ease: "easeOut",
+                delay: action.delay 
+              }}
+              whileHover={{ 
+                scale: 1.02, 
+                y: -5,
+                transition: { duration: 0.2 }
+              }}
+              className={cn(
+                'relative overflow-hidden rounded-xl cursor-pointer border transition-all',
+                'bg-card dark:bg-card/40 backdrop-blur-sm hover:shadow-md',
+                isCurrentPath ? 'border-primary/30 shadow' : 'border-border/60',
+                action.hoverGradient
+              )}
+              onClick={() => router.push(action.href)}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              {/* Accent top border with animate-in effect */}
+              <div className={cn(
+                "absolute top-0 left-0 w-full h-1 transform origin-left",
+                "bg-gradient-to-r from-primary/40 via-primary to-primary/40",
+                isHovered || isCurrentPath ? "scale-x-100" : "scale-x-0",
+                "transition-transform duration-300 ease-out"
+              )} />
+              
+              {/* Current page indicator */}
+              {isCurrentPath && (
+                <div className="absolute top-3 right-3 rounded-full h-2 w-2 bg-primary" />
+              )}
+              
+              {/* Card content */}
+              <div className="p-6">
+                <div className="flex flex-col h-full">
+                  <div className="mb-4">
+                    <div className={cn(
+                      "p-3 w-min rounded-lg transition-transform duration-300",
+                      action.color,
+                      (isHovered || isCurrentPath) && "scale-110"
+                    )}>
+                      <action.icon className="h-6 w-6" />
+                    </div>
                   </div>
+                  
+                  <h3 className={cn(
+                    "font-semibold text-lg mb-1.5 transition-colors duration-300",
+                    (isHovered || isCurrentPath) ? "text-primary" : "text-foreground"
+                  )}>
+                    {action.title}
+                  </h3>
+                  
+                  <p className="text-sm text-muted-foreground flex-1">
+                    {action.description}
+                  </p>
+                  
+                  <motion.div 
+                    className="flex items-center gap-1 text-sm font-medium mt-4 text-primary"
+                    initial={{ opacity: 0.8 }}
+                    animate={{ 
+                      opacity: isHovered ? 1 : 0.8, 
+                      x: isHovered ? 5 : 0 
+                    }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <span>Explore</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </motion.div>
                 </div>
-                <h3 className="font-semibold text-xl mb-1.5">{action.title}</h3>
-                <p className="text-sm text-white/90">{action.description}</p>
               </div>
               
-              {/* Call to action button */}
-              <motion.div 
-                className="flex items-center gap-1 text-sm font-medium mt-2"
-                initial={{ opacity: 0.8 }}
-                animate={{ opacity: isHovered ? 1 : 0.8 }}
-                transition={{ duration: 0.2 }}
-              >
-                <span>Get Started</span>
-                <motion.div
-                  animate={{ x: isHovered ? 5 : 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </motion.div>
-              </motion.div>
-            </div>
-            
-            {/* Large background icon */}
-            <motion.div 
-              className="absolute -bottom-8 -right-8 opacity-10"
-              animate={{ 
-                rotate: isHovered ? 10 : 0,
-                scale: isHovered ? 1.1 : 1
-              }}
-              transition={{ duration: 0.5 }}
-            >
-              <action.icon className="h-40 w-40" />
+              {/* Subtle background decoration */}
+              <div className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-10 bg-gradient-to-br from-foreground/20 to-foreground/5"></div>
             </motion.div>
-          </motion.div>
-        );
-      })}
-    </motion.div>
+          );
+        })}
+      </motion.div>
+    </div>
   );
 };
 

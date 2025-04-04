@@ -94,7 +94,7 @@ const QuickStartOption = ({
               "group-hover:bg-primary/15 group-hover:scale-105",
               "border border-primary/10 group-hover:border-primary/25"
             )}>
-              {React.cloneElement(icon as React.ReactElement, { className: "h-6 w-6" })}
+              {React.cloneElement(icon as React.ReactElement)}
             </div>
             
             <Tooltip>

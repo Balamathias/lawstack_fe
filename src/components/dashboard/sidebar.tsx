@@ -14,9 +14,8 @@ import {
   ShieldAlert,
   ChevronLeft,
   ChevronRight,
-  Menu,
-  LucideScale,
-  Shield
+  Shield,
+  LucideScale
 } from "lucide-react"
 import Logo from '../logo'
 import { Button } from '../ui/button'
@@ -29,7 +28,6 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 
 export const dashboardLinks = [
   {
@@ -111,7 +109,7 @@ const DashboardSidebar = ({ user }: Props) => {
   const NavLinks = () => (
     <nav className='flex flex-col gap-1 overflow-y-auto'>
       {dashboardLinks.map((link, index) => {
-        const isActive = pathname === link.href || pathname.startsWith(`/${link.href}/`);
+        const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
         
         return (
           <Link 
@@ -258,7 +256,7 @@ const DashboardSidebar = ({ user }: Props) => {
   )
 
   // Desktop Sidebar
-  const DesktopSidebar = () => (
+  return (
     <motion.div 
       layout
       className={cn(
@@ -305,43 +303,6 @@ const DashboardSidebar = ({ user }: Props) => {
         </div>
       </div>
     </motion.div>
-  )
-
-  // Mobile Sidebar (Drawer/Sheet)
-  const MobileSidebar = () => (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="lg:hidden fixed top-3 left-4 z-50 h-9 w-9 rounded-full shadow-md bg-background"
-        >
-          <Menu className="h-4 w-4" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="left" className="p-0 sm:max-w-xs w-[280px]">
-        <div className="flex flex-col h-full overflow-hidden">
-          <div className="p-4 border-b border-border">
-            <Logo />
-          </div>
-          
-          <div className="p-3 flex-1 overflow-y-auto">
-            <NavLinks />
-          </div>
-          
-          <div className="p-3 border-t border-border">
-            <UserProfile />
-          </div>
-        </div>
-      </SheetContent>
-    </Sheet>
-  )
-
-  return (
-    <>
-      <DesktopSidebar />
-      {/* <MobileSidebar /> */}
-    </>
   )
 }
 
