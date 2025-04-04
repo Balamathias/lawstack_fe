@@ -38,10 +38,13 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchPar
   return (
     <div className='w-full flex flex-col gap-y-10 max-w-5xl mx-auto p-4 sm:p-10 relative'>
         <div className='flex flex-col gap-y-5'>
-            <h1 className='text-3xl font-bold hidden'>Past Questions</h1>
             {/* <ModeToggle /> */}
             
-            <BackButton />
+            <div className="flex justify-between items-center">
+              <BackButton />
+
+
+            </div>
 
             <Suspense fallback={<LoadingOverlay />}>
                 <QuestionDetail id={params.id} />

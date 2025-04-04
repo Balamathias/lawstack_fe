@@ -9,7 +9,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   const { data: user } = await getUser()
   
   return (
-    <div className='bg-background min-h-screen'>
+    <div className='bg-background md:bg-secondary md:dark:bg-background min-h-screen'>
       <DashboardSidebar user={user} />
       <Navbar user={user} />
       <main className='lg:pl-[220px]'>

@@ -22,6 +22,8 @@ import { Quiz, QuizStatistics, Course } from '@/@types/db'
 import { useQuizzes, useQuizStatistics, useCreateQuiz, useGenerateMCQuestions } from '@/services/client/quiz'
 import { useCourses } from '@/services/client/courses'
 import { useRouter } from 'nextjs-toploader/app'
+import { useSearchParams } from 'next/navigation'
+
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area, PieChart, Pie, Cell, Legend
@@ -35,11 +37,12 @@ interface QuizDashboardProps {
 
 export default function QuizDashboard({ initialQuizzes, initialStats, initialCourses }: QuizDashboardProps) {
   const router = useRouter()
+  const course = useSearchParams().get('course') as string
   
   // States for quiz creation
   const [isCreating, setIsCreating] = useState(false)
   const [quizTitle, setQuizTitle] = useState('')
-  const [selectedCourse, setSelectedCourse] = useState('')
+  const [selectedCourse, setSelectedCourse] = useState(course || '')
   const [numQuestions, setNumQuestions] = useState(10)
   const [quizDuration, setQuizDuration] = useState(15)
 
