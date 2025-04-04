@@ -24,12 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(`antialiased selection:bg-green-600/20 selection:text-green-600 font-inter`, inter.className,)}
+        className={cn(`antialiased selection:bg-primary/20 selection:text-primary font-inter`, inter.className,)}
         suppressHydrationWarning
       >
         <NextTopLoader 
           showSpinner={false}
-          color="lightgreen"
+          color="var(--primary)"
         />
         <TanstackQueryProvider>
           <ThemeProvider

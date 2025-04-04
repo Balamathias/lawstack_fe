@@ -11,7 +11,8 @@ import {
   Info, 
   ArrowRight, 
   LogIn, 
-  UserPlus 
+  UserPlus,
+  Sparkles 
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Delius } from 'next/font/google'
@@ -34,12 +35,8 @@ interface QuickStartOptionProps {
   description: string
   icon: React.ReactNode
   onClick: () => void
-  color: string
-  iconBg: string
-  tooltipContent: string
+  accentColor: string
   disabled?: boolean
-  gradientFrom?: string
-  gradientTo?: string
   index: number
 }
 
@@ -58,12 +55,8 @@ const QuickStartOption = ({
   description, 
   icon, 
   onClick, 
-  color, 
-  iconBg, 
-  tooltipContent, 
+  accentColor, 
   disabled = false,
-  gradientFrom = "from-white/5",
-  gradientTo = "to-white/15",
   index
 }: QuickStartOptionProps) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -71,9 +64,11 @@ const QuickStartOption = ({
   return (
     <motion.div
       className={cn(
-        "relative overflow-hidden rounded-xl md:h-[200px] cursor-pointer",
-        disabled ? "opacity-60 pointer-events-none" : "",
-        `bg-gradient-to-br ${gradientFrom} ${gradientTo} backdrop-blur-sm border border-white/10`,
+        "relative overflow-hidden rounded-xl shadow-sm transition-all",
+        "border border-border hover:border-primary/30 dark:hover:border-primary/40",
+        "bg-card/50 backdrop-blur-sm hover:shadow-lg dark:bg-card/40",
+        disabled ? "opacity-60 pointer-events-none" : "cursor-pointer",
+        "group h-full"
       )}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -82,29 +77,32 @@ const QuickStartOption = ({
         delay: 0.2 + index * 0.1,
         ease: [0.22, 1, 0.36, 1]
       }}
-      whileHover={{ scale: 1.02, y: -5 }}
+      whileHover={{ scale: 1.02, y: -4 }}
       whileTap={{ scale: 0.98 }}
       onClick={disabled ? undefined : onClick}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
-      <div className="p-6 flex flex-col h-full justify-between relative z-10">
+      {/* Highlight gradient bar */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary to-primary/40 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out origin-left" />
+
+      <div className="p-6 sm:p-7 flex flex-col h-full justify-between relative z-10">
         <div>
-          <div className="flex justify-between items-start mb-3">
+          <div className="flex justify-between items-start mb-4">
             <div className={cn(
-              "p-3 rounded-lg transition-all duration-300",
-              iconBg,
-              isHovered ? "scale-110" : ""
+              "p-3 rounded-xl transition-all duration-300 bg-primary/10 text-primary",
+              "group-hover:bg-primary/15 group-hover:scale-105",
+              "border border-primary/10 group-hover:border-primary/25"
             )}>
-              {icon}
+              {React.cloneElement(icon as React.ReactElement, { className: "h-6 w-6" })}
             </div>
             
             <Tooltip>
               <TooltipTrigger asChild>
                 <button 
                   className={cn(
-                    "text-gray-400 hover:text-gray-200 flex items-center justify-center rounded-full p-1.5 transition-colors",
-                    "bg-black/10 backdrop-blur-sm border border-white/10"
+                    "text-muted-foreground hover:text-foreground flex items-center justify-center rounded-full p-1.5 transition-colors",
+                    "bg-card/80 backdrop-blur-sm hover:bg-card/90 border border-border hover:border-primary/30"
                   )}
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -113,46 +111,51 @@ const QuickStartOption = ({
               </TooltipTrigger>
               <TooltipContent 
                 side="top" 
-                className="max-w-[260px] text-xs bg-black/80 backdrop-blur-md border border-white/10 shadow-xl text-white/90 font-normal"
+                className="max-w-[260px] text-xs bg-card/95 backdrop-blur-md border shadow-lg font-normal rounded-xl p-3 text-muted-foreground"
+                sideOffset={10}
               >
-                {tooltipContent}
+                {description}
               </TooltipContent>
             </Tooltip>
           </div>
           
-          <h3 className={cn("font-medium text-lg mb-2 line-clamp-1", color)}>{title}</h3>
-          <p className="text-white/70 text-sm pr-4 line-clamp-2">{description}</p>
+          <h3 className="font-semibold text-lg mb-2 line-clamp-1 text-foreground group-hover:text-primary transition-colors">
+            {title}
+          </h3>
+          <p className="text-muted-foreground text-sm pr-4 line-clamp-2 mt-1">{description}</p>
         </div>
         
         <motion.div 
-          className="flex items-center gap-1 text-sm font-medium mt-2"
+          className="flex items-center gap-1.5 text-sm font-medium mt-4 text-primary"
           initial={{ opacity: 0.8 }}
           animate={{ opacity: isHovered ? 1 : 0.8, x: isHovered ? 5 : 0 }}
           transition={{ duration: 0.2 }}
         >
           <span>Get Started</span>
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-3.5 w-3.5" />
         </motion.div>
       </div>
       
       {/* Decorative elements */}
-      <div 
-        className={cn(
-          "absolute -bottom-10 -right-10 rounded-full opacity-20 w-40 h-40 transition-all duration-500",
-          isHovered ? "scale-125 rotate-[15deg] opacity-30" : "rotate-0"
-        )}
-        style={{ backgroundColor: color.includes('text-') ? color.replace('text-', 'rgb(var(--color-') + ' / 0.2)' : color }}
+      <motion.div 
+        className="absolute -bottom-20 -right-20 rounded-full w-60 h-60 bg-primary/5 opacity-50 dark:opacity-20"
+        animate={{ 
+          scale: isHovered ? 1.2 : 1,
+          rotate: isHovered ? 10 : 0,
+          opacity: isHovered ? (0.7) : (0.5)
+        }}
+        transition={{ duration: 0.5 }}
       />
       
       <motion.div 
-        className="absolute top-1/2 right-0 opacity-10 h-40 w-40 -translate-y-1/2 translate-x-1/2"
+        className="absolute top-1/3 right-0 opacity-5 h-40 w-40 -translate-y-1/2 translate-x-1/2"
         animate={{ 
           rotate: isHovered ? 15 : 0,
           scale: isHovered ? 1.2 : 1
         }}
         transition={{ duration: 0.5 }}
       >
-        {React.cloneElement(icon as React.ReactElement,)}
+        {React.cloneElement(icon as React.ReactElement, { className: "h-full w-full" })}
       </motion.div>
     </motion.div>
   )
@@ -164,7 +167,7 @@ const GuestPrompt = ({ onLoginClick }: { onLoginClick: () => void }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="rounded-xl overflow-hidden mb-10 border border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 backdrop-blur-sm"
+      className="rounded-xl overflow-hidden mb-10 border border-primary/20 bg-card/60 shadow-md backdrop-blur-sm"
     >
       <div className="p-6 sm:p-8 relative overflow-hidden">
         {/* Background decorative elements */}
@@ -172,8 +175,8 @@ const GuestPrompt = ({ onLoginClick }: { onLoginClick: () => void }) => {
         <div className="absolute bottom-0 left-0 w-60 h-60 bg-primary/5 rounded-full -translate-x-1/3 translate-y-1/3 blur-2xl"></div>
         
         <div className="flex flex-col sm:flex-row gap-6 sm:items-center relative z-10">
-          <div className="p-4 rounded-full bg-primary/10 border border-primary/20 self-start">
-            <Scale className="h-10 w-10 text-primary/80" />
+          <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 self-start">
+            <Scale className="h-10 w-10 text-primary" />
           </div>
           
           <div className="flex-1 space-y-3">
@@ -237,7 +240,7 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
     {
       title: 'Start a Chat',
       description: 'Start a chat with LawStack Assistant on any topic including current happenings.',
-      icon: <MessageSquare className="h-6 w-6" />,
+      icon: <MessageSquare />,
       onClick: () => {
         if (isGuest) {
           handleLoginClick();
@@ -255,44 +258,28 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
           }
         })
       },
-      color: "text-emerald-400",
-      iconBg: "bg-emerald-950/40 text-emerald-400",
-      tooltipContent: "Best for general legal questions and exploratory conversations. Use this when you want open-ended guidance or have multiple topics to discuss with minimal structure.",
-      gradientFrom: "from-emerald-950/30",
-      gradientTo: "to-emerald-900/40"
+      accentColor: "emerald",
     },
     {
       title: 'Start with a Course',
       description: 'Predict past questions, get mock past questions, analyze patterns',
-      icon: <BookOpen className="h-6 w-6" />,
+      icon: <BookOpen />,
       onClick: () => isGuest ? handleLoginClick() : setIsCourseModalOpen(true),
-      color: "text-blue-400",
-      iconBg: "bg-blue-950/40 text-blue-400",
-      tooltipContent: "Perfect for exam preparation. Choose this option when studying for a specific course to identify likely exam questions, understand question patterns, and get tailored practice materials.",
-      gradientFrom: "from-blue-950/30",
-      gradientTo: "to-blue-900/40"
+      accentColor: "blue",
     },
     {
       title: 'Start with a Past Question',
       description: 'Deeply analyze past questions, get insights, predict future questions',
-      icon: <FileQuestion className="h-6 w-6" />,
+      icon: <FileQuestion />,
       onClick: () => isGuest ? handleLoginClick() : setIsQuestionModalOpen(true),
-      color: "text-purple-400",
-      iconBg: "bg-purple-950/40 text-purple-400",
-      tooltipContent: "Ideal when you have specific exam questions to study. The assistant will break down question patterns, suggest model answers, and help you understand marking criteria and examiners' expectations.",
-      gradientFrom: "from-purple-950/30",
-      gradientTo: "to-purple-900/40"
+      accentColor: "purple",
     },
     {
       title: 'Take a Quiz on any Course',
       description: 'Get AI quizzes based on previous past-questions and set the grounds for success',
-      icon: <Lightbulb className="h-6 w-6" />,
+      icon: <Lightbulb />,
       onClick: () => isGuest ? handleLoginClick() : router.push(`/dashboard/quizzes`),
-      color: "text-amber-400",
-      iconBg: "bg-amber-950/40 text-amber-400",
-      tooltipContent: "Best for deep-diving into specific legal concepts. Select this to explore a particular area of law in depth, access comprehensive resources, and understand how the topic might appear in examinations.",
-      gradientFrom: "from-amber-950/30",
-      gradientTo: "to-amber-900/40"
+      accentColor: "amber",
     }
   ]
 
@@ -314,9 +301,9 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
-                className="bg-primary/10 p-2 rounded-full"
+                className="bg-primary/10 p-2.5 rounded-xl border border-primary/20"
               >
-                <Scale size={28} className="text-primary" />
+                <Sparkles size={28} className="text-primary" />
               </motion.div>
               <motion.span 
                 className="text-primary font-delius font-medium text-xl"
@@ -329,7 +316,7 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
             </div>
             
             <motion.h2 
-              className="text-3xl font-bold mb-2"
+              className="text-3xl font-bold mb-2 text-foreground"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
@@ -351,7 +338,7 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
           {isGuest && <GuestPrompt onLoginClick={handleLoginClick} />}
           
           {/* Main options grid with staggered animation */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mb-10">
             {options.map((option, index) => (
               <QuickStartOption 
                 key={option.title} 
