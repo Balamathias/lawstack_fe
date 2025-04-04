@@ -26,7 +26,7 @@ const SettingsPage = async () => {
 
         <Tabs defaultValue="appearance" className="w-full">
           <div className="border-b border-border mb-8">
-            <TabsList className="bg-transparent p-0 h-auto flex w-full justify-start -mb-px space-x-1">
+            <TabsList className="bg-transparent p-0 h-auto flex w-full justify-start -mb-px space-x-1 gap-2.5 flex-wrap">
               <TabsTrigger 
                 value="appearance"
                 className="rounded-t-xl border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-background data-[state=active]:shadow-sm px-5 py-2.5 transition-all hover:bg-muted/40 data-[state=active]:font-medium"
