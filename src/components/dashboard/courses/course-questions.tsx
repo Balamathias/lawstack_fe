@@ -14,7 +14,7 @@ interface Props {
 }
 
 const CourseQuestions = async ({ courseId, searchParams }: Props) => {
-    const { data: questions, count } = await getQuestions({ params: { course: courseId, ...searchParams, page_size: 15 } })
+    const { data: questions, count } = await getQuestions({ params: { course: courseId, ...searchParams, page_size: 25 } })
 
     const page = Number(searchParams?.page || 1)
   
@@ -27,12 +27,12 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
                 <QuestionItem 
                   key={question.id} 
                   question={question} 
-                  number={(index + 1) + (page - 1) * 15} 
+                  number={(index + 1) + (page - 1) * 25} 
                 />
               ))}
             </div>
             <Pagination
-              totalPages={Math.ceil(count / 15)}
+              totalPages={Math.ceil(count / 25)}
               className="mt-8"
             />
           </>
