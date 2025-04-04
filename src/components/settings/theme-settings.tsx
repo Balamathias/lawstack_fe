@@ -150,7 +150,7 @@ const ThemeSettings = () => {
   const { theme: nextTheme, setTheme: setNextTheme, resolvedTheme } = useNextTheme()
   const [mounted, setMounted] = useState(false)
   const [activeTab, setActiveTab] = useState<"colors" | "appearance">("colors")
-  const [previewMode, setPreviewMode] = useState<DarkVariant>("subtle")
+  const [previewMode, setPreviewMode] = useState<DarkVariant>("lights-out")
   
   // Mount check to prevent hydration issues
   useEffect(() => {
@@ -189,7 +189,7 @@ const ThemeSettings = () => {
   const resetThemeSettings = () => {
     setTheme("default")
     setNextTheme("system")
-    setDarkVariant("subtle")
+    setDarkVariant("lights-out")
     setIsAnimated(true)
     toast.success("Theme settings reset to defaults")
   }
