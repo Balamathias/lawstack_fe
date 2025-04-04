@@ -124,12 +124,13 @@ const DashboardAction = () => {
               whileHover={{ 
                 scale: 1.02, 
                 y: -5,
-                transition: { duration: 0.2 }
+                transition: { duration: 0.2 },
+                boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
               }}
               className={cn(
                 'relative overflow-hidden rounded-xl cursor-pointer border transition-all',
                 'bg-card dark:bg-card/40 backdrop-blur-sm hover:shadow-md',
-                isCurrentPath ? 'border-primary/30 shadow' : 'border-border/60',
+                isCurrentPath ? 'border-primary/30 shadow-md' : 'border-border/60',
                 action.hoverGradient
               )}
               onClick={() => router.push(action.href)}
@@ -154,11 +155,19 @@ const DashboardAction = () => {
                 <div className="flex flex-col h-full">
                   <div className="mb-4">
                     <div className={cn(
-                      "p-3 w-min rounded-lg transition-transform duration-300",
+                      "p-3 w-min rounded-lg transition-all duration-300",
                       action.color,
                       (isHovered || isCurrentPath) && "scale-110"
                     )}>
-                      <action.icon className="h-6 w-6" />
+                      <motion.div
+                        animate={{ 
+                          rotate: isHovered ? 10 : 0,
+                          scale: isHovered ? 1.1 : 1
+                        }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                      >
+                        <action.icon className="h-6 w-6" />
+                      </motion.div>
                     </div>
                   </div>
                   
@@ -188,8 +197,17 @@ const DashboardAction = () => {
                 </div>
               </div>
               
-              {/* Subtle background decoration */}
-              <div className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-10 bg-gradient-to-br from-foreground/20 to-foreground/5"></div>
+              {/* Large background icon */}
+              <motion.div 
+                className="absolute -bottom-8 -right-8 opacity-10"
+                animate={{ 
+                  rotate: isHovered ? 10 : 0,
+                  scale: isHovered ? 1.1 : 1
+                }}
+                transition={{ duration: 0.5 }}
+              >
+                <action.icon className="h-32 w-32" />
+              </motion.div>
             </motion.div>
           );
         })}

@@ -64,11 +64,39 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
       
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full -translate-x-1/4 translate-y-1/4 blur-3xl" />
+        {/* Animated floating circles */}
+        <motion.div 
+          className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl"
+          animate={{ 
+            scale: [1, 1.05, 1],
+            rotate: [0, 5, 0]
+          }}
+          transition={{ 
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full -translate-x-1/4 translate-y-1/4 blur-3xl"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            rotate: [0, -5, 0]
+          }}
+          transition={{ 
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
         
         {/* Light pattern overlay */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_500px_at_50%_200px,rgba(var(--primary),0.1),transparent)] dark:bg-[radial-gradient(circle_500px_at_50%_200px,rgba(var(--primary),0.05),transparent)]"></div>
+        
+        {/* Subtle pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.05)_25%,rgba(68,68,68,.05)_50%,transparent_50%,transparent_75%,rgba(68,68,68,.05)_75%)] bg-[length:8px_8px]"></div>
+        </div>
       </div>
       
       <div className="relative z-10 px-6 py-8 sm:px-8">
@@ -137,12 +165,17 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
             ) : (
               <>
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12 border-2 border-primary/20">
-                    <AvatarImage src={user?.avatar || ''} />
-                    <AvatarFallback>
-                      {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Avatar className="h-12 w-12 border-2 border-primary/20">
+                      <AvatarImage src={user?.avatar || ''} />
+                      <AvatarFallback>
+                        {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </motion.div>
                   
                   <div>
                     <h1 className="text-2xl sm:text-3xl font-bold">
@@ -167,7 +200,12 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
               <div className="relative bg-card dark:bg-card/80 border border-primary/10 p-6 rounded-lg">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-primary" />
+                    <motion.div
+                      whileHover={{ rotate: 15, scale: 1.1 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Sparkles className="h-4 w-4 text-primary" />
+                    </motion.div>
                     <h3 className="font-medium text-sm">Continue Learning</h3>
                   </div>
                   <p className="text-xs text-muted-foreground">Pick up where you left off</p>

@@ -23,16 +23,16 @@ export const dashboardMobileLinks = [
     href: "/dashboard/chat",
     icon: Stars,
   },
-  {
-    tooltip: "Search",
-    href: "/dashboard/search",
-    icon: Search,
-  },
-  {
-    tooltip: "Bookmarks",
-    href: "/dashboard/bookmarks",
-    icon: BookMarked,
-  },
+  // {
+  //   tooltip: "Search",
+  //   href: "/dashboard/search",
+  //   icon: Search,
+  // },
+  // {
+  //   tooltip: "Bookmarks",
+  //   href: "/dashboard/bookmarks",
+  //   icon: BookMarked,
+  // },
   {
     tooltip: "Settings",
     href: "/dashboard/settings",
