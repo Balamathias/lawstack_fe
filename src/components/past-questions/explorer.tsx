@@ -1,12 +1,14 @@
 import { getQuestions } from '@/services/server/questions';
-import { ScrollText, ArrowUpRight, GraduationCap, Building2, Clock } from 'lucide-react';
-import Link from 'next/link';
+import { ScrollText } from 'lucide-react';
 import React from 'react';
-import { cn, truncateString } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
 import SwitchDisplay from './switch-display';
 import Pagination from '../pagination';
-import MarkdownPreview from '../markdown-preview';
+import { Badge } from '../ui/badge';
+import Empty from '../empty';
+import CardGrid from './card-grid';
+import CardList from './card-list';
 
 interface Props {
     params?: Promise<{ [key: string]: any }>,
@@ -25,77 +27,61 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
     });
 
     return (
-        <div className="space-y-8 mt-10">
-            <div className='flex items-center justify-between py-4 border-b border-muted/30'>
-                <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2.5">
-                    <ScrollText className="h-6 w-6 text-primary" />
-                    Recent Questions
-                </h2>
-                <SwitchDisplay />
+        <div className="space-y-8 mt-6 animate-fade-in">
+            {/* Header with gradient background */}
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 p-6 shadow-sm border border-primary/20">
+                {/* Background pattern */}
+                <div className="absolute inset-0 pointer-events-none opacity-20">
+                    <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.05)_25%,rgba(68,68,68,.05)_50%,transparent_50%,transparent_75%,rgba(68,68,68,.05)_75%)] bg-[length:8px_8px]"></div>
+                </div>
+                
+                <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-2.5 text-foreground mb-2">
+                            <ScrollText className="h-7 w-7 text-primary" />
+                            Past Questions
+                        </h1>
+                        <p className="text-muted-foreground max-w-2xl">
+                            Explore past exam questions from various law courses. Use the filters to narrow down your search.
+                        </p>
+                    </div>
+                    <SwitchDisplay className="self-end" />
+                </div>
             </div>
-            <div className={cn("gap-6", {
-                "grid md:grid-cols-2 lg:grid-cols-3": view === 'grid',
-                "flex flex-col": view === 'list'
-            })}>
-                {data.map((question) => (
-                    <Link
-                        href={`/dashboard/past-questions/${question.id}`}
-                        key={question.id}
-                        className={cn(
-                            "group relative overflow-hidden p-6 rounded-xl border border-muted/30 transition-all duration-300 hover:border-primary/30",
-                            "bg-gradient-to-br from-background/80 to-secondary/20 backdrop-blur-lg shadow-md hover:shadow-xl",
-                            "flex flex-col gap-3 justify-between",
-                            view === 'list' ? "lg:flex-row lg:items-center" : ""
-                        )}
-                    >
-                        <div className={cn(
-                            "flex flex-col gap-3", 
-                            view === 'list' ? "lg:flex-1" : "flex-1"
-                        )}>
-                            <div className="flex justify-between items-start gap-4">
-                                <div className={cn(
-                                    "font-medium text-foreground/90",
-                                    view === 'list' ? "line-clamp-2" : "line-clamp-3"
-                                )}>
-                                    <MarkdownPreview content={(question?.text)} />
-                                </div>
-                                <span className="bg-primary/10 p-2 rounded-full transform translate-y-0 group-hover:translate-y-1 transition-transform duration-300">
-                                    <ArrowUpRight className="h-4 w-4 text-primary" />
-                                </span>
-                            </div>
 
-                            <div className={cn(
-                                "flex items-center flex-wrap gap-y-2",
-                                view === 'list' ? "gap-x-6" : "gap-x-3 mt-auto"
-                            )}>
-                                <span className="text-xs px-3 py-1.5 bg-primary/15 text-primary font-medium rounded-full">
-                                    {question.course_name}
-                                </span>
-                                
-                                {question?.level && (
-                                    <span className="text-xs flex items-center gap-1 text-muted-foreground">
-                                        <GraduationCap className="h-3.5 w-3.5" /> 
-                                        <span>{question.level} Level</span>
-                                    </span>
-                                )}
-                                
-                                {question?.institution_name && (
-                                    <span className="text-xs flex items-center gap-1 text-muted-foreground">
-                                        <Building2 className="h-3.5 w-3.5" /> 
-                                        <span className="truncate max-w-[150px]">{question.institution_name}</span>
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-                        
-                        {/* Hover effect gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                    </Link>
-                ))}
+            {/* Section title */}
+            <div className="flex items-center justify-between py-2 border-b border-border/40">
+                <div className="flex items-center gap-2">
+                    <div className="h-6 w-1.5 bg-gradient-to-b from-primary to-primary/30 rounded-full"></div>
+                    <h2 className="text-lg sm:text-xl font-semibold">Question Archive</h2>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span>Total found:</span>
+                    <Badge variant="outline" className="bg-primary/5 text-primary hover:bg-primary/10">
+                        {count} Questions
+                    </Badge>
+                </div>
             </div>
+
+            {data.length === 0 ? (
+                <Empty 
+                    title="No questions found"
+                    content="Try adjusting your filters to find questions."
+                    icon={<ScrollText />}
+                    color="primary"
+                />
+            ) : (
+                // Use client components to handle animations based on view type
+                // Don't pass the getPattern function - it will be defined inside the client components
+                view === 'grid' ? (
+                    <CardGrid data={data} />
+                ) : (
+                    <CardList data={data} />
+                )
+            )}
 
             <Pagination
-                totalPages={Math.ceil(count/12)}
+                totalPages={Math.ceil(count/15)}
                 className='mt-10'
             />
         </div>
@@ -108,47 +94,65 @@ export const ExplorerSkeleton = ({ searchParams }: { searchParams: { view: strin
     const view = searchParams.view || 'list';
 
     return (
-        <div className="space-y-8 mt-10">
-            <div className='flex items-center justify-between py-4 border-b border-muted/30'>
-                <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2.5">
-                    <ScrollText className="h-6 w-6 text-primary" />
-                    Recent Questions
-                </h2>
-                <SwitchDisplay />
+        <div className="space-y-8 mt-6">
+            {/* Header skeleton */}
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/5 via-primary/2 to-primary/5 p-6 shadow-sm border border-primary/10">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-2.5">
+                            <Skeleton className="h-7 w-7 rounded-full" />
+                            <Skeleton className="h-9 w-48" />
+                        </div>
+                        <Skeleton className="h-4 w-full max-w-md" />
+                    </div>
+                    <Skeleton className="h-9 w-32" />
+                </div>
             </div>
-            <div className={cn("gap-6", {
+
+            {/* Section title */}
+            <div className="flex items-center justify-between py-2 border-b border-border/40">
+                <div className="flex items-center gap-2">
+                    <Skeleton className="h-6 w-1.5 rounded-full" />
+                    <Skeleton className="h-6 w-32" />
+                </div>
+                <Skeleton className="h-6 w-20" />
+            </div>
+
+            <div className={cn("gap-5", {
                 "grid md:grid-cols-2 lg:grid-cols-3": view === 'grid',
                 "flex flex-col": view === 'list'
             })}>
-                {[...Array(12)].map((_, index) => (
+                {[...Array(9)].map((_, index) => (
                     <div 
                         key={index} 
                         className={cn(
-                            "p-6 rounded-xl border border-muted/30 bg-gradient-to-br from-background/80 to-secondary/20 backdrop-blur-lg shadow-md",
-                            "flex flex-col gap-3",
-                            view === 'list' ? "lg:flex-row lg:items-center" : ""
+                            "relative overflow-hidden rounded-xl border p-6 animate-pulse",
+                            view === 'list' ? "flex flex-col md:flex-row md:items-center md:gap-5" : ""
                         )}
                     >
+                        {/* Subtle pattern background for skeleton */}
+                        <div className="absolute inset-0 pointer-events-none opacity-5">
+                            <div className="absolute inset-0 bg-repeat" 
+                                style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
+                        </div>
+                        
                         <div className={cn(
-                            "flex flex-col gap-4",
-                            view === 'list' ? "lg:flex-1" : "flex-1"
+                            "space-y-4 w-full",
+                            view === 'list' ? "md:flex-1" : ""
                         )}>
-                            <div className="flex justify-between items-start gap-4">
-                                <div className="space-y-2 w-full">
+                            <div className="flex items-start justify-between">
+                                <div className="space-y-2 flex-1">
                                     <Skeleton className="h-4 w-full" />
-                                    <Skeleton className="h-4 w-3/4" />
-                                    {view !== 'list' && <Skeleton className="h-4 w-1/2" />}
+                                    <Skeleton className="h-4 w-4/5" />
+                                    {view === 'grid' && <Skeleton className="h-4 w-2/3" />}
                                 </div>
-                                <Skeleton className="h-8 w-8 rounded-full" />
+                                <Skeleton className="h-8 w-8 rounded-full ml-2" />
                             </div>
                             
-                            <div className={cn(
-                                "flex items-center flex-wrap gap-y-2",
-                                view === 'list' ? "gap-x-6" : "gap-x-3"
-                            )}>
+                            <div className="flex flex-wrap gap-2 pt-4">
+                                <Skeleton className="h-6 w-28 rounded-full" />
+                                <Skeleton className="h-6 w-20 rounded-full" />
                                 <Skeleton className="h-6 w-24 rounded-full" />
-                                <Skeleton className="h-4 w-28" />
-                                <Skeleton className="h-4 w-32" />
                             </div>
                         </div>
                     </div>

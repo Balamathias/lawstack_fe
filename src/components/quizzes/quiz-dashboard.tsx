@@ -42,7 +42,7 @@ import { useQuizzes, useQuizStatistics, useCreateQuiz, useGenerateMCQuestions } 
 import { useCourses } from '@/services/client/courses'
 import { useRouter } from 'nextjs-toploader/app'
 import { useSearchParams } from 'next/navigation'
-import { cn } from '@/lib/utils'
+import { cn, truncateString } from '@/lib/utils'
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell, Legend } from 'recharts';
 
@@ -314,7 +314,7 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
     if (!statsData?.data?.course_performance) return []
     
     return Object.entries(statsData.data.course_performance).map(([course, data]) => ({
-      name: data?.course_name,
+      name: truncateString(data?.course_name, 20),
       value: data.quizzes_taken,
     })).slice(0, 6)
   }, [statsData?.data?.course_performance])
@@ -417,7 +417,7 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
             
             <Badge variant="outline" className="flex items-center gap-1 text-xs py-0.5 px-1.5">
               <Layers className="h-3 w-3" />
-              <span>{quiz.questions?.length || 0} Qs</span>
+              <span>{quiz.total_questions || 0} Qs</span>
             </Badge>
           </div>
           
@@ -428,12 +428,12 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
                 <div className="flex items-center gap-1.5">
                   <span className={cn(
                     "font-semibold text-sm",
-                    (quiz.score / quiz.total_questions! * 100) >= 70 ? "text-green-500" : "text-amber-500"
+                    (quiz.score) >= 70 ? "text-green-500" : "text-amber-500"
                   )}>
-                    {quiz.score}/{quiz.total_questions}
+                    {quiz.correct_answers}/{quiz.total_questions}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    ({Math.round(quiz.score / quiz.total_questions! * 100)}%)
+                    ({Math.round(quiz.score)}%)
                   </span>
                 </div>
               </div>
@@ -454,7 +454,7 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
                 <span className="text-xs text-muted-foreground">Time taken:</span>
                 <span className="text-xs flex items-center gap-1">
                   <TimerIcon className="h-3 w-3 text-muted-foreground" />
-                  {quiz.completion_time} mins
+                  {Math.round(quiz.completion_time/60)} mins
                 </span>
               </div>
             )}
