@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from '@/lib/utils'
-import { Home, BookOpen, Search, BookMarked, User, MessageSquare, ShieldAlert, Stars } from 'lucide-react'
+import { Home, BookOpen, Search, BookMarked, User, MessageSquare, ShieldAlert, Stars, Settings2 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -33,6 +33,12 @@ export const dashboardMobileLinks = [
     href: "/dashboard/bookmarks",
     icon: BookMarked,
   },
+  {
+    tooltip: "Settings",
+    href: "/dashboard/settings",
+    icon: Settings2,
+  },
+
 ]
 
 const DashboardBottomBar = () => {
