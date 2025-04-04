@@ -1,36 +1,34 @@
-import LoadingOverlay from '@/components/loading-overlay'
-import AccessSection from '@/components/past-questions/access-section'
-import Explorer, { ExplorerSkeleton } from '@/components/past-questions/explorer'
 import React, { Suspense } from 'react'
-import BackButton from '@/components/back-button'
 import { Metadata } from 'next'
-
-interface Props {
-  params: Promise<{[key: string]: any}>,
-  searchParams: Promise<{[key: string]: any}>
-}
+import Explorer, { ExplorerSkeleton } from '@/components/past-questions/explorer'
+import Filters from '@/components/past-questions/filters'
+import { ScrollText } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const metadata: Metadata = {
-  title: 'Past Questions',
-  description: 'Explore past questions from various institutions',
+  title: 'Past Questions | Law Stack',
+  description: 'Access and explore past legal examination questions from various courses and universities.'
 }
 
-const Page = async ({ searchParams }: Props) => {
+interface Props {
+  params: Promise<Record<string, any>>,
+  searchParams: Promise<Record<string, any>>,
+}
+
+export default async function PastQuestionsPage({ params: _params, searchParams }: Props) {
+  // Create a copy of searchParams for the skeleton to use
+  const viewParam = searchParams.view || 'list';
+  
   return (
-    <div className='w-full flex flex-col gap-y-10 max-w-7xl mx-auto p-3 sm:p-8 pb-16 max-lg:mt-14'>
-        <div className='flex flex-col gap-y-5'>
-            <h1 className='text-3xl font-bold hidden'>Past Questions</h1>
-            
-            <BackButton />
-
-            <AccessSection searchParams={searchParams} />
-
-            <Suspense fallback={<ExplorerSkeleton searchParams={{ view: (await searchParams).view }} />}>
-                <Explorer searchParams={searchParams} />
-            </Suspense>
-        </div>
+    <div className='max-w-7xl mx-auto w-full px-4 pb-20 pt-4 md:pt-8 lg:pt-12 max-lg:mt-14 space-y-8'>
+      <div className="flex items-center justify-between">
+        <h1 className="sr-only">Past Questions</h1>
+        <Filters />
+      </div>
+      
+      <Suspense fallback={<ExplorerSkeleton searchParams={{ view: viewParam }} />}>
+        <Explorer searchParams={searchParams} />
+      </Suspense>
     </div>
   )
 }
-
-export default Page
