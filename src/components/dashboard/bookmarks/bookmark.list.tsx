@@ -222,7 +222,7 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
             {/* Bookmark list section */}
             <div className="space-y-8">
                 {/* Today's bookmarks */}
-                {groupedBookmarks?.today.length > 0 && (
+                {(groupedBookmarks?.today?.length || 0) > 0 && (
                     <div className="space-y-3">
                         <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                             <Clock className="h-4 w-4" />
@@ -233,7 +233,7 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
                                 ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" 
                                 : "space-y-3"
                         )}>
-                            {groupedBookmarks.today.map((bookmark) => (
+                            {groupedBookmarks?.today?.map((bookmark) => (
                                 <BookmarkCard 
                                     key={bookmark.id} 
                                     bookmark={bookmark} 
@@ -245,7 +245,7 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
                 )}
                 
                 {/* This week's bookmarks */}
-                {groupedBookmarks?.thisWeek.length > 0 && (
+                {(groupedBookmarks?.thisWeek?.length || 0) > 0 && (
                     <div className="space-y-3">
                         <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                             <CalendarDays className="h-4 w-4" />
@@ -256,7 +256,7 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
                                 ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" 
                                 : "space-y-3"
                         )}>
-                            {groupedBookmarks.thisWeek.map((bookmark) => (
+                            {groupedBookmarks?.thisWeek?.map((bookmark) => (
                                 <BookmarkCard 
                                     key={bookmark.id} 
                                     bookmark={bookmark} 
@@ -268,7 +268,7 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
                 )}
                 
                 {/* Earlier bookmarks */}
-                {groupedBookmarks?.earlier.length > 0 && (
+                {(groupedBookmarks?.earlier?.length || 0) > 0 && (
                     <div className="space-y-3">
                         <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                             <Calendar className="h-4 w-4" />
@@ -279,7 +279,7 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
                                 ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" 
                                 : "space-y-3"
                         )}>
-                            {groupedBookmarks.earlier.map((bookmark) => (
+                            {groupedBookmarks.earlier?.map((bookmark) => (
                                 <BookmarkCard 
                                     key={bookmark.id} 
                                     bookmark={bookmark} 
