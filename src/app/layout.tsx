@@ -44,7 +44,7 @@ export default function RootLayout({
 
           <Toaster
             position="top-right"
-            // richColors
+            richColors
             duration={5000}
           />
         </TanstackQueryProvider>
