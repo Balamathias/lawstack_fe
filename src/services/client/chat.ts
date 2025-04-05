@@ -5,7 +5,7 @@ import axios from "axios"
 import { API_URL } from "../utils"
 import { toast } from "sonner"
 import { getCookie } from 'cookies-next/client'
-import { getChats } from "../server/chats"
+import { getChats, deleteChat } from "../server/chats"
 import React from "react"
 import { useRouter } from "nextjs-toploader/app"
 import { cn } from "@/lib/utils"
@@ -80,5 +80,20 @@ export const useGetChats = (params?: Record<string, any>) => {
     return useQuery({
         queryKey: ['get_chats', params],
         queryFn: () => getChats(params),
+    })
+}
+
+export const useDeleteChat = () => {
+    const token = getCookie('token')
+    
+    return useMutation({
+        mutationKey: ['delete-chat'],
+        mutationFn: async (chat_id: string) => {
+            return await deleteChat(chat_id)
+        },
+        onError: (error) => {
+            console.error('Error deleting chat:', error)
+            toast.error('Error deleting chat, please try again?', { description: error.message })
+        }
     })
 }

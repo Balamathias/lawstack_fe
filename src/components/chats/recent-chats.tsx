@@ -16,7 +16,8 @@ import {
   MessageSquareDashed,
   ArrowRight,
   MessageSquareText,
-  Sparkles
+  Sparkles,
+  MessageSquareMore
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -34,15 +35,15 @@ interface RecentChatsProps {
 
 export function RecentChatsLoading() {
   return (
-    <div className="w-full py-4">
+    <div className="w-full py-8">
       <div className="flex items-center justify-between mb-3">
-        <Skeleton className="h-5 w-32" />
-        <Skeleton className="h-8 w-16" />
+        <Skeleton className="h-5 w-40" />
+        <Skeleton className="h-8 w-20" />
       </div>
-      <div className="flex gap-3 overflow-hidden">
+      <div className="flex gap-4 overflow-hidden">
         {Array(4).fill(0).map((_, i) => (
           <div key={i} className="flex-shrink-0 w-[300px] rounded-xl overflow-hidden">
-            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-[160px] w-full" />
           </div>
         ))}
       </div>
@@ -200,6 +201,15 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
     }
   }
   
+  const getChatTypeColor = (chatType: string) => {
+    switch (chatType) {
+      case 'course_specific': return 'bg-blue-500/10 text-blue-500 border-blue-500/20'
+      case 'past_question': return 'bg-purple-500/10 text-purple-500 border-purple-500/20'
+      case 'exam_prep': return 'bg-amber-500/10 text-amber-500 border-amber-500/20'
+      default: return 'bg-primary/10 text-primary border-primary/20'
+    }
+  }
+  
   if (isPending) {
     return <RecentChatsLoading />
   }
@@ -241,7 +251,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
   
   return (
     <motion.div 
-      className="w-full py-6 px-1 mt-8"
+      className="w-full py-8 px-1 mt-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
@@ -249,10 +259,10 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-md bg-primary/10 text-primary">
-            <History size={14} />
+            <MessageSquareMore size={14} />
           </div>
           <h3 className="text-base font-medium">Recent Conversations</h3>
-          <Badge variant="outline" className="ml-2 text-xs py-0 px-2 rounded-full">
+          <Badge variant="outline" className="ml-1 text-xs py-0 px-2 rounded-full">
             {recentChats.length}
           </Badge>
         </div>
@@ -298,7 +308,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
       </div>
       
       <div 
-        className="overflow-x-auto pb-2 -mx-2 px-2"
+        className="overflow-x-auto pb-2 -mx-2 px-2 hide-scrollbar"
         ref={scrollContainerRef}
         onScroll={handleScroll}
         tabIndex={0}
@@ -312,6 +322,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
               const date = new Date(chat.created_at);
               const formattedDate = format(date, 'MMM d, yyyy');
               const timeAgo = formatTimeAgo(date);
+              const chatTypeClass = getChatTypeColor(chat.chat_type);
               
               return (
                 <motion.div 
@@ -322,9 +333,9 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
                   whileHover={{ y: -4, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
                   whileTap={{ y: 0, scale: 0.98 }}
                   className={cn(
-                    "flex-shrink-0 w-[300px] rounded-xl overflow-hidden cursor-pointer bg-card",
-                    "border transition-all",
-                    isActive ? "border-primary shadow ring-1 ring-primary/20" : "border-border hover:border-primary/30 shadow-sm"
+                    'flex-shrink-0 w-[300px] rounded-xl overflow-hidden cursor-pointer bg-card',
+                    'border transition-all',
+                    isActive ? 'border-primary/30 shadow-md ring-1 ring-primary/20' : 'border-border/60 hover:border-primary/30 shadow-sm'
                   )}
                   onClick={() => router.push(`/dashboard/chat/${chat.id}`)}
                   tabIndex={0}
@@ -335,7 +346,8 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
                     <div className="flex items-center justify-between gap-3 mb-3">
                       <div className="flex items-center gap-2">
                         <div className={cn(
-                          "p-2 rounded-lg bg-primary/10 text-primary border border-primary/10"
+                          "p-2 rounded-lg border",
+                          chatTypeClass
                         )}>
                           {getChatIcon(chat.chat_type)}
                         </div>

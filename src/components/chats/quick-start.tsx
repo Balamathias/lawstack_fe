@@ -12,7 +12,10 @@ import {
   ArrowRight, 
   LogIn, 
   UserPlus,
-  Sparkles 
+  Sparkles,
+  Brain,
+  GraduationCap,
+  Wand2
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Delius } from 'next/font/google'
@@ -27,6 +30,7 @@ import RecentChats from './recent-chats'
 import { User } from '@/@types/db'
 import { Button } from '../ui/button'
 import Link from 'next/link'
+import ChatHistory from './chat-history'
 
 const delius = Delius({weight: ['400'], subsets: ['latin'], variable: '--font-delius'})
 
@@ -38,6 +42,7 @@ interface QuickStartOptionProps {
   accentColor: string
   disabled?: boolean
   index: number
+  highlight?: boolean
 }
 
 interface Props {
@@ -57,7 +62,8 @@ const QuickStartOption = ({
   onClick, 
   accentColor, 
   disabled = false,
-  index
+  index,
+  highlight = false
 }: QuickStartOptionProps) => {
   const [isHovered, setIsHovered] = useState(false);
   
@@ -68,7 +74,8 @@ const QuickStartOption = ({
         "border border-border hover:border-primary/30 dark:hover:border-primary/40",
         "bg-card/50 backdrop-blur-sm hover:shadow-lg dark:bg-card/40",
         disabled ? "opacity-60 pointer-events-none" : "cursor-pointer",
-        "group h-full"
+        "group h-full",
+        highlight ? "ring-2 ring-primary/20 bg-primary/[0.03]" : ""
       )}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -86,6 +93,13 @@ const QuickStartOption = ({
       {/* Highlight gradient bar */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary to-primary/40 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out origin-left" />
 
+      {highlight && (
+        <div className="absolute top-3 right-3 flex items-center gap-1 bg-primary/10 text-primary text-xs py-0.5 px-2 rounded-full border border-primary/20">
+          <Sparkles className="h-3 w-3" />
+          <span>Recommended</span>
+        </div>
+      )}
+
       <div className="p-6 sm:p-7 flex flex-col h-full justify-between relative z-10">
         <div>
           <div className="flex justify-between items-start mb-4">
@@ -94,7 +108,7 @@ const QuickStartOption = ({
               "group-hover:bg-primary/15 group-hover:scale-105",
               "border border-primary/10 group-hover:border-primary/25"
             )}>
-              {React.cloneElement(icon as React.ReactElement)}
+              {React.cloneElement(icon as React.ReactElement, { className: "h-6 w-6" })}
             </div>
             
             <Tooltip>
@@ -155,7 +169,7 @@ const QuickStartOption = ({
         }}
         transition={{ duration: 0.5 }}
       >
-        {React.cloneElement(icon as React.ReactElement)}
+        {React.cloneElement(icon as React.ReactElement, { className: "h-full w-full" })}
       </motion.div>
     </motion.div>
   )
@@ -224,7 +238,7 @@ const GuestPrompt = ({ onLoginClick }: { onLoginClick: () => void }) => {
   );
 };
 
-const QuickStart = ({ auth, user, chat_id }: Props) => {
+const QuickStart = ({ user, chat_id }: Props) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false)
@@ -238,8 +252,8 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
     
   const options = [
     {
-      title: 'Start a Chat',
-      description: 'Start a chat with LawStack Assistant on any topic including current happenings.',
+      title: 'Open-ended Chat',
+      description: 'Chat with LawStack Assistant about any legal topic, current events, or study concepts.',
       icon: <MessageSquare />,
       onClick: () => {
         if (isGuest) {
@@ -247,9 +261,8 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
           return;
         }
         
-        startChat({ title: 'New chat', chat_type: 'general' }, {
+        startChat({ title: 'New conversation', chat_type: 'general' }, {
           onSuccess: (data) => {
-            console.log('Chat started:', data)
             if (data.error) {
               console.error('Error starting chat:', data.error)
               return
@@ -259,25 +272,27 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
         })
       },
       accentColor: "emerald",
+      highlight: true
     },
     {
-      title: 'Start with a Course',
-      description: 'Predict past questions, get mock past questions, analyze patterns',
+      title: 'Course-Specific Chat',
+      description: 'Get help with a specific course, including question predictions, mock scenarios, and pattern analysis.',
       icon: <BookOpen />,
       onClick: () => isGuest ? handleLoginClick() : setIsCourseModalOpen(true),
       accentColor: "blue",
+      highlight: true,
     },
     {
-      title: 'Start with a Past Question',
-      description: 'Deeply analyze past questions, get insights, predict future questions',
+      title: 'Analyze Past Question',
+      description: 'Upload or select a past question to receive deep analysis, answer guidance, and related concept exploration.',
       icon: <FileQuestion />,
       onClick: () => isGuest ? handleLoginClick() : setIsQuestionModalOpen(true),
       accentColor: "purple",
     },
     {
-      title: 'Take a Quiz on any Course',
-      description: 'Get AI quizzes based on previous past-questions and set the grounds for success',
-      icon: <Lightbulb />,
+      title: 'Generate Practice Quiz',
+      description: 'Create a customized quiz to test your knowledge on any legal topic or course material.',
+      icon: <Brain />,
       onClick: () => isGuest ? handleLoginClick() : router.push(`/dashboard/quizzes`),
       accentColor: "amber",
     }
@@ -288,6 +303,19 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
       {isPending && <LoadingOverlay />}
       
       <div className={cn("w-full max-w-5xl mx-auto py-8 px-4 relative min-h-[80vh]", delius.variable)}>
+        <div className="flex justify-end">
+          <ChatHistory 
+            user={user} 
+            currentChatId={chat_id}
+            trigger={
+              <Button variant="outline" size="sm" className="flex items-center gap-2 mb-4">
+                <MessageSquare className="h-4 w-4" />
+                <span>Chat History</span>
+              </Button>
+            }
+          />
+        </div>
+        
         <div className="relative z-10">
           {/* Header with animated entry */}
           <motion.div 
@@ -296,14 +324,14 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
-            <div className="flex items-center justify-center gap-2 mb-3">
+            <div className="flex items-center justify-center gap-2 mb-4">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
-                className="bg-primary/10 p-2.5 rounded-xl border border-primary/20"
+                className="bg-primary/10 p-3 rounded-xl border border-primary/20"
               >
-                <Sparkles size={28} className="text-primary" />
+                <Wand2 size={30} className="text-primary" />
               </motion.div>
               <motion.span 
                 className="text-primary font-delius font-medium text-xl"
@@ -311,26 +339,26 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4, duration: 0.5 }}
               >
-                LawStack Assistant
+                LawStack AI
               </motion.span>
             </div>
             
             <motion.h2 
-              className="text-3xl font-bold mb-2 text-foreground"
+              className="text-3xl sm:text-4xl font-bold mb-3 text-foreground"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
             >
-              Your Legal Learning Partner
+              Your Legal Learning Assistant
             </motion.h2>
             
             <motion.p
-              className="text-muted-foreground max-w-xl mx-auto"
+              className="text-muted-foreground max-w-2xl mx-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              Choose how you'd like to engage with our AI assistant for personalized legal education
+              Choose how you'd like to engage with our AI assistant for personalized legal education and guidance
             </motion.p>
           </motion.div>
           
@@ -345,6 +373,7 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
                 {...option} 
                 index={index}
                 disabled={isGuest && index > 0} // Allow first option for guests as a teaser
+                highlight={option.highlight}
               />
             ))}
           </div>
@@ -354,7 +383,7 @@ const QuickStart = ({ auth, user, chat_id }: Props) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className='py-5'
+            className="py-5"
           >
             {!isGuest && (
               <RecentChats 
