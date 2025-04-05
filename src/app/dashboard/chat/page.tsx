@@ -41,7 +41,7 @@ const Page = async () => {
   const { data: user } = await getUser()
 
   return (
-    <div className='w-full flex flex-col gap-y-8 max-w-7xl mx-auto p-3 sm:p-8 pb-16 max-lg:mt-14 animate-fade-in'>
+    <div className='w-full flex flex-col gap-y-8 max-w-7xl mx-auto p-3 sm:p-8 pb-16 max-lg:mt-14 animate-fade-in relative'>
       <div className='flex flex-col gap-y-5'>            
         <BackButton />
 
@@ -51,9 +51,9 @@ const Page = async () => {
       </div>
       
       {/* Decorative elements */}
-      <div className="fixed bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none z-10 opacity-50" />
+      {/* <div className="fixed bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none z-10 opacity-50" />
       <div className="fixed top-1/4 right-0 w-96 h-96 bg-primary/5 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl opacity-50 pointer-events-none"></div>
-      <div className="fixed bottom-1/4 left-0 w-80 h-80 bg-primary/5 rounded-full -translate-x-1/2 translate-y-1/2 blur-3xl opacity-40 pointer-events-none"></div>
+      <div className="fixed bottom-1/4 left-0 w-80 h-80 bg-primary/5 rounded-full -translate-x-1/2 translate-y-1/2 blur-3xl opacity-40 pointer-events-none"></div> */}
     </div>
   )
 }
