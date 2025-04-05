@@ -1,25 +1,26 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Search, Loader2, X, ArrowRight } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Search, Loader2, X, Command } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
-  isLoading?: boolean;
+  isLoading: boolean;
   placeholder?: string;
 }
 
 export function SearchInput({ value, onChange, isLoading, placeholder }: SearchInputProps) {
   const [inputValue, setInputValue] = useState(value);
   const [isFocused, setIsFocused] = useState(false);
+  const [showHints, setShowHints] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
-  // Sync input value with parent component
+  // Keep input value in sync with parent
   useEffect(() => {
     setInputValue(value);
   }, [value]);
@@ -27,27 +28,40 @@ export function SearchInput({ value, onChange, isLoading, placeholder }: SearchI
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Focus search on Ctrl+K or Meta+K
+      // Focus search input on Ctrl/Cmd + K
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         inputRef.current?.focus();
       }
       
-      // Clear on Escape
-      if (e.key === 'Escape' && document.activeElement === inputRef.current) {
-        setInputValue('');
-        onChange('');
-        inputRef.current?.blur();
+      // Submit search on Enter when focused
+      if (e.key === 'Enter' && isFocused && inputValue.trim()) {
+        console.log("Submitting search on Enter:", inputValue.trim());
+        onChange(inputValue.trim());
       }
     };
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onChange]);
+  }, [onChange, inputValue, isFocused]);
   
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onChange(inputValue);
+    console.log("Submitting search form:", inputValue.trim());
+    if (inputValue.trim()) {
+      onChange(inputValue.trim());
+    }
+  };
+  
+  const handleFocus = () => {
+    setIsFocused(true);
+    setShowHints(true);
+  };
+  
+  const handleBlur = () => {
+    setIsFocused(false);
+    setTimeout(() => setShowHints(false), 200);
   };
   
   return (
@@ -76,42 +90,66 @@ export function SearchInput({ value, onChange, isLoading, placeholder }: SearchI
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           placeholder={placeholder || "Search..."}
           className="pl-11 pr-16 py-6 h-14 bg-transparent border-primary/10 placeholder:text-muted-foreground/70 text-base focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
         />
         
-        {inputValue && (
-          <div className="absolute right-3 flex items-center gap-1.5">
-            <Button
+        <div className="absolute right-3.5 flex items-center gap-2">
+          {inputValue && (
+            <button
               type="button"
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
               onClick={() => {
                 setInputValue('');
                 onChange('');
                 inputRef.current?.focus();
               }}
+              className="p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
             >
               <X className="h-4 w-4" />
-            </Button>
-            
-            <Button
-              type="submit"
-              size="icon"
-              className="h-8 w-8 hover:bg-primary/90 transition-colors"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+            </button>
+          )}
+          
+          <div className="hidden sm:flex items-center pl-2 border-l border-border/50 h-6">
+            <kbd className="hidden sm:flex h-6 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 text-xs font-medium text-muted-foreground">
+              <span className="text-xs">⌘</span>K
+            </kbd>
           </div>
-        )}
+        </div>
       </motion.div>
       
-      <div className="absolute right-4 bottom-0 transform translate-y-full mt-1.5 text-xs text-muted-foreground opacity-70 hover:opacity-100 transition-opacity">
-        Press <kbd className="px-1.5 py-0.5 bg-muted rounded border border-border/40 font-mono text-xs">Ctrl K</kbd> to search
-      </div>
+      {/* Search hints */}
+      {showHints && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="absolute mt-2 w-full bg-card/90 backdrop-blur-sm rounded-lg border shadow-lg p-3 z-50"
+        >
+          <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+            <span className="flex items-center gap-1">
+              <Command className="h-3.5 w-3.5" />
+              <span>Search tips</span>
+            </span>
+          </div>
+          
+          <div className="space-y-2 text-xs text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-primary bg-primary/5">course:"contract law"</Badge>
+              <span>Search in specific course</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-primary bg-primary/5">year:2023</Badge>
+              <span>Search by year</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-primary bg-primary/5">type:question</Badge>
+              <span>Filter by content type</span>
+            </div>
+          </div>
+        </motion.div>
+      )}
     </form>
   );
-} 
+}
