@@ -23,7 +23,7 @@ export default async function SearchPage() {
     ]);
     
     return (
-      <div className="flex flex-col gap-6 max-w-7xl mx-auto animate-fade-in p-3 py-10 sm:p-8 pb-20 max-lg:pt-14">
+      <div className="flex flex-col gap-6 max-w-7xl mx-auto animate-fade-in p-3 py-10 sm:p-8 pb-20 max-lg:pt-16">
         {/* Hero section with background pattern */}
         <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 p-6 sm:p-8 border border-primary/20 shadow-sm">
           {/* Background pattern */}
