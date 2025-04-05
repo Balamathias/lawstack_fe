@@ -68,7 +68,7 @@ const Explorer = async ({ searchParams: _searchParams }: Props) => {
                     title="No questions found"
                     content="Try adjusting your filters to find questions."
                     icon={<ScrollText />}
-                    color="primary"
+                    color="gray"
                 />
             ) : (
                 // Use client components to handle animations based on view type
