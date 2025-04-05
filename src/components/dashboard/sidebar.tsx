@@ -15,7 +15,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Shield,
-  LucideScale
+  LucideScale,
+  ArrowRight
 } from "lucide-react"
 import Logo from '../logo'
 import { Button } from '../ui/button'
@@ -238,23 +239,45 @@ const DashboardSidebar = ({ user }: Props) => {
         )}
       </div>
       
-      <Button 
-        className={cn(
-          "rounded-lg transition-all", 
-          isCollapsed ? "w-10 h-10 p-0" : "w-full gap-2",
-          loggingOut && "opacity-70"
-        )}
-        variant="default"
-        size={isCollapsed ? "icon" : "sm"}
-        onClick={handleLogout}
-        disabled={loggingOut}
-        title="Logout"
-      >
-        {!isCollapsed && (
-          <span>{loggingOut ? 'Logging out...' : 'Logout'}</span>
-        )}
-        <LogOut className='w-4 h-4' />
-      </Button>
+      {
+        user ? (
+          <Button 
+            className={cn(
+              "rounded-lg transition-all", 
+              isCollapsed ? "w-10 h-10 p-0" : "w-full gap-2",
+              loggingOut && "opacity-70"
+            )}
+            variant="default"
+            size={isCollapsed ? "icon" : "sm"}
+            onClick={handleLogout}
+            disabled={loggingOut}
+            title="Logout"
+          >
+            {!isCollapsed && (
+              <span>{loggingOut ? 'Logging out...' : 'Logout'}</span>
+            )}
+            <LogOut className='w-4 h-4' />
+          </Button>
+        ): (
+          <Button 
+            className={cn(
+              "rounded-lg transition-all", 
+              isCollapsed ? "w-10 h-10 p-0" : "w-full gap-2",
+              loggingOut && "opacity-70"
+            )}
+            variant="default"
+            size={isCollapsed ? "icon" : "sm"}
+            onClick={handleLogout}
+            disabled={loggingOut}
+            title="Login"
+          >
+            {!isCollapsed && (
+              <span>Login</span>
+            )}
+            <ArrowRight className='w-4 h-4' />
+          </Button>
+        )
+      }
     </div>
   )
 

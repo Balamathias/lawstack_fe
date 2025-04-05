@@ -4,6 +4,7 @@ import axios from "axios";
 import { QUERY_KEYS } from "./query-keys";
 import { useQuery } from '@tanstack/react-query';
 import { analyzeSearchQuery } from '../server/ai';
+import { StackResponse } from "@/@types/generics";
 
 interface AIInsightParams {
   prompt: string;
@@ -121,17 +122,11 @@ interface SearchAnalysisResults {
  * Only fetches data when explicitly requested by the user
  */
 export function useAnalyzeSearch(query: string) {
-  return useQuery<SearchAnalysisResults>({
+  return useQuery<StackResponse<SearchAnalysisResults>>({
     queryKey: QUERY_KEYS.aiAnalysis(query),
     queryFn: async () => {
-      if (!query) return {
-        analysis: '',
-        relatedTopics: [],
-        suggestedResources: []
-      };
-      
       const result = await analyzeSearchQuery(query);
-      return result.data;
+      return result
     },
   });
 }
