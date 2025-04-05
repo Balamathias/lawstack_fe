@@ -88,6 +88,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
     }
   };
   
+  
   // Calculate total pages
   const totalPages = Math.ceil(results.count / 15);
   
