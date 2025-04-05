@@ -279,7 +279,7 @@ const BookmarksList = async ({ searchParams, user }: Props) => {
                                 ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" 
                                 : "space-y-3"
                         )}>
-                            {groupedBookmarks.earlier?.map((bookmark) => (
+                            {groupedBookmarks?.earlier?.map((bookmark) => (
                                 <BookmarkCard 
                                     key={bookmark.id} 
                                     bookmark={bookmark} 
