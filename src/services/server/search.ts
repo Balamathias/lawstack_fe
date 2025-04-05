@@ -1,10 +1,9 @@
 'use server';
 
 import { StackResponse } from '@/@types/generics';
-import { Course, Question, SearchResults } from '@/@types/db';
-import { getInstitutions, Institution } from './institutions';
+import { Course, Question, Institution, SearchResults } from '@/@types/db';
+import { getInstitutions } from './institutions';
 import { getCourses } from './courses';
-import { stackbase } from '../server.entry';
 
 // Define proper search parameter types
 export interface SearchParams {
@@ -23,6 +22,13 @@ export interface SearchResultItem {
   data: Course | Question | any; // Ideally replace 'any' with a Resource type
 }
 
+// export interface SearchResultsData {
+//   items: SearchResultItem[];
+//   total: number;
+//   page: number;
+//   limit: number;
+// }
+
 export interface FilterOptions {
   institutions: Array<{ id: string; name: string }>;
   courses: Array<{ id: string; name: string }>;
@@ -33,7 +39,7 @@ export interface FilterOptions {
 /**
  * Perform an advanced search across multiple content types
  */
-export async function searchContent(filters: SearchParams): Promise<StackResponse<SearchResults>> {
+export async function searchContent(params: SearchParams): Promise<StackResponse<SearchResults>> {
   try {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
@@ -92,18 +98,16 @@ export async function getSearchFilterOptions(): Promise<StackResponse<FilterOpti
         institutions: schools.map((school: Institution) => ({ id: school.id, name: school.name })),
         courses: courses.map((course: Course) => ({ id: course.id, name: course.name })),
         years,
-        types: contentTypes,
+        types: contentTypes
       },
       message: 'Filter options retrieved successfully',
-      error: false,
-      status: 200
+      error: false
     };
   } catch (error: any) {
     console.error('Error fetching filter options:', error);
     return {
       message: error?.message || 'Failed to retrieve filter options',
       error: true,
-      status: 400,
       data: {
         institutions: [],
         courses: [],

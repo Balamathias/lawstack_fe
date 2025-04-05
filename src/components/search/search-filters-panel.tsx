@@ -23,10 +23,10 @@ import { FilterOptions } from '@/services/server/search';
 
 interface SearchFiltersPanelProps {
   filters: {
-    institution?: string;
-    course?: string;
-    year?: string;
-    type?: string;
+    institution: string;
+    course: string;
+    year: string;
+    type: string;
   };
   onChange: (filters: Partial<Record<string, any>>) => void;
   filterOptions: FilterOptions;

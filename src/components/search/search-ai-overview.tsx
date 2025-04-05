@@ -25,14 +25,12 @@ export function SearchAIOverview({ query }: SearchAIOverviewProps) {
   
   // Use the AI analysis hook, but don't enable it automatically
   const { 
-    data: _analysisData,
+    data: analysisData,
     refetch: generateAnalysis,
     isRefetching: isGenerating,
     isFetching,
     isLoading
   } = useAnalyzeSearch(query);
-
-  const analysisData = _analysisData?.data
   
   // Determine if analysis is being generated or available
   const isAnalysisAvailable = !!(analysisData?.analysis);

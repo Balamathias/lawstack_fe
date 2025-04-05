@@ -6,17 +6,16 @@ import { SearchFiltersPanel } from './search-filters-panel';
 import { SearchResultsDisplay } from './search-results-display';
 import { SearchEmptyState } from './search-empty-state';
 import { SearchAIOverview } from './search-ai-overview';
-import { SearchParams, FilterOptions } from '@/services/server/search';
+import { SearchParams, SearchResultsData, FilterOptions } from '@/services/server/search';
 import { useSearch, useSearchFilterOptions } from '@/services/client/search';
 import { useDebounce } from '@/hooks/use-debounce';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, History, Sparkles, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { SearchResults } from '@/@types/db';
 
 interface SearchClientProps {
-  initialResults: SearchResults;
+  initialResults: SearchResultsData;
   filterOptions: FilterOptions;
 }
 
@@ -44,11 +43,11 @@ export function SearchClient({ initialResults, filterOptions: initialFilterOptio
   };
 
   // Add non-empty filters
-  // Object.entries(filters).forEach(([key, value]) => {
-  //   if (value && value !== '') {
-  //     searchParams[(key as keyof SearchParams)] = value;
-  //   }
-  // });
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value && value !== '') {
+      searchParams[key as keyof SearchParams] = value;
+    }
+  });
 
   // Check if we have any active search criteria
   const hasSearchCriteria = Boolean(

@@ -41,7 +41,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
   // Group results by type
   const courseResults = results?.courses || [];
   const questionResults = results?.past_questions || [];
-  const resourceResults: any = [];
+  const resourceResults = results?.resources || [];
   
   // Function to render result items based on type
   const renderResultItem = (item: any, index: number) => {
@@ -72,12 +72,11 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
     }
     
     // Default/resource result type
-    // return (
-    //   <motion.div key={item.id} {...motionProps}>
-    //     <ResourceResultCard resource={item.data} />
-    //   </motion.div>
-    // );
-    return null
+    return (
+      <motion.div key={item.id} {...motionProps}>
+        <ResourceResultCard resource={item.data} />
+      </motion.div>
+    );
   };
   
   const getResultCountByTab = (tab: string) => {
@@ -85,12 +84,12 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
       case 'courses': return courseResults.length;
       case 'questions': return questionResults.length;
       case 'resources': return resourceResults.length;
-      default: return results?.past_questions?.length || 0;
+      default: return results?.items?.length || 0;
     }
   };
   
   // Calculate total pages
-  const totalPages = Math.ceil(results.count / 15);
+  const totalPages = Math.ceil(results.total / results.limit);
   
   // Generate patterns for items
   const getPattern = (name: string = '') => {
@@ -113,7 +112,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
           <div className="h-6 w-1.5 bg-gradient-to-b from-primary to-primary/30 rounded-full"></div>
           <h2 className="text-lg sm:text-xl font-semibold">Search Results</h2>
           <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">
-            {results.count} items
+            {results.total} items
           </Badge>
         </div>
         
@@ -181,7 +180,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
               
             <TabsContent value="resources" className="space-y-4 mt-0">
               <AnimatePresence mode="wait">
-                {resourceResults.map((item: any, index: number) => renderResultItem(item, index))}
+                {resourceResults.map((item, index) => renderResultItem(item, index))}
               </AnimatePresence>
             </TabsContent>
           </Tabs>
