@@ -185,8 +185,7 @@ const MobileSidebar = ({ user }: { user: User | null }) => {
             {user ? (
               <Button 
                 className="w-full gap-2"
-                variant="destructive"
-                size="sm"
+                variant="default"
                 onClick={handleLogout}
                 disabled={loggingOut}
               >
