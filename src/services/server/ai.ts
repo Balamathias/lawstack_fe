@@ -1,7 +1,7 @@
-'use server';
+// 'use server';
 
 import { StackResponse } from '@/@types/generics';
-import { stackbase } from '../server.entry';
+// import { stackbase } from '../server.entry';
 import axios from 'axios';
 
 interface SearchAnalysisResponse {
