@@ -349,7 +349,7 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
                     </svg>
                     
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <div className={cn("text-4xl font-bold", scoreInfo.color)}>{score.toFixed(2)}%</div>
+                      <div className={cn("text-2xl font-bold", scoreInfo.color)}>{score.toFixed(2)}%</div>
                       <div className="text-lg font-semibold">Grade: {scoreInfo.grade}</div>
                     </div>
                   </div>
@@ -365,7 +365,7 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
               
               {/* Stats Cards */}
               <div className="md:col-span-2">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <motion.div 
                     custom={0}
                     initial={{ opacity: 0, y: 20 }}

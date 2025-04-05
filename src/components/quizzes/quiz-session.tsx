@@ -33,6 +33,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const [isTimeWarning, setIsTimeWarning] = useState(false)
   const [showCompleteDialog, setShowCompleteDialog] = useState(false)
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<number>>(new Set())
@@ -102,24 +103,6 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
         if (remaining <= 0) {
           setTimeRemaining(0)
           
-          // Time's up - auto submit the quiz
-          if (!isAutoSubmitting) {
-            setIsAutoSubmitting(true)
-            toast.warning("Time's up! Submitting your quiz...", {
-              duration: 5000,
-              position: "top-center",
-            })
-            
-            // Schedule auto-submit with a small delay to allow last answer to be saved
-            if (autoSubmitTimeoutRef.current) {
-              clearTimeout(autoSubmitTimeoutRef.current)
-            }
-            
-            autoSubmitTimeoutRef.current = setTimeout(() => {
-              handleQuizSubmit()
-            }, 2000)
-          }
-          
           if (timerRef.current) {
             clearInterval(timerRef.current)
           }
@@ -146,6 +129,13 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
       }
     }
   }, [quiz.status, quiz.started_at, quiz.duration, isAutoSubmitting])
+
+  // Auto-submit when time runs out
+  useEffect(() => {
+    if (timeRemaining !== null && timeRemaining <= 0 && !isSubmitting && !isSubmitted) {
+      handleSubmitQuiz(true); // Pass true to indicate auto-submission
+    }
+  }, [timeRemaining, isSubmitting, isSubmitted])
   
   // Touch event handlers for swipe navigation
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -301,35 +291,41 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   }
   
   // Submit the entire quiz
-  const handleQuizSubmit = async () => {
-    // Save the current answer first
-    if (!isAutoSubmitting) {
-      await saveCurrentAnswer()
-    }
+  const handleSubmitQuiz = async (isAutoSubmit = false) => {
+    if (isSubmitting || isSubmitted) return;
     
-    // Prevent multiple submissions
-    if (isCompleting) return
+    setIsSubmitting(true);
     
-    // Submit the quiz
-    completeQuiz(undefined, {
-      onSuccess: (response) => {
-        if (response.data) {
-          router.push(`/dashboard/quizzes/${quiz.id}/results`)
-          toast.success('Quiz completed successfully!')
-        } else if (response.error?.detail?.includes('incomplete')) {
-          // If there are unanswered questions
-          toast.error('Please answer all questions before submitting')
-          setIsAutoSubmitting(false)
-        } else {
-          toast.error(response.message || 'Failed to complete quiz')
-          setIsAutoSubmitting(false)
+    try {
+        // Prepare submission data
+        const submissionData = {
+            quiz_id: quiz?.id,
+            answers,
+            completed: true,
+            time_taken: Math.floor((Date.now() - new Date(quiz.started_at).getTime()) / 1000)
+        };
+        
+        // Perform the submission
+        const response = await completeQuiz(submissionData);
+        
+        if (response.error) {
+            toast.error('Failed to submit quiz');
+            setIsSubmitting(false);
+            return;
         }
-      },
-      onError: () => {
-        toast.error('Failed to complete quiz')
-        setIsAutoSubmitting(false)
-      }
-    })
+        
+        // Handle successful submission
+        setIsSubmitted(true);
+        
+        // Navigate to results
+        if (response?.data?.id) {
+            router.push(`/dashboard/quizzes/${quiz?.id}/results?session_id=${response.data.id}`);
+        }
+    } catch (error) {
+        console.error('Error submitting quiz:', error);
+        toast.error('Failed to submit quiz. Please try again.');
+        setIsSubmitting(false);
+    }
   }
   
   // Format time remaining
@@ -872,7 +868,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
             </Button>
             
             <Button 
-              onClick={handleQuizSubmit}
+              onClick={() => handleSubmitQuiz(false)}
               disabled={isCompleting || isAutoSubmitting}
               className="min-w-[100px]"
             >

@@ -294,7 +294,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
           >
             <ChevronRight size={16} />
           </Button>
-          <Link href="/dashboard/chats" passHref>
+          <Link href="/dashboard/chats" passHref className="md:flex hidden">
             <Button 
               variant="outline" 
               size="sm"
