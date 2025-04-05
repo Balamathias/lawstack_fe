@@ -319,7 +319,7 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
 
       <SheetContent 
         className="p-0 flex flex-col max-w-md w-[85vw] sm:w-[385px] bg-background/95 backdrop-blur-md"
-        side="left"
+        side="right"
       >
         <div className="flex flex-col h-full overflow-hidden">
           <SheetHeader className='p-4 border-b'>
