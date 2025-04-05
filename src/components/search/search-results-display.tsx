@@ -44,8 +44,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
   const resourceResults: any = [];
   
   // Function to render result items based on type
-  const renderResultItem = (item: any, index: number) => {
-    const itemType = item.type;
+  const renderResultItem = (item: any, index: number, itemType="resources") => {
     
     // Common animation props for all item types
     const motionProps = {
@@ -119,7 +118,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
         
         <div className="flex items-center">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="bg-card/70 backdrop-blur-sm border border-border/50">
+            <TabsList className="bg-card/70 backdrop-blur-sm border border-border/50 flex gap-4 flex-wrap">
               <TabsTrigger 
                 value="all" 
                 className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
@@ -163,13 +162,13 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
 
             <TabsContent value="all" className="space-y-4 mt-0">
               <AnimatePresence mode="wait">
-                {results?.past_questions?.map((item, index) => renderResultItem(item, index))}
+                {results?.past_questions?.map((item, index) => renderResultItem(item, index, 'questions'))}
               </AnimatePresence>
             </TabsContent>
             
             <TabsContent value="courses" className="space-y-4 mt-0">
               <AnimatePresence mode="wait">
-                {courseResults.map((item, index) => renderResultItem(item, index))}
+                {courseResults.map((item, index) => renderResultItem(item, index, 'courses'))}
               </AnimatePresence>
             </TabsContent>
             
