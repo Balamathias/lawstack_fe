@@ -17,7 +17,7 @@ interface Props {
 
 export default async function PastQuestionsPage({ params: _params, searchParams }: Props) {
   // Create a copy of searchParams for the skeleton to use
-  const viewParam = searchParams.view || 'list';
+  const viewParam = (await searchParams).view || 'list';
   
   return (
     <div className='max-w-7xl mx-auto w-full px-4 pb-20 pt-4 md:pt-8 lg:pt-12 max-lg:mt-14 space-y-8'>
