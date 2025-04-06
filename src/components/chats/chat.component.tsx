@@ -1,4 +1,4 @@
-import { getChatMessages } from '@/services/server/chats'
+import { getChat, getChatMessages } from '@/services/server/chats'
 import React from 'react'
 import ChatInterface from './chat.interface'
 import { getUser } from '@/services/server/auth'
@@ -8,8 +8,11 @@ interface Props {
 }
 
 const ChatComponent = async ({ chat_id }: Props) => {
-  const { data: messages, count } = await getChatMessages(chat_id, { ordering: '-created_at', page_size: 200 })
-  const { data: user } = await getUser()
+  const [{ data: messages, count }, { data: user }, { data: chat }] = await Promise.all([
+    getChatMessages(chat_id, { ordering: '-created_at', page_size: 500 }),
+    getUser(),
+    getChat(chat_id)
+  ])
 
   return (
     <div className="w-full h-full">
@@ -17,6 +20,7 @@ const ChatComponent = async ({ chat_id }: Props) => {
         chatId={chat_id}
         initialMessages={messages || []}
         user={user!}
+        chat={chat}
       />
     </div>
   )

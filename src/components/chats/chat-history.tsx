@@ -86,6 +86,33 @@ const ChatHistoryItem = ({ chat, isActive, icon, onDelete, closeDrawer }: ChatHi
   const formattedDate = format(date, 'MMM d, yyyy')
   const formattedTime = format(date, 'h:mm a')
   
+  // Display a proper context badge for specialized chats
+  const getContextBadge = () => {
+    if (chat.chat_type === 'course_specific') {
+      return (
+        <Badge 
+          variant="outline" 
+          className="text-[10px] px-1 py-0 border-blue-500/30 bg-blue-500/5 text-blue-500"
+        >
+          Course
+        </Badge>
+      );
+    }
+    
+    if (chat.chat_type === 'past_question') {
+      return (
+        <Badge 
+          variant="outline" 
+          className="text-[10px] px-1 py-0 border-emerald-500/30 bg-emerald-500/5 text-emerald-500"
+        >
+          Question
+        </Badge>
+      );
+    }
+    
+    return null;
+  };
+  
   const handleClick = () => {
     router.push(`/dashboard/chat/${chat.id}`)
     closeDrawer()
@@ -164,14 +191,18 @@ const ChatHistoryItem = ({ chat, isActive, icon, onDelete, closeDrawer }: ChatHi
                 </time>
               </span>
               
-              {isActive && (
-                <Badge 
-                  variant="outline" 
-                  className="text-[10px] px-1 py-0 border-primary/30 bg-primary/5 text-primary"
-                >
-                  Current
-                </Badge>
-              )}
+              <div className="flex items-center gap-1">
+                {getContextBadge()}
+                
+                {isActive && (
+                  <Badge 
+                    variant="outline" 
+                    className="text-[10px] px-1 py-0 border-primary/30 bg-primary/5 text-primary"
+                  >
+                    Current
+                  </Badge>
+                )}
+              </div>
             </div>
           </div>
         </div>

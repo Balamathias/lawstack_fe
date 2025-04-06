@@ -1,11 +1,11 @@
 import { Chat, Message } from "@/@types/db"
 import { StackResponse } from "@/@types/generics"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { API_URL } from "../utils"
 import { toast } from "sonner"
 import { getCookie } from 'cookies-next/client'
-import { getChats, deleteChat } from "../server/chats"
+import { getChats, deleteChat, getChatMessages } from "../server/chats"
 import React from "react"
 import { useRouter } from "nextjs-toploader/app"
 import { cn } from "@/lib/utils"
@@ -83,6 +83,13 @@ export const useGetChats = (params?: Record<string, any>) => {
     })
 }
 
+export const useChatMessages = (chatId: string) => {
+    return useQuery({
+        queryKey: ['get_chat_messages', chatId],
+        queryFn: () => getChatMessages(chatId),
+    })
+}
+
 export const useDeleteChat = () => {
     const token = getCookie('token')
     
@@ -97,3 +104,34 @@ export const useDeleteChat = () => {
         }
     })
 }
+
+/**
+ * Hook to send messages in a chat
+ */
+export function useChat() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (params: {
+      chat_id: string;
+      content: string;
+      role: string;
+      model?: string; // Add model parameter
+    }) => {
+      const { data } = await axios.post(`/api/chat/${params.chat_id}/messages`, params);
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate the chat messages query to trigger a refetch
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.messages(variables.chat_id),
+      });
+      
+      // Update the chat list as well to reflect the latest message preview
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.chats,
+      });
+    },
+  });
+}
+

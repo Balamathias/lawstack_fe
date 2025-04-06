@@ -41,6 +41,7 @@ const PastQuestionSelector = ({ isOpen, onClose }: PastQuestionSelectorProps) =>
         title: `Question Analysis: ${selectedQuestion.text?.substring(0, 50)}...`, 
         chat_type: 'question',
         past_question: selectedQuestion.id,
+        course: selectedQuestion.course
       },
       {
         onSuccess: (data) => {

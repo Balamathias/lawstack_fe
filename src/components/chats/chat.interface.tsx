@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Paperclip, MoreVertical, UserCircle, Loader2, LucideScale, Sparkles, Check, Clipboard, X, File, Image as ImageIcon } from 'lucide-react';
+import { Send, Paperclip, MoreVertical, UserCircle, Loader2, LucideScale, Sparkles, Check, Clipboard, X, File, Image as ImageIcon, MessageCircle, FileText, BookOpen, ExternalLink, Settings, Shield, Command, Zap, BadgeInfo, RotateCw, ChevronDown } from 'lucide-react';
 import { Message, User } from '@/@types/db';
 import { useSendMessage } from '@/services/client/chat';
 import MarkdownPreview from '../markdown-preview';
@@ -18,15 +18,45 @@ import Image from 'next/image';
 import { Progress } from '../ui/progress';
 import { toast } from 'sonner';
 import Logo from '../logo';
+import { cn } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 interface Props {
   chatId?: string;
   initialMessages?: Message[];
   onSendMessage?: (message: string) => Promise<void>;
   user?: User;
+  chat?: any; // Assuming chat is passed as a prop
+  handleTitleChange?: (title: string) => void; // Assuming handleTitleChange is passed as a prop
 }
 
-const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Props) => {
+// Available AI models
+const AI_MODELS = [
+  {
+    id: 'gemini-1.5-pro',
+    name: 'Standard',
+    description: 'Balanced model for most legal questions',
+    icon: <Command className="h-4 w-4" />,
+    isDefault: false,
+  },
+  {
+    id: 'gemini-2.0-flash',
+    name: 'Advanced',
+    description: 'Enhanced reasoning and legal analysis capabilities',
+    icon: <Sparkles className="h-4 w-4 text-amber-500" />,
+    isDefault: false,
+    isPremium: true,
+  },
+  {
+    id: 'gemini-2.5-pro-exp',
+    name: 'Expert',
+    description: 'Highest accuracy for complex legal questions',
+    icon: <Shield className="h-4 w-4 text-indigo-500" />,
+    isPremium: true,
+  }
+];
+
+const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat, handleTitleChange }: Props) => {
   const [messages, setMessages] = useState<Partial<Message>[]>(initialMessages);
   const [inputValue, setInputValue] = useState('');
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
@@ -43,6 +73,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedModel, setSelectedModel] = useState(AI_MODELS[1]);
 
   const { mutate: sendMessage, isPending: isLoading } = useSendMessage(chatId!);
 
@@ -93,6 +124,22 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
     return () => container.removeEventListener('scroll', handleScroll);
   }, [shouldAutoScroll]);
 
+  useEffect(() => {
+    if (chat?.chat_type && chat?.id) {
+      let contextualTitle = '';
+
+      if (chat.chat_type === 'past_question' && chat.past_question) {
+        contextualTitle = `Question Discussion: ${chat.course_name || 'Course'} (${chat.past_question_year || 'Unknown Year'})`;
+      } else if (chat.chat_type === 'course_specific' && chat.course) {
+        contextualTitle = `Course Assistant: ${chat.course_name || 'Course'}`;
+      }
+
+      if (contextualTitle && (!chat.title || chat.title.startsWith('New Chat'))) {
+        handleTitleChange?.(contextualTitle);
+      }
+    }
+  }, [chat]);
+
   const handleSendMessage = async () => {
     if (inputValue.trim() === '') return;
 
@@ -112,7 +159,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
         await onSendMessage(inputValue);
       } else {
         sendMessage(
-          { content: inputValue },
+          { content: inputValue, model: selectedModel.id },
           {
             onSuccess: (data) => {
               const { user_message, ai_message } = data?.data || {};
@@ -172,6 +219,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
 
     const formData = new FormData();
     formData.append('content', inputValue.trim());
+    formData.append('model', selectedModel.id);
 
     selectedFiles.forEach((file) => {
       formData.append('files', file);
@@ -182,12 +230,6 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
       content: inputValue,
       sender: 'user',
       created_at: new Date().toISOString(),
-      // attachments: selectedFiles.map((file) => ({
-      //   filename: file.name,
-      //   file_type: file.type,
-      //   size: file.size,
-      //   url: URL.createObjectURL(file),
-      // })),
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -396,6 +438,63 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
     );
   };
 
+  const ChatContextBanner = () => {
+    if (!chat) return null;
+
+    if (!chat.chat_type || !chat.id) return null;
+
+    let icon = <MessageCircle className="h-4 w-4" />;
+    let bgClass = "bg-primary/5";
+    let borderClass = "border-primary/20";
+    let textClass = "text-primary";
+    let contextLabel = "Context";
+    let linkHref = "";
+
+    if (chat.chat_type === 'past_question' && chat.past_question) {
+      icon = <FileText className="h-4 w-4 text-emerald-500" />;
+      bgClass = "bg-emerald-500/5";
+      borderClass = "border-emerald-500/20";
+      textClass = "text-emerald-500";
+      contextLabel = "Question Context";
+      linkHref = `/dashboard/past-questions/${chat.past_question}`;
+    } else if (chat.chat_type === 'course_specific' && chat.course) {
+      icon = <BookOpen className="h-4 w-4 text-blue-500" />;
+      bgClass = "bg-blue-500/5";
+      borderClass = "border-blue-500/20";
+      textClass = "text-blue-500";
+      contextLabel = "Course Context";
+      linkHref = `/dashboard/courses/${chat.course}`;
+    }
+
+    return (
+      <div className={cn(
+        "rounded-lg p-3 mb-4 border flex justify-between items-center",
+        bgClass, borderClass
+      )}>
+        <div className="flex items-center gap-2">
+          {icon}
+          <span className={cn("text-sm font-medium", textClass)}>
+            {contextLabel}: {chat.course_name || chat.title}
+          </span>
+        </div>
+
+        {linkHref && (
+          <Button 
+            asChild
+            variant="ghost"
+            size="sm"
+            className={cn("h-7 gap-1 text-xs hover:bg-accent", textClass)}
+          >
+            <Link href={linkHref}>
+              <span>View Source</span>
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+          </Button>
+        )}
+      </div>
+    );
+  };
+
   const AnimatedMessage = ({ message }: { message: Partial<Message> }) => {
     const isStreaming = streamingMessageId === message.id && message.sender === 'ai';
     const isHistorical = message.id ? historicalMessages.has(message.id.toString()) : false;
@@ -451,20 +550,106 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user }: Pr
 
   return (
     <div className="flex flex-col h-full bg-inherit backdrop-blur-sm rounded-xl overflow-hidden relative">
-      <div className="flex items-center justify-between p-2 sm:p-4 ">
+      <div className="flex items-center justify-between p-2 sm:p-4 bg-background/70 backdrop-blur-sm z-10">
         <div className="flex items-center space-x-2">
           <Logo />
-          <h2 className="text-xl font-muted-foreground">AI</h2>
+          <h2 className="text-xl font-muted-foreground hidden sm:block">AI</h2>
         </div>
-        <ChatHistory
-          user={user!}
-          currentChatId={chatId}
-          trigger={
-            <button className="p-1.5 hover:bg-secondary/60 rounded-full transition-all cursor-pointer">
-              <MoreVertical size={18} className="text-muted-foreground" />
-            </button>
-          }
-        />
+        <div className="flex items-center gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-9 px-3 gap-2 border border-border/40 hover:bg-accent rounded-xl"
+              >
+                <div className="relative">
+                  {selectedModel.isPremium && (
+                    <div className="absolute -right-1.5 -top-1.5 w-3 h-3 rounded-full bg-primary/80 ring-2 ring-background" />
+                  )}
+                  {selectedModel.icon || <Settings className="h-4 w-4" />}
+                </div>
+                
+                <span className={cn(
+                  "font-medium text-xs md:text-sm",
+                  selectedModel.isPremium && "text-transparent bg-clip-text bg-gradient-to-r from-primary to-violet-600"
+                )}>
+                  {selectedModel.name}
+                </span>
+                <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-72 p-0" align="end">
+              <div className="px-4 pt-3 pb-2">
+                <h4 className="font-medium text-sm">Select AI Model</h4>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Choose the AI model that best fits your needs
+                </p>
+              </div>
+              
+              <div className="px-1 py-2">
+                {AI_MODELS.map((model) => (
+                  <div
+                    key={model.id}
+                    className={cn(
+                      "flex items-start gap-3 px-3 py-2.5 rounded-md m-1 cursor-pointer hover:bg-secondary/50 transition-colors",
+                      selectedModel.id === model.id && "bg-secondary/50"
+                    )}
+                    onClick={() => setSelectedModel(model)}
+                  >
+                    <div className="relative mt-0.5">
+                      {model.isPremium && (
+                        <div className="absolute -right-1 -top-1 w-2.5 h-2.5 rounded-full bg-primary/80 ring-1 ring-background" />
+                      )}
+                      {model.icon || <Command className="h-4 w-4" />}
+                    </div>
+                    
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-0.5">
+                        <div className={cn(
+                          "font-medium text-sm",
+                          model.isPremium && "text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80"
+                        )}>
+                          {model.name}
+                        </div>
+                        
+                        {selectedModel.id === model.id && (
+                          <Check className="h-3.5 w-3.5 text-primary" />
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {model.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="border-t px-4 py-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <BadgeInfo className="h-3 w-3" />
+                    <span>Models updated regularly</span>
+                  </div>
+                  
+                  <Button variant="ghost" size="sm" className="h-7 text-xs gap-1">
+                    <RotateCw className="h-3 w-3" />
+                    Reset
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+          <ChatHistory
+            user={user!}
+            currentChatId={chatId}
+            trigger={
+              <button className="p-1.5 hover:bg-secondary/60 rounded-full transition-all cursor-pointer">
+                <MoreVertical size={18} className="text-muted-foreground" />
+              </button>
+            }
+          />
+        </div>
       </div>
 
       <div ref={messagesContainerRef} className="flex-1 overflow-y-auto scrollbar-hidden p-2 sm:p-4 h-full pb-2">
