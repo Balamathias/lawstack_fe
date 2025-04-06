@@ -254,6 +254,9 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
 // Course result card component
 function CourseResultCard({ course }: { course: Course }) {
   const pattern = getPattern(course.name);
+  const router = useRouter()
+
+  router.prefetch(`/dashboard/courses/${course.id}`)
   
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-md hover:border-blue-500/30 hover:bg-blue-500/[0.02] group relative">
@@ -264,7 +267,7 @@ function CourseResultCard({ course }: { course: Course }) {
       
       {/* Top gradient highlight */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/30 via-blue-500/60 to-blue-500/30 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
-      
+      <Link href={`/dashboard/courses/${course.id}`} className="absolute inset-0" />      
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start gap-4">
           <div className="space-y-1">
@@ -326,8 +329,9 @@ function CourseResultCard({ course }: { course: Course }) {
 
 // Question result card component
 function QuestionResultCard({ question }: { question: Question }) {
-  console.log(question)
   const pattern = getPattern(question.course_name || '');
+  const router = useRouter()
+  router.prefetch(`/dashboard/past-questions/${question}`)
   
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-md hover:border-emerald-500/30 hover:bg-emerald-500/[0.02] group relative">

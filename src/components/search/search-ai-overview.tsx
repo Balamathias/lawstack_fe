@@ -106,44 +106,44 @@ export function SearchAIOverview({ query, onOpenPanel, opened }: SearchAIOvervie
         };
   }, [query, queryClient]);
 
-  if (error) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="w-full"
-      >
-        <Card className="border-destructive/20 shadow-sm">
-          <CardHeader className="bg-destructive/5 pb-3">
-            <div className="flex items-center gap-2">
-              <div className="bg-destructive/10 p-2 rounded-lg border border-destructive/20">
-                <X className="h-4 w-4 text-destructive" />
-              </div>
-              <CardTitle className="text-lg">Error Occurred</CardTitle>
-            </div>
-            <CardDescription className="mt-2 text-destructive/80">
-              We encountered a problem while generating the AI overview
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-4 pb-3">
-            <div className="bg-destructive/5 p-3 rounded-lg border border-destructive/10">
-              <p className="text-sm text-muted-foreground">{error || error?.message || "Failed to generate AI analysis for your query. This could be due to system limitations or the complexity of your search."}</p>
-            </div>
-            <div className="mt-4 flex justify-center">
-              <Button 
-                onClick={handleGenerate} 
-                variant="outline"
-                className="gap-2 border-destructive/20 hover:bg-destructive/10 hover:text-destructive"
-              >
-                <Sparkles className="h-4 w-4" />
-                <span>Try Again</span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    )
-  }
+  // if (error) {
+  //   return (
+  //     <motion.div
+  //       initial={{ opacity: 0 }}
+  //       animate={{ opacity: 1 }}
+  //       className="w-full"
+  //     >
+  //       <Card className="border-destructive/20 shadow-sm">
+  //         <CardHeader className="bg-destructive/5 pb-3">
+  //           <div className="flex items-center gap-2">
+  //             <div className="bg-destructive/10 p-2 rounded-lg border border-destructive/20">
+  //               <X className="h-4 w-4 text-destructive" />
+  //             </div>
+  //             <CardTitle className="text-lg">Error Occurred</CardTitle>
+  //           </div>
+  //           <CardDescription className="mt-2 text-destructive/80">
+  //             We encountered a problem while generating the AI overview
+  //           </CardDescription>
+  //         </CardHeader>
+  //         <CardContent className="pt-4 pb-3">
+  //           <div className="bg-destructive/5 p-3 rounded-lg border border-destructive/10">
+  //             <p className="text-sm text-muted-foreground">{error || error?.message || "Failed to generate AI analysis for your query. This could be due to system limitations or the complexity of your search."}</p>
+  //           </div>
+  //           <div className="mt-4 flex justify-center">
+  //             <Button 
+  //               onClick={handleGenerate} 
+  //               variant="outline"
+  //               className="gap-2 border-destructive/20 hover:bg-destructive/10 hover:text-destructive"
+  //             >
+  //               <Sparkles className="h-4 w-4" />
+  //               <span>Try Again</span>
+  //             </Button>
+  //           </div>
+  //         </CardContent>
+  //       </Card>
+  //     </motion.div>
+  //   )
+  // }
   
   return (
     <Card className={cn(
