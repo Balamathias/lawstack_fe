@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { stackbase } from '@/services/server.entry';
+import { getUser } from '@/services/server/auth';
 
 export const runtime = 'edge'
 
@@ -8,7 +9,18 @@ const openai = new OpenAI({
   baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
   apiKey: process.env.GEMINI_API_KEY,
 });
+
 export async function POST(request: NextRequest) {
+
+  const { data: user } = await getUser()
+
+  if (!user) {
+    return NextResponse.json(
+      { error: 'Smart analysis is only available for signed in users' },
+      { status: 401 }
+    );
+  }
+
   try {
     const { query } = await request.json();
     

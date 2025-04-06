@@ -1,27 +1,37 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Sparkles, ArrowRight, Lightbulb, X, Maximize2, Minimize2, Copy, Check, Share, Loader2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Sparkles, ArrowRight, Lightbulb, X, Maximize2, Minimize2, Copy, Check, Share, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn, convertMarkdownToPlainText } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useAnalyzeSearch } from '@/services/client/ai';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/services/client/query-keys';
+import MarkdownPreview from '../markdown-preview';
 
 interface SearchAIOverviewProps {
   query: string;
+  opened?: boolean
+  onOpenPanel?: (opened: boolean) => void;
 }
 
-export function SearchAIOverview({ query }: SearchAIOverviewProps) {
+export function SearchAIOverview({ query, onOpenPanel, opened }: SearchAIOverviewProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isGenerated, setIsGenerated] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isAnalysisExpanded, setIsAnalysisExpanded] = useState(false);
   
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (isExpanded) {
+      onOpenPanel?.(true);
+    } 
+  }, [isExpanded, onOpenPanel]);
   
   // Use the AI analysis hook, but don't enable it automatically
   const { 
@@ -29,15 +39,24 @@ export function SearchAIOverview({ query }: SearchAIOverviewProps) {
     refetch: generateAnalysis,
     isRefetching: isGenerating,
     isFetching,
-    isLoading
+    isPending: isProcessing
   } = useAnalyzeSearch(query);
 
   const analysisData = _analysisData?.data
+
+  const error = _analysisData?.error
   
   // Determine if analysis is being generated or available
+  // const isProcessing = isGenerating || isFetching || isLoading;
   const isAnalysisAvailable = !!(analysisData?.analysis);
-  const isProcessing = isGenerating || isFetching || isLoading;
   
+  // Function to get content preview
+  const getContentPreview = (content: string, previewLines = 3) => {
+    const lines = content.split('\n');
+    if (lines.length <= previewLines) return content;
+    return lines.slice(0, previewLines).join('\n') + '...';
+  };
+
   // Handle generate analysis button click
   const handleGenerate = async () => {
     try {
@@ -54,33 +73,77 @@ export function SearchAIOverview({ query }: SearchAIOverviewProps) {
     if (!isAnalysisAvailable) return;
     
     const analysisText = `
-AI Analysis for "${query}":
+      AI Analysis for "${query}":
 
-${analysisData.analysis}
+      ${analysisData.analysis}
 
-Related Topics:
-${analysisData.relatedTopics.map(topic => `• ${topic}`).join('\n')}
+      Related Topics:
+      ${analysisData.relatedTopics.map(topic => `• ${topic}`).join('\n')}
 
-Suggested Resources:
-${analysisData.suggestedResources.map(resource => `• ${resource}`).join('\n')}
-    `.trim();
-    
-    navigator.clipboard.writeText(analysisText);
-    setIsCopied(true);
-    toast.success("Copied to clipboard");
-    setTimeout(() => setIsCopied(false), 2000);
-  };
+      Suggested Resources:
+      ${analysisData.suggestedResources.map(resource => `• ${resource}`).join('\n')}
+          `.trim();
+          
+          navigator.clipboard.writeText(convertMarkdownToPlainText(analysisText));
+          setIsCopied(true);
+          toast.success("Copied to clipboard");
+          setTimeout(() => setIsCopied(false), 2000);
+        };
+        
+        const shareOverview = () => {
+        toast.success("Sharing feature coming soon");
+      };
   
-  const shareOverview = () => {
-    toast.success("Sharing feature coming soon");
-  };
+      // Toggle analysis expansion
+      const toggleAnalysisExpansion = () => {
+        setIsAnalysisExpanded(!isAnalysisExpanded);
+      };
   
-  // Clear cached analysis when the component unmounts
-  React.useEffect(() => {
-    return () => {
-      queryClient.removeQueries({ queryKey: QUERY_KEYS.aiAnalysis(query) });
-    };
+      // Clear cached analysis when the component unmounts
+      React.useEffect(() => {
+        return () => {
+          queryClient.removeQueries({ queryKey: QUERY_KEYS.aiAnalysis(query) });
+        };
   }, [query, queryClient]);
+
+  if (error) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="w-full"
+      >
+        <Card className="border-destructive/20 shadow-sm">
+          <CardHeader className="bg-destructive/5 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="bg-destructive/10 p-2 rounded-lg border border-destructive/20">
+                <X className="h-4 w-4 text-destructive" />
+              </div>
+              <CardTitle className="text-lg">Error Occurred</CardTitle>
+            </div>
+            <CardDescription className="mt-2 text-destructive/80">
+              We encountered a problem while generating the AI overview
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4 pb-3">
+            <div className="bg-destructive/5 p-3 rounded-lg border border-destructive/10">
+              <p className="text-sm text-muted-foreground">{error || error?.message || "Failed to generate AI analysis for your query. This could be due to system limitations or the complexity of your search."}</p>
+            </div>
+            <div className="mt-4 flex justify-center">
+              <Button 
+                onClick={handleGenerate} 
+                variant="outline"
+                className="gap-2 border-destructive/20 hover:bg-destructive/10 hover:text-destructive"
+              >
+                <Sparkles className="h-4 w-4" />
+                <span>Try Again</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    )
+  }
   
   return (
     <Card className={cn(
@@ -188,7 +251,39 @@ ${analysisData.suggestedResources.map(resource => `• ${resource}`).join('\n')}
                 <div className="space-y-4">
                   <div className="prose prose-sm max-w-none">
                     <div className="bg-primary/5 p-3 rounded-lg border border-primary/10">
-                      {analysisData.analysis}
+                      <div className="relative">
+                        <MarkdownPreview 
+                          content={isAnalysisExpanded 
+                            ? analysisData?.analysis || '' 
+                            : getContentPreview(analysisData?.analysis || '', 3)} 
+                        />
+                        
+                        {analysisData?.analysis?.split('\n').length > 3 && (
+                          <div 
+                            className={cn(
+                              "mt-3 text-center",
+                              !isAnalysisExpanded && "pt-4"
+                            )}
+                          >
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={toggleAnalysisExpansion}
+                              className="text-xs gap-1 text-primary hover:bg-primary/10"
+                            >
+                              {isAnalysisExpanded ? (
+                                <>
+                                  See less <ChevronUp className="h-3 w-3" />
+                                </>
+                              ) : (
+                                <>
+                                  See more <ChevronDown className="h-3 w-3" />
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                   
@@ -215,7 +310,7 @@ ${analysisData.suggestedResources.map(resource => `• ${resource}`).join('\n')}
                         {analysisData.suggestedResources.map((resource, index) => (
                           <li key={index} className="flex items-start gap-2">
                             <ArrowRight className="h-3.5 w-3.5 text-primary mt-1 flex-shrink-0" />
-                            <span>{resource}</span>
+                            <MarkdownPreview content={resource || ''} />
                           </li>
                         ))}
                       </ul>

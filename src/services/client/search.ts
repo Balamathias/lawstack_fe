@@ -8,8 +8,8 @@ import { SearchFilters } from '@/@types/db';
  */
 export function useSearch(filters: SearchFilters) {
   return useQuery({
-    queryKey: [QUERY_KEYS.SEARCH, filters],
-    queryFn: () => searchContent(filters),
+    queryKey: [QUERY_KEYS.SEARCH,  filters],
+    queryFn: (data) => searchContent(filters),
     enabled: Boolean(filters.query || filters.institution || filters.course || filters.year || filters.type),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

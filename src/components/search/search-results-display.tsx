@@ -57,7 +57,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
     if (itemType === 'course') {
       return (
         <motion.div key={item.id} {...motionProps}>
-          <CourseResultCard course={item.data} />
+          <CourseResultCard course={item} />
         </motion.div>
       );
     }
@@ -65,7 +65,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
     if (itemType === 'question') {
       return (
         <motion.div key={item.id} {...motionProps}>
-          <QuestionResultCard question={item.data} />
+          <QuestionResultCard question={item} />
         </motion.div>
       );
     }
@@ -73,7 +73,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
     // Default/resource result type
     // return (
     //   <motion.div key={item.id} {...motionProps}>
-    //     <ResourceResultCard resource={item.data} />
+    //     <ResourceResultCard resource={item} />
     //   </motion.div>
     // );
     return null
@@ -108,7 +108,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
   
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-3">
+      <div className="flex flex-col gap-3 border-b border-border/40 pb-3">
         <div className="flex items-center gap-3">
           <div className="h-6 w-1.5 bg-gradient-to-b from-primary to-primary/30 rounded-full"></div>
           <h2 className="text-lg sm:text-xl font-semibold">Search Results</h2>
@@ -175,13 +175,13 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
             
             <TabsContent value="questions" className="space-y-4 mt-0">
               <AnimatePresence mode="wait">
-                {questionResults.map((item, index) => renderResultItem(item, index))}
+                {questionResults.map((item, index) => renderResultItem(item, index, 'question'))}
               </AnimatePresence>
             </TabsContent>
               
             <TabsContent value="resources" className="space-y-4 mt-0">
               <AnimatePresence mode="wait">
-                {resourceResults.map((item: any, index: number) => renderResultItem(item, index))}
+                {resourceResults.map((item: any, index: number) => renderResultItem(item, index, 'resource'))}
               </AnimatePresence>
             </TabsContent>
           </Tabs>
@@ -326,6 +326,7 @@ function CourseResultCard({ course }: { course: Course }) {
 
 // Question result card component
 function QuestionResultCard({ question }: { question: Question }) {
+  console.log(question)
   const pattern = getPattern(question.course_name || '');
   
   return (

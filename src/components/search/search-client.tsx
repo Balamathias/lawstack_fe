@@ -21,7 +21,6 @@ interface SearchClientProps {
 }
 
 export function SearchClient({ initialResults, filterOptions: initialFilterOptions }: SearchClientProps) {
-  // State for search parameters and UI
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<Omit<SearchParams, 'query' | 'page' | 'limit'>>({ 
     institution: '', 
@@ -32,30 +31,22 @@ export function SearchClient({ initialResults, filterOptions: initialFilterOptio
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const [openAnalysisPanel, setOpenAnalysisPanel]  = useState(false)
   
-  // Debounce the search query to prevent too many API calls
   const debouncedQuery = useDebounce(query, 500);
   
-  // Create the complete search params object with query, page and filters
   const searchParams: SearchParams = {
     ...(debouncedQuery ? { query: debouncedQuery } : {}),
+    ...filters,
     page,
     limit: 10
   };
 
-  // Add non-empty filters
-  // Object.entries(filters).forEach(([key, value]) => {
-  //   if (value && value !== '') {
-  //     searchParams[(key as keyof SearchParams)] = value;
-  //   }
-  // });
-
-  // Check if we have any active search criteria
   const hasSearchCriteria = Boolean(
     debouncedQuery || Object.values(filters).some(f => f && f !== '')
   );
 
-  // Use React Query hooks for fetching data
   const { 
     data: searchResponse,
     isPending: isSearching,
@@ -151,7 +142,9 @@ export function SearchClient({ initialResults, filterOptions: initialFilterOptio
             <span className="hidden sm:inline">Recent Searches</span>
           </Button>
           
-          <Button className="gap-2 bg-primary/90 hover:bg-primary text-primary-foreground rounded-lg relative overflow-hidden group">
+          <Button 
+            onClick={prev => setOpenAnalysisPanel(!prev)}
+            className="gap-2 bg-primary/90 hover:bg-primary text-primary-foreground rounded-lg relative overflow-hidden group">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <Sparkles className="h-4 w-4" />
             <span className="hidden sm:inline">AI Assist</span>
@@ -185,7 +178,7 @@ export function SearchClient({ initialResults, filterOptions: initialFilterOptio
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <SearchAIOverview query={debouncedQuery} />
+          <SearchAIOverview query={debouncedQuery} onOpenPanel={(opened) => setOpenAnalysisPanel(opened)} opened={openAnalysisPanel} />
         </motion.div>
       )}
       
