@@ -55,6 +55,7 @@ const questionSchema = z.object({
   semester: z.string().min(1, "Please select a semester"),
   institution: z.string().min(1, "Please select an institution"),
   type: z.string().min(1, "Please select a question type"),
+  exam_type: z.string().optional(),
   tags: z.array(z.string()).optional(),
 });
 
@@ -97,6 +98,7 @@ const QuestionForm = () => {
       semester: savedMetadata?.semester || "",
       institution: savedMetadata?.institution || "",
       type: savedMetadata?.type || "",
+      exam_type: savedMetadata?.exam_type || "",
       tags: savedMetadata?.tags || [],
     },
   });
@@ -142,6 +144,7 @@ const QuestionForm = () => {
       semester: "",
       institution: "",
       type: "",
+      exam_type: "",
       tags: [],
     });
     
@@ -556,6 +559,35 @@ const QuestionForm = () => {
                             </Badge>
                           ))}
                         </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="exam_type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center gap-2">
+                          <BookText className="h-4 w-4" />
+                          Exam Type
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue="exam"
+                          value={field.value || "exam"}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select exam type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="exam">Exam</SelectItem>
+                            <SelectItem value="ca">Continuous Assessment</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
