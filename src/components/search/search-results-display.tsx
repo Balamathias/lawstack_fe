@@ -190,7 +190,7 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
       
       
       
-      {/* Pagination controls */}
+      {/* Pagination controls... */}
       {totalPages > 1 && (
         <Pagination className="mt-8">
           <PaginationContent>
