@@ -163,13 +163,13 @@ export function SearchResultsDisplay({ results, onPageChange, currentPage }: Sea
 
             <TabsContent value="all" className="space-y-4 mt-0">
               <AnimatePresence mode="wait">
-                {results?.past_questions?.map((item, index) => renderResultItem(item, index, 'questions'))}
+                {results?.past_questions?.map((item, index) => renderResultItem(item, index, 'question'))}
               </AnimatePresence>
             </TabsContent>
             
             <TabsContent value="courses" className="space-y-4 mt-0">
               <AnimatePresence mode="wait">
-                {courseResults.map((item, index) => renderResultItem(item, index, 'courses'))}
+                {courseResults.map((item, index) => renderResultItem(item, index, 'course'))}
               </AnimatePresence>
             </TabsContent>
             
