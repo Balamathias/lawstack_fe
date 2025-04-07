@@ -19,7 +19,7 @@ const ExploreCourses = async ({ searchParams }: Props) => {
   const { data: courses, count, error } = await getCourses({
     params: {
       ordering: '-created_at',
-      page_size: 12,
+      page_size: 30,
       ...searchParams,
     }
   });
