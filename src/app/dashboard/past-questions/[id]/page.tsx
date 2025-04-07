@@ -5,6 +5,7 @@ import QuestionDetail from '@/components/past-questions/question-detail';
 import { getQuestion } from '@/services/server/questions';
 import { Metadata, ResolvingMetadata } from 'next';
 import React, { Suspense } from 'react'
+import Loader from '@/components/loader'
 
 interface Props {
     params: Promise<{[key: string]: any}>,
@@ -46,7 +47,7 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchPar
 
             </div>
 
-            <Suspense fallback={<LoadingOverlay />}>
+            <Suspense fallback={<Loader variant="spin" />}>
                 <QuestionDetail id={params.id} />
             </Suspense>
         </div>
