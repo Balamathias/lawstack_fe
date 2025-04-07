@@ -1,6 +1,6 @@
 import Loader from '@/components/loader'
 
-export default function Loader() {
+export default function Loading() {
     return (
         <Loader variant="spin" />
     )
