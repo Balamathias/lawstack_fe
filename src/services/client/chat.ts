@@ -108,30 +108,30 @@ export const useDeleteChat = () => {
 /**
  * Hook to send messages in a chat
  */
-export function useChat() {
-  const queryClient = useQueryClient();
+// export function useChat() {
+//   const queryClient = useQueryClient();
   
-  return useMutation({
-    mutationFn: async (params: {
-      chat_id: string;
-      content: string;
-      role: string;
-      model?: string; // Add model parameter
-    }) => {
-      const { data } = await axios.post(`/api/chat/${params.chat_id}/messages`, params);
-      return data;
-    },
-    onSuccess: (data, variables) => {
-      // Invalidate the chat messages query to trigger a refetch
-      queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.messages(variables.chat_id),
-      });
+//   return useMutation({
+//     mutationFn: async (params: {
+//       chat_id: string;
+//       content: string;
+//       role: string;
+//       model?: string; // Add model parameter
+//     }) => {
+//       const { data } = await axios.post(`/api/chat/${params.chat_id}/messages`, params);
+//       return data;
+//     },
+//     onSuccess: (data, variables) => {
+//       // Invalidate the chat messages query to trigger a refetch
+//       queryClient.invalidateQueries({
+//         queryKey: QUERY_KEYS.messages(variables.chat_id),
+//       });
       
-      // Update the chat list as well to reflect the latest message preview
-      queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.chats,
-      });
-    },
-  });
-}
+//       // Update the chat list as well to reflect the latest message preview
+//       queryClient.invalidateQueries({
+//         queryKey: QUERY_KEYS.chats,
+//       });
+//     },
+//   });
+// }
 
