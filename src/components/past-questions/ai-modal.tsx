@@ -44,7 +44,6 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
         </motion.div>
       }
       dialogClassName="sm:max-w-3xl max-h-[calc(100vh-40px)] h-auto overflow-hidden"
-      drawerClassName="flex flex-col max-h-[calc(100vh-120px)] overflow-hidden"
     >
       <div className="flex-1 overflow-hidden flex flex-col min-h-0">
         <InsightsPanel
@@ -57,7 +56,7 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
             question,
             user
           })}
-          initialPrompts={initialPrompts}
+          initialPrompts={[]}
           className="flex-1 overflow-hidden flex flex-col min-h-0"
         />
       </div>

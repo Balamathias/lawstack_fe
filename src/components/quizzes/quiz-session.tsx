@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label'
 import { cn, convertMarkdownToPlainText } from '@/lib/utils'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { useRouter } from 'nextjs-toploader/app'
-import LoadingOverlay from '../loading-overlay'
+import Loader from '@/components/loader'
 import DynamicModal from '../dynamic-modal'
 import MarkdownPreview from '../markdown-preview'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -511,7 +511,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   
   return (
     <>
-      {(isCompleting || isAutoSubmitting) && (<LoadingOverlay />)}
+      {(isCompleting || isAutoSubmitting) && (<Loader variant="spin" />)}
       
       <div className="max-w-4xl mx-auto mb-20 sm:mb-8">
         {/* Header section with timer and progress */}

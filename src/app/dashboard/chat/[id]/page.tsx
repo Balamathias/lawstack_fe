@@ -4,6 +4,7 @@ import LoadingOverlay from '@/components/loading-overlay';
 import { getChat } from '@/services/server/chats';
 import { Metadata, ResolvingMetadata } from 'next';
 import React, { Suspense } from 'react'
+import Loader from '@/components/loader'
 
 interface Props {
     params: Promise<{[key: string]: any}>,
@@ -44,7 +45,7 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchPar
       </div>
 
       <div className="flex-1 min-h-0">
-        <Suspense fallback={<LoadingOverlay />}>
+        <Suspense fallback={<Loader variant="spin" />}>
           <ChatComponent chat_id={params.id} />
         </Suspense>
       </div>

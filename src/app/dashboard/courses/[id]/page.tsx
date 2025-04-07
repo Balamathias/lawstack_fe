@@ -3,6 +3,7 @@ import LoadingOverlay from '@/components/loading-overlay'
 import { getCourse } from '@/services/server/courses'
 import { Metadata, ResolvingMetadata } from 'next'
 import React, { Suspense } from 'react'
+import Loader from '@/components/loader'
 
 interface Props {
     params: Promise<{ id: string }>,
@@ -37,7 +38,7 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams }) => {
   return (
     <div className='max-w-5xl flex flex-col space-y-2.5 sm:space-y-4 md:py-12 py-4 md:mx-auto w-full px-4 pb-16 max-lg:mt-14'>
         <div className='flex flex-col gap-2'>
-          <Suspense fallback={<LoadingOverlay />}>
+          <Suspense fallback={<Loader variant="spin" />}>
             <CourseDetail promisedCourse={promisedCourse} searchParams={searchParamsData} />
           </Suspense>
         </div>

@@ -1,7 +1,7 @@
-import LoadingOverlay from '@/components/loading-overlay'
+import Loader from '@/components/loader'
 
-export default function Loader() {
+export default function Loading() {
     return (
-        <LoadingOverlay />
+        <Loader variant="spin" />
     )
 }
