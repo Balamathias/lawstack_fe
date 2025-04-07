@@ -52,7 +52,7 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
   
   const QuestionItem = ({ question, number }: { question: Question; number: number }) => {
     return (
-      <Link href={`/dashboard/past-questions/${question.id}`} className="group" passHref>
+      <Link href={`/dashboard/past-questions/${question.id}`} className="group">
         <div className="h-full p-5 bg-white dark:bg-secondary/25 rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/50 flex flex-col">
           <div className="flex items-center mb-3">
             <div className="flex items-center justify-center w-8 h-8 bg-primary/15 dark:bg-primary/15 rounded-full text-primary font-bold mr-3 group-hover:bg-primary/30 transition-colors">

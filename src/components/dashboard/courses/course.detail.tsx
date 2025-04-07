@@ -57,8 +57,8 @@ const CourseDetail = ({ promisedCourse, searchParams }: Props) => {
         <Card className="border-secondary/40 bg-card/50 backdrop-blur-sm">
           <CardHeader className="pb-3 relative">
             {/* Decorative gradient background */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full translate-x-1/3 -translate-y-1/3 blur-2xl"></div>
-            <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full -translate-x-1/3 translate-y-1/3 blur-xl"></div>
+            <div className="absolute top-0 right-0 w-12 md:w-64 h-64 bg-primary/5 rounded-full translate-x-1/3 -translate-y-1/3 blur-2xl"></div>
+            <div className="absolute bottom-0 left-0 w-8 md:w-40 h-40 bg-primary/10 rounded-full -translate-x-1/3 translate-y-1/3 blur-xl"></div>
             
             <div className='flex items-center justify-between relative z-10'>
               <div className="animate-slide-in-left">

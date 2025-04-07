@@ -339,6 +339,8 @@ function QuestionResultCard({ question }: { question: Question }) {
       <div className="absolute inset-0 pointer-events-none text-emerald-500/[0.02] dark:text-emerald-500/[0.015]">
         <div className="absolute inset-0 bg-repeat opacity-60" style={{ backgroundImage: pattern }} />
       </div>
+
+      <Link href={`/dashboard/past-questions/${question.id}`} className="absolute inset-0" />
       
       {/* Top gradient highlight */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500/30 via-emerald-500/60 to-emerald-500/30 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />

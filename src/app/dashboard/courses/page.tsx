@@ -131,7 +131,6 @@ const Page = async ({ params: _params, searchParams: _searchParams }: Props) => 
           <Suspense fallback={<ExploreCoursesSkeleton />}>
             <ExploreCourses searchParams={{ 
               ...searchParams, 
-              // ordering: 'popularity' // Use actual backend field for popularity sorting
             }} />
           </Suspense>
         </TabsContent>

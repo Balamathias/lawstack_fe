@@ -77,7 +77,7 @@ const ExploreCourses = async ({ searchParams }: Props) => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {featuredCourses.map(({ id, name, description, level, duration, code, institution_name }) => (
               <div key={id} className="h-full">
-                <Link href={`/dashboard/courses/${id}`} passHref>
+                <Link href={`/dashboard/courses/${id}`}>
                   <Card className="h-full overflow-hidden group transition-all hover:shadow-lg border-border hover:border-primary/30 relative">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary to-primary/40 transform origin-left"></div>
                     
