@@ -19,7 +19,8 @@ import {
   Search,
   RefreshCcw,
   FileQuestion,
-  Check
+  Check,
+  HelpCircle
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { motion } from 'framer-motion'
@@ -36,6 +37,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { Switch } from '@/components/ui/switch'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 import { Quiz, QuizStatistics, Course } from '@/@types/db'
 import { useQuizzes, useQuizStatistics, useCreateQuiz, useGenerateMCQuestions } from '@/services/client/quiz'
@@ -178,6 +181,7 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
   const [semester, setSemester] = useState('1')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedTab, setSelectedTab] = useState('all')
+  const [reuseQuestions, setReuseQuestions] = useState(true)
 
   // States for filtering
   const [statusFilter, setStatusFilter] = useState('all')
@@ -270,6 +274,7 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
         duration: quizDuration,
         difficulty,
         semester,
+        reuse_questions: reuseQuestions
       }, {
         onSuccess: (data) => {
           if (data?.data) {
@@ -552,7 +557,7 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
               ) : (
                 <>
                   <PlusCircle className="h-4 w-4" />
-                  New Quiz
+                  New Test
                 </>
               )}
             </Button>
@@ -898,10 +903,10 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <BrainCircuit className="h-5 w-5 text-primary" />
-              Create New Quiz
+              Create New Test
             </DialogTitle>
             <DialogDescription>
-              Customize your quiz settings. Our AI will generate questions based on your selected course.
+              Customize your test settings. Our SmartAI will generate questions based on your selected course.
             </DialogDescription>
           </DialogHeader>
           
@@ -1022,6 +1027,33 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              <div className="flex flex-col space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Label htmlFor="reuse-questions">Reuse Questions</Label>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-[250px] p-3">
+                          <p>When enabled, the quiz may include previously generated questions from our question bank for faster loading. When disabled, all questions will be freshly generated.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <Switch 
+                    id="reuse-questions"
+                    checked={reuseQuestions}
+                    onCheckedChange={setReuseQuestions}
+                    aria-label="Reuse questions toggle"
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground pl-0.5">
+                  {reuseQuestions ? "Using existing questions when available" : "Generating new questions for each quiz"}
+                </p>
               </div>
             </div>
             

@@ -68,7 +68,8 @@ export interface CreateQuizParams {
   total_questions?: number
   duration?: number,
   difficulty?: string,
-  semester?: string
+  semester?: string,
+  reuse_questions?: boolean
 }
 
 export const createQuiz = async (params: CreateQuizParams): Promise<StackResponse<Quiz | null>> => {
