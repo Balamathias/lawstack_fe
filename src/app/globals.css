@@ -258,7 +258,7 @@ input[type="range"]::-moz-range-thumb {
   --card-foreground: hsl(222 10% 3.9%);
   --popover: hsl(210 100% 99%);
   --popover-foreground: hsl(222 10% 3.9%);
-  --primary: hsl(221.2 83.2% 53.3%);
+  --primary: hsl(213, 85%, 57%);
   --primary-foreground: hsl(210 40% 98%);
   --secondary: hsl(214 100% 96%);
   --secondary-foreground: hsl(222 47.4% 11.2%);
@@ -270,7 +270,7 @@ input[type="range"]::-moz-range-thumb {
   --destructive-foreground: hsl(210 100% 99%);
   --border: hsl(222 31.8% 91.4%);
   --input: hsl(222 31.8% 91.4%);
-  --ring: hsl(221.2 83.2% 53.3%);
+  --ring: hsl(221, 77%, 58%);
 }
 
 /* Purple theme - Light */
@@ -367,8 +367,8 @@ input[type="range"]::-moz-range-thumb {
 
 /* Dark Mode - Subtle (Default) */
 .dark.theme-blue {
-  --primary: hsl(221.2 83.2% 53.3%);
-  --ring: hsl(221.2 83.2% 53.3%);
+  --primary: hsl(213, 85%, 57%);
+  --ring: hsl(213, 85%, 57%);
   --background: hsl(221 20% 7%);
   --card: hsl(221 20% 9%);
   --popover: hsl(221 20% 9%);
@@ -378,7 +378,7 @@ input[type="range"]::-moz-range-thumb {
 
 /* Dark Mode - Lights Out */
 .dark.lights-out.theme-blue {
-  --primary: hsl(252 82% 51%);
+  --primary: hsl(224, 74%, 53%);
   --ring: hsl(221 71% 54%);
   --background: hsl(0 0% 0%);
 }

@@ -161,13 +161,16 @@ interface HSLColor {
 }
 
 const ThemeSettings = () => {
-  const { theme, setTheme, themes, darkVariant, setDarkVariant, isAnimated, setIsAnimated } = useTheme()
+  // Use no default color scheme to allow pure dark theme
+  const [theme, setTheme] = useLocalStorage<Theme>("theme", "default")
+  const [darkVariant, setDarkVariant] = useLocalStorage<DarkVariant>("theme-color-mode", "lights-out")
+  const [colorScheme, setColorScheme] = useLocalStorage<string>("theme-color", "")
+  const { themes, isAnimated, setIsAnimated } = useTheme()
   const { theme: nextTheme, setTheme: setNextTheme, resolvedTheme } = useNextTheme()
   const [mounted, setMounted] = useState(false)
   const [activeTab, setActiveTab] = useState<"colors" | "appearance">("colors")
   const [previewMode, setPreviewMode] = useState<DarkVariant>("lights-out")
-  const [colorMode, setColorMode] = useLocalStorage<string>('theme-color-mode', 'default');
-  const [colorScheme, setColorScheme] = useLocalStorage<string>('theme-color', 'blue');
+  const [colorMode, setColorMode] = useLocalStorage<string>('theme-color-mode', 'lights-out');
   const [customColor, setCustomColor] = useState<HSLColor>({ hue: 221, saturation: 83, lightness: 53 });
   const [isUsingCustomColor, setIsUsingCustomColor] = useLocalStorage<boolean>('using-custom-color', false);
   const [previewColor, setPreviewColor] = useState<HSLColor>(customColor);
@@ -226,6 +229,19 @@ const ThemeSettings = () => {
     }
   }, [theme, colorMode, colorScheme, isUsingCustomColor, customColor]);
 
+  // Add a state to track initial loading
+  useEffect(() => {
+    if (!mounted) return;
+
+    // If no color scheme is set, keep the default dark theme
+    if (!colorScheme && !isUsingCustomColor) {
+      document.documentElement.classList.remove(
+        'theme-blue', 'theme-purple', 'theme-orange',
+        'theme-emerald', 'theme-pink', 'theme-custom'
+      );
+    }
+  }, [mounted, colorScheme, isUsingCustomColor]);
+
   // Handle selecting custom color
   const handleCustomColorSelect = () => {
     console.log("Applying custom color:", previewColor);
@@ -235,7 +251,7 @@ const ThemeSettings = () => {
     applyCustomColor(previewColor);
 
     console.log("Custom color active:", isUsingCustomColor);
-    console.log("Custom color values:", 
+    console.log("Custom color values:",
       document.documentElement.style.getPropertyValue('--custom-primary-hue'),
       document.documentElement.style.getPropertyValue('--custom-primary-saturation'),
       document.documentElement.style.getPropertyValue('--custom-primary-lightness')
@@ -258,6 +274,75 @@ const ThemeSettings = () => {
     document.documentElement.classList.add(`theme-${preset}`);
 
     toast.success(`Theme changed to ${preset}`);
+  };
+
+  // Fix the switchTheme function to preserve dark mode
+  const switchTheme = (theme: string) => {
+    // Preserve current theme mode (dark/light)
+    const currentIsDarkMode = document.documentElement.classList.contains('dark');
+    const currentDarkVariant = darkVariant;
+    
+    if (theme === 'custom') {
+      // Apply custom theme
+      setIsUsingCustomColor(true);
+      setActiveThemeValue('custom');
+      
+      // Apply custom theme properties
+      document.documentElement.style.setProperty('--custom-primary-hue', customColor.hue.toString());
+      document.documentElement.style.setProperty('--custom-primary-saturation', `${customColor.saturation}%`);
+      document.documentElement.style.setProperty('--custom-primary-lightness', `${customColor.lightness}%`);
+      
+      // First remove all theme classes to avoid conflicts
+      document.documentElement.classList.remove(
+        'theme-blue', 'theme-purple', 'theme-orange', 'theme-emerald', 'theme-pink'
+      );
+      
+      // Add custom theme class
+      document.documentElement.classList.add('theme-custom');
+      
+      // Restore dark mode if it was active
+      if (currentIsDarkMode) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.add(currentDarkVariant);
+      }
+      
+      // Update localStorage
+      localStorage.setItem('theme-color', 'custom');
+      localStorage.setItem('using-custom-color', 'true');
+      localStorage.setItem('custom-color', JSON.stringify(customColor));
+    } else {
+      // Apply preset theme
+      setIsUsingCustomColor(false);
+      setColorScheme(theme);
+      setActiveThemeValue(theme);
+      
+      // Clear custom theme properties
+      document.documentElement.style.removeProperty('--custom-primary-hue');
+      document.documentElement.style.removeProperty('--custom-primary-saturation');
+      document.documentElement.style.removeProperty('--custom-primary-lightness');
+      
+      // First remove all theme classes
+      document.documentElement.classList.remove(
+        'theme-blue', 'theme-purple', 'theme-orange', 
+        'theme-emerald', 'theme-pink', 'theme-custom'
+      );
+      
+      // Apply preset theme class
+      document.documentElement.classList.add(`theme-${theme}`);
+      
+      // Restore dark mode if it was active
+      if (currentIsDarkMode) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.add(currentDarkVariant);
+      }
+      
+      // Update localStorage
+      localStorage.setItem('theme-color', theme);
+      localStorage.setItem('using-custom-color', 'false');
+    }
+    
+    // Force UI update
+    // forceUpdate({});
   };
 
   // Handle color theme change
@@ -288,13 +373,37 @@ const ThemeSettings = () => {
     toast.success(`Theme transitions ${checked ? 'enabled' : 'disabled'}`)
   }
 
-  // Reset all theme settings
+  // Reset theme settings to pure dark mode without color theme
   const resetThemeSettings = () => {
-    setTheme("default")
-    setNextTheme("system")
-    setDarkVariant("lights-out")
-    setIsAnimated(true)
-    toast.success("Theme settings reset to defaults")
+    // Clear custom theme properties
+    document.documentElement.style.removeProperty('--custom-primary-hue');
+    document.documentElement.style.removeProperty('--custom-primary-saturation');
+    document.documentElement.style.removeProperty('--custom-primary-lightness');
+
+    // Remove all theme classes
+    document.documentElement.classList.remove(
+      'theme-blue', 'theme-purple', 'theme-orange',
+      'theme-emerald', 'theme-pink', 'theme-custom'
+    );
+
+    // Add dark and lights-out but no color theme
+    document.documentElement.classList.add('dark', 'lights-out');
+
+    // Reset state variables
+    setTheme("dark");
+    setNextTheme("dark");
+    setDarkVariant("lights-out");
+    setIsUsingCustomColor(false);
+    setColorScheme("");
+    setActiveThemeValue("");
+
+    // Force localStorage update
+    localStorage.setItem('theme', 'dark');
+    localStorage.removeItem('theme-color'); // Remove instead of setting to blue
+    localStorage.setItem('theme-color-mode', 'lights-out');
+    localStorage.setItem('using-custom-color', 'false');
+
+    toast.success("Theme settings reset to defaults");
   }
 
   // Prevent hydration mismatch
@@ -362,7 +471,8 @@ const ThemeSettings = () => {
                     )}
                     onClick={() => {
                       handleThemeChange(colorTheme.id)
-                      setColorScheme(colorTheme.id)
+                      switchTheme(colorTheme.id)
+                      
                     }}
                   >
                     {/* Color preview area */}
@@ -705,7 +815,7 @@ const ThemeSettings = () => {
                             <div className="w-full h-24 rounded-md relative overflow-hidden" style={{ background: hslToString(previewColor) }}>
                               <div className="absolute inset-0 flex items-center justify-center">
                                 <div className="text-white text-xs font-mono drop-shadow-md bg-black/20 px-2 py-1 rounded">
-                                  HSL({previewColor.hue}, {previewColor.saturation}%, {previewColor.lightness}%)
+                                  HSL({previewColor.hue}, {previewColor.saturation}, {previewColor.lightness})
                                 </div>
                               </div>
                             </div>

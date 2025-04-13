@@ -142,7 +142,8 @@ const DashboardAction = () => {
                 'relative overflow-hidden rounded-xl cursor-pointer border transition-all',
                 'bg-card dark:bg-card/40 backdrop-blur-sm hover:shadow-lg',
                 isCurrentPath ? 'border-primary/30 shadow-md' : 'border-border/60',
-                action.hoverGradient
+                action.hoverGradient,
+                'hover:bg-gradient-to-br hover:from-primary/20 hover:to-secondary/20'
               )}
               onClick={() => router.push(action.href)}
               onMouseEnter={() => setHoveredIndex(index)}
@@ -151,7 +152,8 @@ const DashboardAction = () => {
               {/* Pattern background */}
               <div className={cn(
                 "absolute inset-0 pointer-events-none opacity-70",
-                action.patternColor
+                action.patternColor,
+                'text-primary/[0.03] dark:text-primary/[0.03]'
               )}>
                 <div 
                   className="absolute inset-0 bg-repeat opacity-60" 
@@ -182,7 +184,8 @@ const DashboardAction = () => {
                   <div className="mb-4">
                     <div className={cn(
                       "p-3 w-min rounded-lg transition-all duration-300 relative overflow-hidden",
-                      action.color,
+                      // action.color,
+                      'text-primary/[0.5] bg-primary/10',
                       (isHovered || isCurrentPath) && "scale-110"
                     )}>
                       <motion.div

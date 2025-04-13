@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { ThemeProvider as NextThemesProvider, type ThemeProviderProps } from "next-themes"
 
 // Define theme types
-export type Theme = "default" | "purple" | "orange" | "pink" | "emerald" | "blue"
+export type Theme = "default" | "purple" | "orange" | "pink" | "emerald" | "blue" | "dark"
 export type Mode = "light" | "dark" | "system"
 export type DarkVariant = "subtle" | "lights-out"
 
@@ -44,7 +44,7 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
+  defaultTheme = "dark", // Changed from "system" to "dark"
   ...props
 }: ThemeProviderProps) {
   const [mounted, setMounted] = useState(false)
@@ -86,8 +86,8 @@ export function ThemeProvider({
   const initializeThemeFromLocalStorage = () => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme') as Mode || defaultTheme;
-      const savedColorScheme = localStorage.getItem('theme-color') || 'blue';
-      const savedDarkVariant = localStorage.getItem('theme-color-mode') || 'subtle';
+      const savedColorScheme = localStorage.getItem('theme-color'); // No default to allow pure dark theme
+      const savedDarkVariant = localStorage.getItem('theme-color-mode') || 'lights-out';
       const isCustomTheme = localStorage.getItem('using-custom-color') === 'true';
       
       // Apply the correct theme immediately
@@ -100,28 +100,29 @@ export function ThemeProvider({
         document.documentElement.classList.remove('lights-out', 'subtle');
       }
       
-      // Apply color scheme
+      // Remove all theme classes first
       document.documentElement.classList.remove(
         'theme-blue', 'theme-purple', 'theme-orange', 
         'theme-emerald', 'theme-pink', 'theme-custom'
       );
       
-      if (isCustomTheme) {
-        try {
-          const customColor = JSON.parse(localStorage.getItem('custom-color') || '{}');
-          if (customColor.hue !== undefined) {
-            document.documentElement.style.setProperty('--custom-primary-hue', customColor.hue.toString());
-            document.documentElement.style.setProperty('--custom-primary-saturation', `${customColor.saturation}%`);
-            document.documentElement.style.setProperty('--custom-primary-lightness', `${customColor.lightness}%`);
-            document.documentElement.classList.add('theme-custom');
-          } else {
-            document.documentElement.classList.add(`theme-${savedColorScheme}`);
+      // Only apply color scheme if one was explicitly saved
+      if (savedColorScheme) {
+        if (isCustomTheme) {
+          try {
+            const customColor = JSON.parse(localStorage.getItem('custom-color') || '{}');
+            if (customColor.hue !== undefined) {
+              document.documentElement.style.setProperty('--custom-primary-hue', customColor.hue.toString());
+              document.documentElement.style.setProperty('--custom-primary-saturation', `${customColor.saturation}%`);
+              document.documentElement.style.setProperty('--custom-primary-lightness', `${customColor.lightness}%`);
+              document.documentElement.classList.add('theme-custom');
+            }
+          } catch (e) {
+            // If error, don't add any theme class
           }
-        } catch (e) {
+        } else if (savedColorScheme) {
           document.documentElement.classList.add(`theme-${savedColorScheme}`);
         }
-      } else {
-        document.documentElement.classList.add(`theme-${savedColorScheme}`);
       }
     }
   }
