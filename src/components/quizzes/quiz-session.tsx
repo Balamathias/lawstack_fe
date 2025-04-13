@@ -21,6 +21,7 @@ import Loader from '@/components/loader'
 import DynamicModal from '../dynamic-modal'
 import MarkdownPreview from '../markdown-preview'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useSwipeable } from 'react-swipeable'
 
 interface QuizSessionProps {
   initialQuiz: Quiz
@@ -147,44 +148,33 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
     }
   }, [quiz.status, quiz.started_at, quiz.duration, isAutoSubmitting])
   
-  // Touch event handlers for swipe navigation
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.touches[0].clientX
-  }
-  
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartXRef.current === null) return
-    
-    const touchEndX = e.changedTouches[0].clientX
-    const diff = touchStartXRef.current - touchEndX
-    
-    // Minimum swipe distance (px)
-    const minSwipeDistance = 50
-    
-    if (Math.abs(diff) > minSwipeDistance) {
-      if (diff > 0) {
-        // Swiped left, go to next question
-        if (currentQuestionIndex < quiz.questions?.length - 1) {
-          setSwipeDirection('left')
-          setTimeout(() => {
-            handleNextQuestion()
-            setSwipeDirection(null)
-          }, 50)
-        }
-      } else {
-        // Swiped right, go to previous question
-        if (currentQuestionIndex > 0) {
-          setSwipeDirection('right')
-          setTimeout(() => {
-            handlePreviousQuestion()
-            setSwipeDirection(null)
-          }, 50)
-        }
+  // Modify the swipe handlers with higher threshold and debounce
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (currentQuestionIndex < quiz.questions?.length - 1) {
+        setSwipeDirection('left')
+        setTimeout(() => {
+          handleNextQuestion()
+          setSwipeDirection(null)
+        }, 50)
       }
-    }
-    
-    touchStartXRef.current = null
-  }
+    },
+    onSwipedRight: () => {
+      if (currentQuestionIndex > 0) {
+        setSwipeDirection('right')
+        setTimeout(() => {
+          handlePreviousQuestion()
+          setSwipeDirection(null)
+        }, 50)
+      }
+    },
+    // threshold: 50,
+    trackTouch: true,
+    // preventDefaultTouchmoveEvent: true,
+    delta: 100,
+    // minVelocity: 0.3,
+    trackMouse: false
+  })
   
   // Start the quiz if it's pending
   const handleStartQuiz = () => {
@@ -551,8 +541,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
         
         {/* Question content area with touch support */}
         <motion.div 
-          onTouchStart={handleTouchStart} 
-          onTouchEnd={handleTouchEnd}
+          {...swipeHandlers}
           animate={{ 
             x: swipeDirection === 'left' ? -20 : swipeDirection === 'right' ? 20 : 0,
             opacity: swipeDirection !== null ? 0.5 : 1

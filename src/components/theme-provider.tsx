@@ -44,6 +44,7 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export function ThemeProvider({
   children,
+  defaultTheme = "system",
   ...props
 }: ThemeProviderProps) {
   const [mounted, setMounted] = useState(false)
@@ -82,33 +83,52 @@ export function ThemeProvider({
     localStorage.setItem("theme-animated", String(value))
   }
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme-color") as Theme
-    const savedDarkVariant = localStorage.getItem("dark-variant") as DarkVariant
-    const savedMode = localStorage.getItem("color-mode") as Mode
-    const savedAnimated = localStorage.getItem("theme-animated")
-
-    if (savedTheme && themes.includes(savedTheme)) {
-      setThemeState(savedTheme)
-      if (savedTheme !== "default") {
-        document.documentElement.classList.add(`theme-${savedTheme}`)
+  const initializeThemeFromLocalStorage = () => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme') as Mode || defaultTheme;
+      const savedColorScheme = localStorage.getItem('theme-color') || 'blue';
+      const savedDarkVariant = localStorage.getItem('theme-color-mode') || 'subtle';
+      const isCustomTheme = localStorage.getItem('using-custom-color') === 'true';
+      
+      // Apply the correct theme immediately
+      if (savedTheme === 'dark' || 
+         (savedTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.add(savedDarkVariant);
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.remove('lights-out', 'subtle');
+      }
+      
+      // Apply color scheme
+      document.documentElement.classList.remove(
+        'theme-blue', 'theme-purple', 'theme-orange', 
+        'theme-emerald', 'theme-pink', 'theme-custom'
+      );
+      
+      if (isCustomTheme) {
+        try {
+          const customColor = JSON.parse(localStorage.getItem('custom-color') || '{}');
+          if (customColor.hue !== undefined) {
+            document.documentElement.style.setProperty('--custom-primary-hue', customColor.hue.toString());
+            document.documentElement.style.setProperty('--custom-primary-saturation', `${customColor.saturation}%`);
+            document.documentElement.style.setProperty('--custom-primary-lightness', `${customColor.lightness}%`);
+            document.documentElement.classList.add('theme-custom');
+          } else {
+            document.documentElement.classList.add(`theme-${savedColorScheme}`);
+          }
+        } catch (e) {
+          document.documentElement.classList.add(`theme-${savedColorScheme}`);
+        }
+      } else {
+        document.documentElement.classList.add(`theme-${savedColorScheme}`);
       }
     }
+  }
 
-    if (savedDarkVariant) {
-      setDarkVariantState(savedDarkVariant)
-      document.documentElement.classList.add(savedDarkVariant === "lights-out" ? "lights-out" : "subtle")
-    }
-
-    if (savedMode && ["light", "dark", "system"].includes(savedMode)) {
-      setModeState(savedMode)
-    }
-
-    if (savedAnimated !== null) {
-      setIsAnimated(savedAnimated === "true")
-    }
-
-    setMounted(true)
+  useEffect(() => {
+    initializeThemeFromLocalStorage();
+    setMounted(true);
   }, [])
 
   const value = {

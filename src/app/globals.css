@@ -35,18 +35,90 @@
   --chart-4: hsl(43 74% 66%);
   --chart-5: hsl(27 87% 67%);
   --radius: 0.6rem;
+
+  /* Custom color theme support */
+  --custom-primary-hue: 221;
+  --custom-primary-saturation: 83%;
+  --custom-primary-lightness: 53%;
 }
 
+/* Light mode custom theme */
+.theme-custom {
+  --primary: hsl(var(--custom-primary-hue) var(--custom-primary-saturation) var(--custom-primary-lightness));
+  --primary-foreground: hsl(210 40% 98%);
+  --ring: hsl(var(--custom-primary-hue) var(--custom-primary-saturation) var(--custom-primary-lightness));
+  
+  /* Add background tints based on custom color */
+  --background: hsl(var(--custom-primary-hue) 50% 99%);
+  --card: hsl(var(--custom-primary-hue) 50% 99%);
+  --popover: hsl(var(--custom-primary-hue) 50% 99%);
+}
+
+/* Dark mode custom theme */
+.dark.theme-custom {
+  --primary: hsl(var(--custom-primary-hue) var(--custom-primary-saturation) var(--custom-primary-lightness));
+  --ring: hsl(var(--custom-primary-hue) var(--custom-primary-saturation) var(--custom-primary-lightness));
+  --background: hsl(var(--custom-primary-hue) 20% 7%);
+  --card: hsl(var(--custom-primary-hue) 20% 9%);
+  --popover: hsl(var(--custom-primary-hue) 20% 9%);
+  --border: hsl(var(--custom-primary-hue) 20% 15%);
+  --input: hsl(var(--custom-primary-hue) 20% 15%);
+  
+  /* Ensure text is visible */
+  --foreground: hsl(0 0% 95%);
+  --card-foreground: hsl(0 0% 95%);
+  --popover-foreground: hsl(0 0% 95%);
+}
+
+/* Dark mode - Lights Out with custom theme */
+.dark.lights-out.theme-custom {
+  --primary: hsl(var(--custom-primary-hue) var(--custom-primary-saturation) var(--custom-primary-lightness));
+  --ring: hsl(var(--custom-primary-hue) var(--custom-primary-saturation) var(--custom-primary-lightness));
+  --background: hsl(0 0% 0%);
+}
+
+/* Styling for custom color sliders */
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 8px;
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+/* Fix for dark mode text visibility in all themes */
 .dark {
   --background: hsl(240 10% 10%);
-  --foreground: hsl(210 40% 98%);
+  --foreground: hsl(0 0% 98%); /* Ensure light text on dark backgrounds */
   --card: hsl(0 0% 3.9%);
   --card-foreground: hsl(0 0% 98%);
   --popover: hsl(0 0% 3.9%);
   --popover-foreground: hsl(0 0% 98%);
   --primary: hsl(0 0% 98%);
   --primary-foreground: hsl(0 0% 9%);
-  --secondary: hsl(0 0% 14.9%);
+  --secondary: hsl(0 0% 14.9%); /* Improved secondary background */
   --secondary-foreground: hsl(0 0% 98%);
   --muted: hsl(0 0% 14.9%);
   --muted-foreground: hsl(0 0% 63.9%);
@@ -54,7 +126,7 @@
   --accent-foreground: hsl(0 0% 98%);
   --destructive: hsl(0 62.8% 30.6%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(0 0% 14.9%);
+  --border: hsl(0 0% 20%); /* Improved border visibility */
   --input: hsl(0 0% 14.9%);
   --ring: hsl(0 0% 83.1%);
   --chart-1: hsl(220 70% 50%);
@@ -64,13 +136,73 @@
   --chart-5: hsl(340 75% 55%);
 }
 
+/* Ensure ALL themed dark variants consistently handle text colors */
+.dark.theme-blue,
+.dark.theme-purple,
+.dark.theme-orange,
+.dark.theme-pink,
+.dark.theme-emerald,
+.dark.theme-custom {
+  --foreground: hsl(0 0% 95%); /* Consistent light text for all themes */
+  --card-foreground: hsl(0 0% 95%);
+  --popover-foreground: hsl(0 0% 95%);
+  --primary-foreground: hsl(0 0% 95%);
+  --secondary-foreground: hsl(0 0% 95%);
+  --accent-foreground: hsl(0 0% 95%);
+  --destructive-foreground: hsl(0 0% 95%);
+  --muted-foreground: hsl(0 0% 70%);
+  --border: hsl(0 0% 20%); /* Consistent border color */
+  --secondary: hsl(0 0% 16%); /* Slightly improved secondary background */
+}
+
+/* Improved Dark Mode - Lights Out (Pure Black Background) */
+.dark.lights-out {
+  --background: hsl(0 0% 0%); /* Pure black background */
+  --foreground: hsl(0 0% 95%) !important;
+  --card: hsl(0 0% 7%); /* Slightly lighter cards for contrast */
+  --card-foreground: hsl(0 0% 95%) !important;
+  --popover: hsl(0 0% 7%);
+  --popover-foreground: hsl(0 0% 95%) !important;
+  --primary: hsl(0 0% 98%);
+  --primary-foreground: hsl(0 0% 9%);
+  --secondary: hsl(0 0% 11%); /* Improved secondary background */
+  --secondary-foreground: hsl(0 0% 98%) !important;
+  --muted: hsl(0 0% 14.9%);
+  --muted-foreground: hsl(0 0% 63.9%);
+  --accent: hsl(0 0% 14.9%);
+  --accent-foreground: hsl(0 0% 98%);
+  --destructive: hsl(0 62.8% 30.6%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(0 0% 15%); /* Improved border visibility */
+  --input: hsl(0 0% 14.9%);
+  --ring: hsl(0 0% 83.1%);
+}
+
+/* Fix specifically for themed dark lights-out variants */
+.dark.lights-out.theme-blue,
+.dark.lights-out.theme-purple,
+.dark.lights-out.theme-orange,
+.dark.lights-out.theme-pink,
+.dark.lights-out.theme-emerald,
+.dark.lights-out.theme-custom {
+  --background: hsl(0 0% 0%); /* Pure black background */
+  --card: hsl(0 0% 7%); /* Slightly lighter cards for contrast */
+  --popover: hsl(0 0% 7%);
+  --foreground: hsl(0 0% 95%) !important;
+  --card-foreground: hsl(0 0% 95%) !important;
+  --popover-foreground: hsl(0 0% 95%) !important;
+  --secondary: hsl(0 0% 11%); /* Improved secondary background */
+  --secondary-foreground: hsl(0 0% 95%) !important;
+  --accent-foreground: hsl(0 0% 95%) !important;
+  --muted-foreground: hsl(0 0% 70%) !important;
+  --border: hsl(0 0% 15%); /* Consistent border color */
+}
+
 .dark.lights-out {
   --background: hsl(0 0% 0%);
-  --foreground: hsl(210 40% 98%);
-  --card: hsl(0 0% 3.9%);
-  --card-foreground: hsl(0 0% 98%);
-  --popover: hsl(0 0% 3.9%);
-  --popover-foreground: hsl(0 0% 98%);
+  --foreground: hsl(0 0% 95%) !important;
+  --card-foreground: hsl(0 0% 95%) !important;
+  --popover-foreground: hsl(0 0% 95%) !important;
   --primary: hsl(0 0% 98%);
   --primary-foreground: hsl(0 0% 9%);
   --secondary: hsl(0 0% 14.9%);

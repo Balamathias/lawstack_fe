@@ -39,6 +39,7 @@ import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import MarkdownPreview from '../markdown-preview'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useSwipeable } from 'react-swipeable'
 
 interface QuizResultsProps {
   initialQuiz: Quiz
@@ -88,45 +89,38 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
     )
   }
   
-  // Touch event handlers for swipe navigation
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.touches[0].clientX
-  }
-  
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartXRef.current === null) return
-    
-    const touchEndX = e.changedTouches[0].clientX
-    const diff = touchStartXRef.current - touchEndX
-    
-    // Minimum swipe distance (px)
-    const minSwipeDistance = 50
-    
-    if (Math.abs(diff) > minSwipeDistance) {
-      if (diff > 0) {
-        // Swiped left, go to next question
-        if (currentQuestionIndex < quiz.questions.length - 1) {
-          setSwipeDirection('left')
-          setTimeout(() => {
-            goToNextQuestion()
-            setSwipeDirection(null)
-          }, 150)
-        }
-      } else {
-        // Swiped right, go to previous question
-        if (currentQuestionIndex > 0) {
-          setSwipeDirection('right')
-          setTimeout(() => {
-            goToPreviousQuestion()
-            setSwipeDirection(null)
-          }, 150)
-        }
+  // Update swipe handlers with reduced sensitivity
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (currentQuestionIndex < quiz.questions.length - 1) {
+        setSwipeDirection('left')
+        setTimeout(() => {
+          setCurrentQuestionIndex(currentQuestionIndex + 1)
+          setSwipeDirection(null)
+        }, 150)
       }
-    }
-    
-    touchStartXRef.current = null
-  }
-  
+    },
+    onSwipedRight: () => {
+      if (currentQuestionIndex > 0) {
+        setSwipeDirection('right')
+        setTimeout(() => {
+          setCurrentQuestionIndex(currentQuestionIndex - 1)
+          setSwipeDirection(null)
+        }, 150)
+      }
+    },
+    // Increase threshold to reduce sensitivity
+    // threshold: 50,
+    // Add delta threshold to prevent accidental swipes
+    delta: 100,
+    // Add velocity requirement for swipe to be registered
+    // minVelocity: 0.3,
+    // Prevent default to avoid page scrolling during swipe attempts
+    // preventDefaultTouchmoveEvent: true,
+    // Add debounce to prevent multiple swipes
+    trackMouse: false
+  })
+
   // Current question from the list
   const currentQuestion = quiz.questions[currentQuestionIndex]
   const userAnswer = quiz.answers?.[currentQuestion.id]
@@ -529,8 +523,7 @@ export default function QuizResults({ initialQuiz }: QuizResultsProps) {
           
           <TabsContent value="review" className="space-y-4 pt-2">
             <motion.div 
-              onTouchStart={handleTouchStart} 
-              onTouchEnd={handleTouchEnd}
+              {...swipeHandlers}
               animate={{ 
                 x: swipeDirection === 'left' ? -20 : swipeDirection === 'right' ? 20 : 0,
                 opacity: swipeDirection !== null ? 0.5 : 1

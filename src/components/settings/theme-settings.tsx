@@ -23,13 +23,21 @@ import {
   Circle,
   LucideIcon,
   RefreshCw,
-  EyeIcon
+  EyeIcon,
+  Paintbrush,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover"
+import { useLocalStorage } from "@/hooks/use-localstorage"
 
 // Theme color definitions with their representative colors
 const themeColors: {
@@ -145,32 +153,127 @@ const darkVariants: {
   },
 ];
 
+// Define HSL color type
+interface HSLColor {
+  hue: number;
+  saturation: number;
+  lightness: number;
+}
+
 const ThemeSettings = () => {
   const { theme, setTheme, themes, darkVariant, setDarkVariant, isAnimated, setIsAnimated } = useTheme()
   const { theme: nextTheme, setTheme: setNextTheme, resolvedTheme } = useNextTheme()
   const [mounted, setMounted] = useState(false)
   const [activeTab, setActiveTab] = useState<"colors" | "appearance">("colors")
   const [previewMode, setPreviewMode] = useState<DarkVariant>("lights-out")
-  
+  const [colorMode, setColorMode] = useLocalStorage<string>('theme-color-mode', 'default');
+  const [colorScheme, setColorScheme] = useLocalStorage<string>('theme-color', 'blue');
+  const [customColor, setCustomColor] = useState<HSLColor>({ hue: 221, saturation: 83, lightness: 53 });
+  const [isUsingCustomColor, setIsUsingCustomColor] = useLocalStorage<boolean>('using-custom-color', false);
+  const [previewColor, setPreviewColor] = useState<HSLColor>(customColor);
+  const [activeThemeValue, setActiveThemeValue] = useState<string>(
+    isUsingCustomColor ? 'custom' : colorScheme
+  );
+
   // Mount check to prevent hydration issues
   useEffect(() => {
     setMounted(true)
   }, [])
-  
+
+  // Convert HSL to CSS string format
+  const hslToString = (hsl: HSLColor) => `hsl(${hsl.hue} ${hsl.saturation}% ${hsl.lightness}%)`;
+
+  // Function to update document styles with custom color
+  const applyCustomColor = (hsl: HSLColor) => {
+    console.log("Setting custom color HSL values:", hsl);
+    document.documentElement.style.setProperty('--custom-primary-hue', hsl.hue.toString());
+    document.documentElement.style.setProperty('--custom-primary-saturation', `${hsl.saturation}%`);
+    document.documentElement.style.setProperty('--custom-primary-lightness', `${hsl.lightness}%`);
+    document.documentElement.classList.add('theme-custom');
+    localStorage.setItem('custom-color', JSON.stringify(hsl));
+  };
+
+  // Load custom color from localStorage on component mount
+  useEffect(() => {
+    const savedCustomColor = localStorage.getItem('custom-color');
+    if (savedCustomColor) {
+      try {
+        const parsedColor = JSON.parse(savedCustomColor) as HSLColor;
+        setCustomColor(parsedColor);
+        setPreviewColor(parsedColor);
+        if (isUsingCustomColor) {
+          applyCustomColor(parsedColor);
+        }
+      } catch (e) {
+        console.error('Failed to parse custom color from localStorage');
+      }
+    }
+  }, [isUsingCustomColor]);
+
+  // Apply theme changes
+  useEffect(() => {
+    if (theme) {
+      document.documentElement.classList.remove('lights-out', 'subtle');
+      if (colorMode === 'lights-out' || colorMode === 'subtle') {
+        document.documentElement.classList.add(colorMode);
+      }
+    }
+    document.documentElement.classList.remove('theme-blue', 'theme-purple', 'theme-orange', 'theme-emerald', 'theme-pink', 'theme-custom');
+    if (isUsingCustomColor) {
+      applyCustomColor(customColor);
+    } else {
+      document.documentElement.classList.add(`theme-${colorScheme}`);
+    }
+  }, [theme, colorMode, colorScheme, isUsingCustomColor, customColor]);
+
+  // Handle selecting custom color
+  const handleCustomColorSelect = () => {
+    console.log("Applying custom color:", previewColor);
+    setIsUsingCustomColor(true);
+    setActiveThemeValue('custom');
+    setCustomColor(previewColor);
+    applyCustomColor(previewColor);
+
+    console.log("Custom color active:", isUsingCustomColor);
+    console.log("Custom color values:", 
+      document.documentElement.style.getPropertyValue('--custom-primary-hue'),
+      document.documentElement.style.getPropertyValue('--custom-primary-saturation'),
+      document.documentElement.style.getPropertyValue('--custom-primary-lightness')
+    );
+
+    document.documentElement.classList.remove('theme-blue', 'theme-purple', 'theme-orange', 'theme-emerald', 'theme-pink');
+    document.documentElement.classList.add('theme-custom');
+
+    toast.success("Custom color applied");
+  };
+
+  // Reset to preset themes
+  const handleResetToPreset = (preset: string) => {
+    console.log("Resetting to preset:", preset);
+    setIsUsingCustomColor(false);
+    setActiveThemeValue(preset);
+    setColorScheme(preset);
+
+    document.documentElement.classList.remove('theme-custom');
+    document.documentElement.classList.add(`theme-${preset}`);
+
+    toast.success(`Theme changed to ${preset}`);
+  };
+
   // Handle color theme change
   const handleThemeChange = (newTheme: Theme) => {
     if (newTheme === theme) return; // Don't do anything if same theme
     setTheme(newTheme)
     toast.success(`Theme changed to ${themeColors.find(t => t.id === newTheme)?.name}`)
   }
-  
+
   // Handle appearance mode change
   const handleModeChange = (newMode: Mode) => {
     if (newMode === nextTheme) return; // Don't do anything if same mode
     setNextTheme(newMode)
     toast.success(`Appearance mode set to ${newMode}`)
   }
-  
+
   // Handle dark variant change
   const handleDarkVariantChange = (newVariant: DarkVariant) => {
     if (newVariant === darkVariant) return; // Don't do anything if same variant
@@ -178,13 +281,13 @@ const ThemeSettings = () => {
     setPreviewMode(newVariant)
     toast.success(`Dark theme style set to ${newVariant === "lights-out" ? "Lights Out" : "Subtle Dark"}`)
   }
-  
+
   // Handle animation toggle
   const handleAnimationToggle = (checked: boolean) => {
     setIsAnimated(checked)
     toast.success(`Theme transitions ${checked ? 'enabled' : 'disabled'}`)
   }
-  
+
   // Reset all theme settings
   const resetThemeSettings = () => {
     setTheme("default")
@@ -193,14 +296,14 @@ const ThemeSettings = () => {
     setIsAnimated(true)
     toast.success("Theme settings reset to defaults")
   }
-  
+
   // Prevent hydration mismatch
   if (!mounted) {
     return null
   }
 
   const isDarkMode = resolvedTheme === "dark"
-  
+
   return (
     <Card className="border-none shadow-none relative overflow-hidden">
       <CardContent className="p-0">
@@ -257,7 +360,10 @@ const ThemeSettings = () => {
                         ? "border-primary"
                         : "border-transparent hover:border-primary/20"
                     )}
-                    onClick={() => handleThemeChange(colorTheme.id)}
+                    onClick={() => {
+                      handleThemeChange(colorTheme.id)
+                      setColorScheme(colorTheme.id)
+                    }}
                   >
                     {/* Color preview area */}
                     <div className={cn(
@@ -455,6 +561,242 @@ const ThemeSettings = () => {
                   checked={isAnimated}
                   onCheckedChange={handleAnimationToggle}
                 />
+              </div>
+            </div>
+
+            <div className="pt-4 border-t">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-medium text-sm">Preset Colors</h4>
+                  {isUsingCustomColor && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleResetToPreset('default')}
+                      className="h-7 text-xs gap-1.5"
+                    >
+                      <RefreshCw className="h-3 w-3" />
+                      Reset to preset
+                    </Button>
+                  )}
+                </div>
+                <RadioGroup
+                  value={activeThemeValue}
+                  onValueChange={(value) => {
+                    console.log("Color scheme selected:", value);
+                    setActiveThemeValue(value);
+                    if (value === 'custom') {
+                      setIsUsingCustomColor(true);
+                      applyCustomColor(customColor);
+                    } else {
+                      setIsUsingCustomColor(false);
+                      setColorScheme(value);
+                    }
+                  }}
+                  className="grid grid-cols-6 gap-3"
+                >
+                  {/* Preset color options */}
+                  <div>
+                    <RadioGroupItem
+                      value="blue"
+                      id="blue"
+                      className="peer sr-only"
+                    />
+                    <Label
+                      htmlFor="blue"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-all cursor-pointer"
+                    >
+                      <div className="w-6 h-6 rounded-full bg-[hsl(221.2,83.2%,53.3%)]" />
+                      <span className="text-xs mt-1">Blue</span>
+                    </Label>
+                  </div>
+                  
+                  <div>
+                    <RadioGroupItem
+                      value="purple"
+                      id="purple"
+                      className="peer sr-only"
+                    />
+                    <Label
+                      htmlFor="purple"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-all cursor-pointer"
+                    >
+                      <div className="w-6 h-6 rounded-full bg-[hsl(272,91%,65%)]" />
+                      <span className="text-xs mt-1">Purple</span>
+                    </Label>
+                  </div>
+                  
+                  <div>
+                    <RadioGroupItem
+                      value="orange"
+                      id="orange"
+                      className="peer sr-only"
+                    />
+                    <Label
+                      htmlFor="orange"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-all cursor-pointer"
+                    >
+                      <div className="w-6 h-6 rounded-full bg-[hsl(30,95%,60%)]" />
+                      <span className="text-xs mt-1">Orange</span>
+                    </Label>
+                  </div>
+                  
+                  <div>
+                    <RadioGroupItem
+                      value="emerald"
+                      id="emerald"
+                      className="peer sr-only"
+                    />
+                    <Label
+                      htmlFor="emerald"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-all cursor-pointer"
+                    >
+                      <div className="w-6 h-6 rounded-full bg-[hsl(160,84%,39%)]" />
+                      <span className="text-xs mt-1">Emerald</span>
+                    </Label>
+                  </div>
+                  
+                  <div>
+                    <RadioGroupItem
+                      value="pink"
+                      id="pink"
+                      className="peer sr-only"
+                    />
+                    <Label
+                      htmlFor="pink"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-all cursor-pointer"
+                    >
+                      <div className="w-6 h-6 rounded-full bg-[hsl(336,80%,65%)]" />
+                      <span className="text-xs mt-1">Pink</span>
+                    </Label>
+                  </div>
+                  
+                  {/* Custom color option */}
+                  <div>
+                    <RadioGroupItem
+                      value="custom"
+                      id="custom"
+                      className="peer sr-only"
+                    />
+                    <Label
+                      htmlFor="custom"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary transition-all cursor-pointer"
+                      onClick={() => {
+                        console.log("Custom color clicked");
+                        setActiveThemeValue('custom');
+                        setIsUsingCustomColor(true);
+                        applyCustomColor(customColor);
+                      }}
+                    >
+                      <Popover modal>
+                        <PopoverTrigger >
+                          <div className="w-6 h-6 rounded-full relative overflow-hidden cursor-pointer" style={{ background: hslToString(customColor) }}>
+                            {isUsingCustomColor && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                                <Paintbrush className="h-4 w-4 text-white drop-shadow-md" />
+                              </div>
+                            )}
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-64 p-4" align="center">
+                          <div className="space-y-4">
+                            <h4 className="font-medium text-sm text-center mb-2">Custom Color</h4>
+                            
+                            <div className="w-full h-24 rounded-md relative overflow-hidden" style={{ background: hslToString(previewColor) }}>
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="text-white text-xs font-mono drop-shadow-md bg-black/20 px-2 py-1 rounded">
+                                  HSL({previewColor.hue}, {previewColor.saturation}%, {previewColor.lightness}%)
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-3">
+                              <div className="space-y-1.5">
+                                <div className="flex justify-between text-xs">
+                                  <span>Hue ({previewColor.hue}°)</span>
+                                  <span className="text-muted-foreground">0-360</span>
+                                </div>
+                                <input 
+                                  type="range" 
+                                  min="0" 
+                                  max="360" 
+                                  value={previewColor.hue}
+                                  onChange={(e) => setPreviewColor({ 
+                                    ...previewColor, 
+                                    hue: parseInt(e.target.value) 
+                                  })}
+                                  className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                                  style={{
+                                    background: "linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)",
+                                  }}
+                                />
+                              </div>
+                              
+                              <div className="space-y-1.5">
+                                <div className="flex justify-between text-xs">
+                                  <span>Saturation ({previewColor.saturation}%)</span>
+                                  <span className="text-muted-foreground">0-100</span>
+                                </div>
+                                <input 
+                                  type="range" 
+                                  min="0" 
+                                  max="100" 
+                                  value={previewColor.saturation}
+                                  onChange={(e) => setPreviewColor({ 
+                                    ...previewColor, 
+                                    saturation: parseInt(e.target.value) 
+                                  })}
+                                  className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                                  style={{
+                                    background: `linear-gradient(to right, hsl(${previewColor.hue}, 0%, ${previewColor.lightness}%), hsl(${previewColor.hue}, 100%, ${previewColor.lightness}%))`,
+                                  }}
+                                />
+                              </div>
+                              
+                              <div className="space-y-1.5">
+                                <div className="flex justify-between text-xs">
+                                  <span>Lightness ({previewColor.lightness}%)</span>
+                                  <span className="text-muted-foreground">0-100</span>
+                                </div>
+                                <input 
+                                  type="range" 
+                                  min="0" 
+                                  max="100" 
+                                  value={previewColor.lightness}
+                                  onChange={(e) => setPreviewColor({ 
+                                    ...previewColor, 
+                                    lightness: parseInt(e.target.value) 
+                                  })}
+                                  className="w-full h-2 rounded-full appearance-none cursor-pointer" 
+                                  style={{
+                                    background: `linear-gradient(to right, hsl(${previewColor.hue}, ${previewColor.saturation}%, 0%), hsl(${previewColor.hue}, ${previewColor.saturation}%, 50%), hsl(${previewColor.hue}, ${previewColor.saturation}%, 100%))`,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => setPreviewColor(customColor)}
+                              >
+                                Reset
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={handleCustomColorSelect}
+                              >
+                                Apply
+                              </Button>
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                      <span className="text-xs mt-1">Custom</span>
+                    </Label>
+                  </div>
+                </RadioGroup>
               </div>
             </div>
           </TabsContent>
