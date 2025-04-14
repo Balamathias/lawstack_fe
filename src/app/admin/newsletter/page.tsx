@@ -12,13 +12,14 @@ export const dynamic = 'force-dynamic';
 const NewsletterAdminPage = async ({
   searchParams,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined }
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }) => {
   // Extract search params
-  const category = searchParams?.category as string || '';
-  const status = searchParams?.status as string || '';
-  const search = searchParams?.search as string || '';
-  const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
+  const resolvedSearchParams = await searchParams;
+  const category = resolvedSearchParams?.category as string || '';
+  const status = resolvedSearchParams?.status as string || '';
+  const search = resolvedSearchParams?.search as string || '';
+  const page = resolvedSearchParams?.page ? parseInt(resolvedSearchParams.page as string) : 1;
   
   // Build query parameters for API call
   const queryParams: Record<string, any> = { page };
