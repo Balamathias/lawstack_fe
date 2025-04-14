@@ -110,7 +110,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 			},
 			img: ({ src, alt, ...props }) => (
 			<div className="my-4 flex justify-center">
-				{src && (
+				{typeof src === 'string' && src && (
 				src.startsWith('http') ? (
 					// eslint-disable-next-line @next/next/no-img-element
 					<img
