@@ -703,7 +703,7 @@ const ThemeSettings = () => {
                       setColorScheme(value);
                     }
                   }}
-                  className="grid grid-cols-6 gap-3"
+                  className="grid grid-cols-2 md:grid-cols-6 gap-3"
                 >
                   {/* Preset color options */}
                   <div>
