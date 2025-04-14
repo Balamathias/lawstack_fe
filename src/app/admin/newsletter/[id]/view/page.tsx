@@ -10,14 +10,14 @@ import { notFound } from 'next/navigation'
 import SendNewsletterButton from '@/components/admin/newsletter/send-newsletter-button'
 
 interface ViewNewsletterPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 const ViewNewsletterPage = async ({ params }: ViewNewsletterPageProps) => {
-  const { data: newsletter, error } = await getNewsletter(params.id);
-  const { data: analytics } = await getNewsletterAnalytics(params.id);
+  const { data: newsletter, error } = await getNewsletter((await params).id);
+  const { data: analytics } = await getNewsletterAnalytics((await params).id);
   
   if (error || !newsletter) {
     notFound();
@@ -60,7 +60,7 @@ const ViewNewsletterPage = async ({ params }: ViewNewsletterPageProps) => {
         </div>
         
         <div className="flex flex-col sm:flex-row gap-2">
-          <Link href={`/admin/newsletter/${params.id}/edit`}>
+          <Link href={`/admin/newsletter/${(await params).id}/edit`}>
             <Button variant="outline" className="flex items-center gap-2">
               <Edit className="h-4 w-4" />
               Edit

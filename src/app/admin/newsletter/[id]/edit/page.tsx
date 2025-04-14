@@ -6,13 +6,13 @@ import { getNewsletter, getNewsletterCategories } from '@/services/server/newsle
 import { notFound } from 'next/navigation'
 
 interface EditNewsletterPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 const EditNewsletterPage = async ({ params }: EditNewsletterPageProps) => {
-  const { data: newsletter, error } = await getNewsletter(params.id);
+  const { data: newsletter, error } = await getNewsletter((await params).id);
   const { data: categories = [] } = await getNewsletterCategories();
   
   if (error || !newsletter) {
