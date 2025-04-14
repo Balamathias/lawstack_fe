@@ -72,7 +72,7 @@ const StepThree = ({ user }: Props) => {
                         <span className="text-xs font-medium">STEP 3 OF 3</span>
                     </div>
                     
-                    <h2 className='text-2xl md:text-3xl font-bold tracking-tight flex flex-wrap items-center gap-2'>
+                    <h2 className='text-lg md:text-xl font-bold tracking-tight flex flex-wrap items-center gap-2'>
                         <ImageIcon className="h-6 w-6 text-primary" />
                         <span>Choose your avatar,</span>
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">@{user?.username}</span>
