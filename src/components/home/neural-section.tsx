@@ -11,7 +11,17 @@ const features = [
   {
     icon: <Brain className="w-6 h-6" />,
     title: "Smart Analysis",
-    description: "Our AI analyzes legal documents and extracts key insights automatically."
+    description: "Our AI analyzes past questions, legal documents and extracts key insights automatically."
+  },
+  {
+    icon: <Zap className="w-6 h-6" />,
+    title: "Smart Quizzes",
+    description: "Test your knowledge with AI-generated quizzes tailored to your learning needs."
+  },
+  {
+    icon: <Lightbulb className="w-6 h-6" />,
+    title: "Predictive Insights",
+    description: "Get predictions on case outcomes based on historical data."
   },
   {
     icon: <Scale className="w-6 h-6" />,
@@ -23,11 +33,6 @@ const features = [
     title: "Document Generation",
     description: "Generate legal documents and contracts using AI assistance."
   },
-  {
-    icon: <Lightbulb className="w-6 h-6" />,
-    title: "Predictive Insights",
-    description: "Get predictions on case outcomes based on historical data."
-  }
 ];
 
 const NeuralSection = () => {
