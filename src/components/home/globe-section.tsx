@@ -30,8 +30,9 @@ const GlobeSection = () => {
 
   const stats = [
     { value: "99.9%", label: "Uptime", icon: <Clock className="w-4 h-4" /> },
-    { value: "128+", label: "Countries", icon: <Globe className="w-4 h-4" /> },
-    { value: "Enterprise", label: "Security", icon: <Shield className="w-4 h-4" /> },
+    { value: "30+", label: "Courses", icon: <Tablet className="w-4 h-4" /> },
+    { value: "3000+", label: "Questions", icon: <BarChart className="w-4 h-4" /> },
+    // { value: "Enterprise", label: "Security", icon: <Shield className="w-4 h-4" /> },
     { value: "24/7", label: "Support", icon: <Cloud className="w-4 h-4" /> },
   ];
 

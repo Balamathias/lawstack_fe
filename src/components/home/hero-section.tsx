@@ -155,7 +155,8 @@ const HeroSection = () => {
             variants={itemVariants}
           >
             {[
-              { value: "3000+", label: "Legal Cases" },
+              { value: "30+", label: "Courses" },
+              { value: "3000+", label: "Questions" },
               { value: "98%", label: "Accuracy Rate" },
               { value: "24/7", label: "Support" },
             ].map((stat, i) => (
