@@ -162,7 +162,7 @@ interface HSLColor {
 
 const ThemeSettings = () => {
   // Use no default color scheme to allow pure dark theme
-  const [theme, setTheme] = useLocalStorage<Theme>("theme", "default")
+  const [theme, setTheme] = useLocalStorage<Theme>("theme", "emerald")
   const [darkVariant, setDarkVariant] = useLocalStorage<DarkVariant>("theme-color-mode", "lights-out")
   const [colorScheme, setColorScheme] = useLocalStorage<string>("theme-color", "")
   const { themes, isAnimated, setIsAnimated } = useTheme()
