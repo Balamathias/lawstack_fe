@@ -834,7 +834,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
         <div className="flex items-center justify-center mt-2">
           <div className="text-xs text-muted-foreground/70 flex items-center">
             <HelpCircle size={10} className="mr-1 text-primary/50" />
-            <span>AI can make mistakes, please verify important information.</span>
+            <span className='truncate'>AI can make mistakes, please verify important information.</span>
           </div>
         </div>
       </div>
