@@ -672,7 +672,7 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
             )}
           </div>
           
-          <SheetFooter className="p-4 border-t mt-auto">
+          <SheetFooter className="p-4 border-t">
             <Button 
               className="w-full gap-2"
               onClick={() => {

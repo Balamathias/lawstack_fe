@@ -34,15 +34,8 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchPar
   const params = await _params;
   const searchParams = await _searchParams;
 
-  const { data: chat } = await getChat(params.id)
-
   return (
-    <div className='flex flex-col h-[calc(100vh-5px)] max-w-5xl mx-auto p-2.5 sm:p-6'>
-      <div className='items-center justify-between mb-3 hidden'>
-        <BackButton />
-        <h1 className="text-xl font-bold truncate max-w-[50%]">{chat?.title || 'Legal Consultation'}</h1>
-        <div className="w-8"></div>
-      </div>
+    <div className='flex flex-col h-[calc(100vh-5px)] mx-auto p-1.5 sm:p-5 max-w-5xl'>
 
       <div className="flex-1 min-h-0">
         <Suspense fallback={<Loader variant="spin" />}>
