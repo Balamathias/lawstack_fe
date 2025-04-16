@@ -14,6 +14,26 @@ const inter = Roboto({weight: ['300', '400', '500', '600'], subsets: ['latin'], 
 export const metadata: Metadata = {
   title: "Law Stack",
   description: "A simplistic law stack for learning law and legal practices. Gain access to past questions, notes, and more.",
+  openGraph: {
+    type: "website",
+    title: "Law Stack",
+    description: "A simplistic law stack for learning law and legal practices. Gain access to past questions, notes, and more.",
+    siteName: "Law Stack",
+    images: [
+      {
+        url: "/og-image.png", // Create this image in public directory (1200x630px recommended)
+        width: 1200,
+        height: 630,
+        alt: "Law Stack",
+      }
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Law Stack",
+    description: "A simplistic law stack for learning law and legal practices",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
