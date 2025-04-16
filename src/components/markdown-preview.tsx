@@ -141,11 +141,11 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 			  const isInline = !className || !language
 			  
 			  if (isInline && !className) {
-			    return (
-			      <code className="bg-muted/70 px-1.5 py-0.5 rounded-md text-sm font-mono break-words overflow-x-auto " {...props}>
-			        {children}
-			      </code>
-			    );
+				return (
+				  <code className="bg-muted/70 px-1.5 py-0.5 rounded-md text-sm font-mono break-words whitespace-pre-wrap overflow-x-auto inline-block max-w-full" {...props}>
+					{children}
+				  </code>
+				);
 			  }
 			  
 			  // Get the code content as a string

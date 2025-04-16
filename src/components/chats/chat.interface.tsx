@@ -736,7 +736,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
                   <div></div>
                   <div></div>
                 </div>
-                <span className="text-sm text-muted-foreground">Consulting LawStack base...</span>
+                <span className="text-sm text-muted-foreground">Consulting Smart Assistant...</span>
               </div>
             </div>
           </div>
