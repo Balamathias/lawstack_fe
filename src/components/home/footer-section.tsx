@@ -183,9 +183,9 @@ const FooterSection: FC = () => {
             </form>
 
             <div className="space-y-3">
-              <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
+              <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300 flex-wrap">
                 <Mail className="h-5 w-5 text-emerald-500 dark:text-emerald-400" strokeWidth={1.5} />
-                <span>contact@lawstack.ai</span>
+                <span>law.stack.ng@gmail.com, contact@lawstack.me</span>
               </div>
               <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                 <Phone className="h-5 w-5 text-emerald-500 dark:text-emerald-400" strokeWidth={1.5} />

@@ -99,7 +99,7 @@ const RegisterForm = () => {
                         <div className="text-center space-y-2">
                             <h1 className='text-2xl font-bold text-foreground'>Create Account</h1>
                             <p className='text-muted-foreground'>
-                                Sign up to get started with LegalX
+                                Sign up to get started with Lawstack
                             </p>
                         </div>
 
