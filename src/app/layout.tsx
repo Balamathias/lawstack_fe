@@ -9,30 +9,65 @@ import ModeToggle from "@/components/mode-toggle";
 
 import NextTopLoader from "nextjs-toploader";
 
-const inter = Roboto({weight: ['300', '400', '500', '600'], subsets: ['latin'], variable: '--font-inter'});
+const inter = Roboto({ weight: ['300', '400', '500', '600'], subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: "Law Stack",
-  description: "A simplistic law stack for learning law and legal practices. Gain access to past questions, notes, and more.",
+  title: {
+    default: "Law Stack - Legal Resources, Past Questions & Notes",
+    template: "%s | Law Stack"
+  },
+  description: "Law Stack is your comprehensive platform for learning law and legal practices. Access past law exam questions, detailed notes, legal resources, and more to excel in your legal studies.",
+  keywords: [
+    "Law Stack", "Legal Resources", "Law Notes", "Past Questions", "Legal Studies", "Law Exams", "Law Practice", "Legal Education", "Law Students", "Legal Platform",
+    "Law School", "Legal Advice", "Law Textbooks", "Law Syllabus", "Law Revision", "Law Faculty", "Law Courses", "Law Materials", "Law Tutorials", "Law Guides",
+    "Legal Research", "Law Questions and Answers", "Law Exam Preparation", "Law Study Materials", "Law Reference", "Law Case Studies", "Law Practice Questions",
+    "Law University", "Law Degree", "Legal Knowledge", "Legal Learning", "Law Resources Online", "Law Study Platform", "Law Exam Help", "Law Notes Download"
+  ],
+  authors: [{ name: "Law Stack Team", url: "https://www.lawstack.me" }],
+  creator: "Law Stack Team",
+  publisher: "Law Stack",
+  metadataBase: new URL("https://www.lawstack.me"),
+  alternates: {
+    canonical: "https://www.lawstack.me",
+  },
   openGraph: {
     type: "website",
-    title: "Law Stack",
-    description: "A simplistic law stack for learning law and legal practices. Gain access to past questions, notes, and more.",
+    url: "https://www.lawstack.me",
+    title: "Law Stack - Legal Resources, Past Questions & Notes",
+    description: "Law Stack is your comprehensive platform for learning law and legal practices. Access past law exam questions, detailed notes, legal resources, and more to excel in your legal studies.",
     siteName: "Law Stack",
     images: [
       {
-        url: "/og-image.png", // Create this image in public directory (1200x630px recommended)
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Law Stack",
+        alt: "Law Stack - Legal Resources, Past Questions & Notes",
       }
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Law Stack",
-    description: "A simplistic law stack for learning law and legal practices",
+    site: "@lawstack",
+    title: "Law Stack - Legal Resources, Past Questions & Notes",
+    description: "Law Stack is your comprehensive platform for learning law and legal practices. Access past law exam questions, detailed notes, legal resources, and more.",
     images: ["/og-image.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
   },
 };
 

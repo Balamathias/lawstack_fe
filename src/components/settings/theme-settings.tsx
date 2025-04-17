@@ -349,6 +349,9 @@ const ThemeSettings = () => {
   const handleThemeChange = (newTheme: Theme) => {
     if (newTheme === theme) return; // Don't do anything if same theme
     setTheme(newTheme)
+    setIsUsingCustomColor(false);
+    setColorScheme(newTheme);
+    setActiveThemeValue(newTheme);
     toast.success(`Theme changed to ${themeColors.find(t => t.id === newTheme)?.name}`)
   }
 
@@ -470,9 +473,7 @@ const ThemeSettings = () => {
                         : "border-transparent hover:border-primary/20"
                     )}
                     onClick={() => {
-                      setIsUsingCustomColor(false);
-                      setColorScheme(colorTheme.id);
-                      setActiveThemeValue(colorTheme.id)
+                      handleThemeChange(colorTheme.id)
                     }}
                   >
                     {/* Color preview area */}
