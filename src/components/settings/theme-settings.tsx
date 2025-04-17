@@ -421,7 +421,7 @@ const ThemeSettings = () => {
           onValueChange={(value) => setActiveTab(value as "colors" | "appearance")}
           className="w-full"
         >
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-6 flex-wrap">
             <TabsList className="bg-card/50 border">
               <TabsTrigger value="colors" className="flex items-center gap-1.5 data-[state=active]:bg-primary/10">
                 <Palette className="h-4 w-4" />
@@ -470,9 +470,9 @@ const ThemeSettings = () => {
                         : "border-transparent hover:border-primary/20"
                     )}
                     onClick={() => {
-                      handleThemeChange(colorTheme.id)
-                      switchTheme(colorTheme.id)
-                      
+                      setIsUsingCustomColor(false);
+                      setColorScheme(colorTheme.id);
+                      setActiveThemeValue(colorTheme.id)
                     }}
                   >
                     {/* Color preview area */}
