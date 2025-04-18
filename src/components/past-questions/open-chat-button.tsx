@@ -2,6 +2,7 @@
 
 import { Course, Question, User } from '@/@types/db'
 import { Button } from '@/components/ui/button'
+import { truncateString } from '@/lib/utils'
 import { useCreateChat } from '@/services/client/chat'
 import { MessagesSquare, Loader } from 'lucide-react'
 import { useRouter } from 'nextjs-toploader/app'
@@ -20,7 +21,7 @@ const OpenChatButton = ({ question, user }: Props) => {
     if (!question || !user) return
 
     createChat({
-        title: `Question: ${question?.text} (ID: ${question?.id})`,
+        title: `Question: ${truncateString(question?.text, 50)} (ID: ${question?.id})`,
         chat_type: 'past_question',
         course: question?.course,
         past_question: question?.id
