@@ -82,4 +82,23 @@ export const QUERY_KEYS = {
   SEARCH: 'search',
   SEARCH_FILTERS: 'searchFilters',
   SEARCH_RESULTS: 'searchResults',
+
+  // Cases keys
+  get_cases: "get_cases",
+  get_case: "get_case",
+  create_case: "create_case",
+  update_case: "update_case",
+  delete_case: "delete_case",
+  analyze_case: "analyze_case",
+  summarize_case: "summarize_case",
+  recommend_cases: "recommend_cases",
+  similar_cases: "similar_cases",
+  rollback_case_version: "rollback_case_version",
+  case_history: "case_history",
+  add_case_note: "add_case_note",
+  add_case_attachment: "add_case_attachment",
+  add_case_evidence: "add_case_evidence",
+  add_case_citation: "add_case_citation",
+  case_analytics: "case_analytics",
+  bulk_update_case_status: "bulk_update_case_status",
 } as const

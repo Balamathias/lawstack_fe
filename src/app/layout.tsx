@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TanstackQueryProvider } from "@/lib/tanstack.query";
-import ModeToggle from "@/components/mode-toggle";
 
 import NextTopLoader from "nextjs-toploader";
 
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
   },
   description: "Law Stack is your comprehensive platform for learning law and legal practices. Access past law exam questions, detailed notes, legal resources, and more to excel in your legal studies.",
   keywords: [
-    "Law Stack", "Legal Resources", "Law Notes", "Past Questions", "Legal Studies", "Law Exams", "Law Practice", "Legal Education", "Law Students", "Legal Platform",
+    "Law Stack", "LawStack", "LawStak", "Law Stak", "Law Stakc", "Legal Resources", "Law Notes", "Past Questions", "Legal Studies", "Law Exams", "Law Practice", "Legal Education", "Law Students", "Legal Platform",
     "Law School", "Legal Advice", "Law Textbooks", "Law Syllabus", "Law Revision", "Law Faculty", "Law Courses", "Law Materials", "Law Tutorials", "Law Guides",
     "Legal Research", "Law Questions and Answers", "Law Exam Preparation", "Law Study Materials", "Law Reference", "Law Case Studies", "Law Practice Questions",
     "Law University", "Law Degree", "Legal Knowledge", "Legal Learning", "Law Resources Online", "Law Study Platform", "Law Exam Help", "Law Notes Download"
@@ -94,7 +93,6 @@ export default function RootLayout({
               disableTransitionOnChange
             >
             {children}
-            {/* <ModeToggle /> */}
           </ThemeProvider>
 
           <Toaster
