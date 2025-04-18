@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { createChat } from '@/services/server/chats'
 import { getUser } from '@/services/server/auth'
 import { redirect } from 'next/navigation'
+import OpenChatButton from './open-chat-button'
 
 interface Props {
     promisedCourse: Promise<StackResponse<Course | null>>,
@@ -119,15 +120,7 @@ const CourseDetail = ({ promisedCourse, searchParams }: Props) => {
                 </Button>
                 
                 {/* Chat button */}
-                <form action={createCourseChat}>
-                  <Button
-                    type="submit"
-                    className="bg-indigo-500/90 hover:bg-indigo-500 text-white shadow-md border border-indigo-500/10 gap-2 transition-all"
-                  >
-                    <MessagesSquare className="h-4 w-4" />
-                    <span>Open Chat</span>
-                  </Button>
-                </form>
+                <OpenChatButton course={course} user={user}  />
               </div>
             </div>
           </CardContent>

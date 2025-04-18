@@ -20,6 +20,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { redirect } from 'next/navigation'
+import OpenChatButton from './open-chat-button';
 
 interface Props {
     id: string;
@@ -119,15 +120,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
               </Button>
               
               {/* Open Chat Button */}
-              <form action={createQuestionChat}>
-                <Button
-                  type="submit"
-                  className="bg-indigo-500/90 hover:bg-indigo-500 text-white shadow-md border border-indigo-500/10 gap-2 transition-all"
-                >
-                  <MessagesSquare className="h-4 w-4" />
-                  <span>Open Chat</span>
-                </Button>
-              </form>
+              <OpenChatButton question={data} user={user}  />
             </div>
           </div>
         </CardHeader>

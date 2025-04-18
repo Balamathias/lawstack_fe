@@ -99,7 +99,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 				return (
 					<Link 
 						href={cleanHref} 
-						target={cleanHref?.startsWith('http') ? '_blank' : '_self'} 
+						target={'_blank'} 
 						rel={cleanHref?.startsWith('http') ? 'noopener noreferrer' : undefined}
 						className="text-primary hover:underline transition-colors"
 						{...props}

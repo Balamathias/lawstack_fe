@@ -220,3 +220,79 @@ export interface SearchResults {
   courses: Course[],
   institutions: Institution[]
 }
+
+export interface Plan {
+  id: string;
+  name: string;
+  price: number;
+  duration: string;
+  paystack_plan_code?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Coupon {
+  id: string;
+  code: string;
+  description: string;
+  discount_percent: number;
+  discount_amount: number;
+  valid_from: string;
+  valid_to: string;
+  max_uses: number;
+  used_count: number;
+  is_active: boolean;
+}
+
+export type SubscriptionStatus = 'active' | 'pending' | 'expired' | 'canceled';
+
+export interface Subscription {
+  id: string;
+  user: string | User;
+  plan: Plan;
+  status: SubscriptionStatus;
+  start_date: string;
+  end_date: string;
+  is_auto_renew: boolean;
+  coupon?: Coupon | null;
+  trial_end?: string | null;
+  grace_period_end?: string | null;
+  paystack_subscription_code?: string | null;
+  paystack_email_token?: string | null;
+  paystack_customer_code?: string | null;
+  paystack_authorization_code?: string | null;
+  paystack_last_payment?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SubscriptionResponse {
+  message: string;
+  data: Subscription | Subscription[] | null;
+  status: number;
+  error: any;
+  count?: number;
+  next?: string | null;
+  previous?: string | null;
+}
+
+export interface PlanResponse {
+  message: string;
+  data: Plan | Plan[] | null;
+  status: number;
+  error: any;
+}
+
+export interface CouponResponse {
+  message: string;
+  data: Coupon | Coupon[] | null;
+  status: number;
+  error: any;
+}
+
+export interface PaystackInitResponse {
+  message: string;
+  data: { authorization_url: string } | null;
+  status: number;
+  error: any;
+}
