@@ -70,7 +70,8 @@ const InstitutionForm = () => {
 
   const onSubmit = (values: InstitutionFormValues) => {
     createInstitution({
-      ...values,
+      ...values as any,
+      alias: values.short_name
     }, {
       onSuccess: (data) => {
         if (data?.data) {
