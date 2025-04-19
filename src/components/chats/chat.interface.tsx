@@ -445,9 +445,9 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
 
     return (
       <div
-        className={`max-w-[90%] px-4 py-2.5 backdrop-blur-sm ${
+        className={`max-w-[90%] px-4 mt-2 backdrop-blur-sm ${
           message.sender === 'user'
-            ? 'dark:bg-secondary/40 bg-primary/95 dark:text-foreground text-white rounded-2xl rounded-tr-sm shadow-sm'
+            ? 'dark:bg-secondary/40 bg-primary/95 dark:text-foreground text-white rounded-2xl rounded-tr-sm shadow-sm py-2'
             : 'text-card-foreground rounded-2xl border-none'
         } ${isStreaming ? 'relative overflow-hidden' : ''}`}
       >
@@ -668,7 +668,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
                     }`}
                   >
                     {message.sender === 'ai' && (
-                      <div className="flex-shrink-0 mr-2 mt-1">
+                      <div className="flex-shrink-0 mr-2 mt-2">
                         <div className="bg-primary/10 p-1 rounded-full backdrop-blur-sm shadow-sm">
                           <LucideScale size={18} className="text-primary" />
                         </div>
@@ -678,7 +678,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
                     <AnimatedMessage message={message} />
 
                     {message.sender === 'user' && (
-                      <div className="flex-shrink-0 ml-2 mt-1">
+                      <div className="flex-shrink-0 ml-2 mt-2">
                         {user?.avatar ? (
                           <Avatar>
                             <AvatarImage src={user?.avatar} alt={user?.username!} />

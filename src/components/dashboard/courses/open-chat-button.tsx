@@ -20,7 +20,7 @@ const OpenChatButton = ({ course, user }: Props) => {
     if (!course || !user) return
 
     createChat({
-        title: `Course: ${course?.name} (${course?.code})`,
+        title: `New Chat`,
         chat_type: 'course_specific',
         course: course?.id
     }, {
@@ -28,7 +28,7 @@ const OpenChatButton = ({ course, user }: Props) => {
             router.push(`/dashboard/chat/${data?.data?.id}`)
         },
         onError: (error) => {
-            console.error('Error creating chat:', error)
+            // console.error('Error creating chat:', error)
             toast.error("Failed to create chat. Please try again.", {
                 description: error?.message || "An error occurred while creating the chat.",
             })

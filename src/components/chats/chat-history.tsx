@@ -26,11 +26,9 @@ import {
   Calendar,
   MessageSquare
 } from 'lucide-react'
-import Link from 'next/link'
 
 import {
     Sheet,
-    SheetClose,
     SheetContent,
     SheetHeader,
     SheetTitle,
@@ -45,18 +43,27 @@ import { useRouter } from 'nextjs-toploader/app'
 import { Input } from '../ui/input'
 import { Badge } from '../ui/badge'
 import { ScrollArea } from '../ui/scroll-area'
-import { Separator } from '../ui/separator'
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuTrigger, 
-  DropdownMenuSeparator, 
   DropdownMenuLabel
 } from '../ui/dropdown-menu'
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
+
+// Modal dialog for confirmation
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+  DialogClose,
+} from '@/components/ui/dialog'
 
 interface ChatHistoryProps {
   user: User | null
@@ -77,9 +84,10 @@ interface ChatHistoryItemProps {
   icon: React.ReactNode
   onDelete: (e: React.MouseEvent) => void
   closeDrawer: () => void
+  showDeleteLoading: boolean
 }
 
-const ChatHistoryItem = ({ chat, isActive, icon, onDelete, closeDrawer }: ChatHistoryItemProps) => {
+const ChatHistoryItem = ({ chat, isActive, icon, onDelete, closeDrawer, showDeleteLoading }: ChatHistoryItemProps) => {
   const [showMenu, setShowMenu] = useState(false)
   const router = useRouter()
   const date = new Date(chat.created_at)
@@ -166,10 +174,18 @@ const ChatHistoryItem = ({ chat, isActive, icon, onDelete, closeDrawer }: ChatHi
                   >
                     <button
                       onClick={onDelete}
-                      className="p-1 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors"
+                      className={cn(
+                        "p-1 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors",
+                        showDeleteLoading && "pointer-events-none opacity-60"
+                      )}
                       title="Delete chat"
+                      disabled={showDeleteLoading}
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      {showDeleteLoading ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-destructive" />
+                      ) : (
+                        <Trash2 className="h-3.5 w-3.5" />
+                      )}
                     </button>
                   </motion.div>
                 )}
@@ -211,8 +227,8 @@ const ChatHistoryItem = ({ chat, isActive, icon, onDelete, closeDrawer }: ChatHi
   )
 }
 
-const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
-  const { data: chatsResponse, isPending, error, refetch } = useGetChats()
+const ChatHistory = ({ currentChatId, trigger }: ChatHistoryProps) => {
+  const { data: chatsResponse, isPending, error, refetch } = useGetChats({ params: { ordering: '-updated_at' }})
   const deleteChat = useDeleteChat()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
@@ -222,6 +238,11 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
   const [sortBy, setSortBy] = useState('newest')
   const [activeTab, setActiveTab] = useState('all')
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({ 'today': true, 'week': true, 'month': true, 'older': true })
+
+  // Delete dialog state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleteTargetChat, setDeleteTargetChat] = useState<Chat | null>(null)
+  const [deleteLoading, setDeleteLoading] = useState(false)
   
   // Group chats by time period
   const groupChatsByDate = (chats: Chat[]) => {
@@ -297,29 +318,41 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
         return <MessageCircle className="text-primary" size={18} />
     }
   }
-  
-  const handleDeleteChat = async (chatId: string, e: React.MouseEvent) => {
+
+  // Open delete dialog
+  const handleDeleteChat = (chat: Chat, e: React.MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
-    
+    setDeleteTargetChat(chat)
+    setDeleteDialogOpen(true)
+  }
+
+  // Confirm delete
+  const confirmDeleteChat = async () => {
+    if (!deleteTargetChat) return
+    setDeleteLoading(true)
     try {
-      await deleteChat.mutateAsync(chatId, {
+      await deleteChat.mutateAsync(deleteTargetChat.id, {
         onSuccess: () => {
           toast.success('Chat deleted successfully')
           refetch()
-          
+          setDeleteDialogOpen(false)
+          setDeleteTargetChat(null)
+          setDeleteLoading(false)
           // If the current chat was deleted, redirect to chat home
-          if (chatId === currentChatId) {
+          if (deleteTargetChat.id === currentChatId) {
             router.push('/dashboard/chat')
           }
         },
         onError: () => {
           toast.error('Failed to delete chat')
+          setDeleteLoading(false)
         }
       })
     } catch (error) {
       console.error('Error deleting chat:', error)
       toast.error('Failed to delete chat')
+      setDeleteLoading(false)
     }
   }
   
@@ -343,143 +376,144 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
   const totalChats = Object.values(filteredChats).reduce((total, group) => total + group.length, 0)
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild>
-        {trigger || <Sidebar size={24} className='cursor-pointer' />}
-      </SheetTrigger>
+    <>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetTrigger asChild>
+          {trigger || <Sidebar size={24} className='cursor-pointer' />}
+        </SheetTrigger>
 
-      <SheetContent 
-        className="p-0 flex flex-col max-w-md w-[85vw] sm:w-[385px] bg-background/95 backdrop-blur-md"
-        side="right"
-      >
-        <div className="flex flex-col h-full overflow-hidden">
-          <SheetHeader className='p-4 border-b'>
-            <div className="flex items-center justify-between gap-4">
-              <SheetTitle className='text-xl flex items-center gap-2'>
-                <Wand2 className="h-5 w-5 text-primary" />
-                Chat History
-              </SheetTitle>
-              
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="rounded-full h-8 w-8 hover:bg-muted" 
-                onClick={() => setIsOpen(false)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="flex items-center gap-2 mt-3">
-              <div className="relative flex-grow">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Search conversations..." 
-                  className="pl-9 h-9"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                {searchTerm && (
-                  <button 
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    onClick={() => setSearchTerm('')}
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-9 w-9 shrink-0"
-                    title="Sort conversations"
-                  >
-                    <SlidersHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuLabel>Sort by</DropdownMenuLabel>
-                  {sortOptions.map(option => (
-                    <DropdownMenuItem 
-                      key={option.value}
-                      className="flex items-center gap-2 cursor-pointer"
-                      onClick={() => setSortBy(option.value)}
-                    >
-                      {option.icon}
-                      <span>{option.label}</span>
-                      {sortBy === option.value && (
-                        <Badge variant="secondary" className="ml-auto h-5 text-[10px]">
-                          Active
-                        </Badge>
-                      )}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            
-            <Tabs 
-              value={activeTab} 
-              onValueChange={setActiveTab}
-              className="mt-3"
-            >
-              <TabsList className="grid grid-cols-4 w-full">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="general">Chats</TabsTrigger>
-                <TabsTrigger value="course_specific">Course</TabsTrigger>
-                <TabsTrigger value="past_question">PQ</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </SheetHeader>
-
-          <div className="flex-1 overflow-hidden relative">
-            {isPending ? (
-              <div className="flex flex-col items-center justify-center h-full py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="text-sm text-muted-foreground mt-2">Loading conversations...</p>
-              </div>
-            ) : error || !chatsResponse?.data ? (
-              <div className="flex flex-col items-center justify-center h-full py-12 text-center px-4">
-                <HelpCircle className="h-8 w-8 text-destructive mb-2" />
-                <p className="text-sm text-muted-foreground">
-                  Failed to load chat history. Please try again later.
-                </p>
+        <SheetContent 
+          className="p-0 flex flex-col max-w-md w-[85vw] sm:w-[385px] bg-background/95 backdrop-blur-md"
+          side="right"
+        >
+          <div className="flex flex-col h-full overflow-hidden">
+            <SheetHeader className='p-4 border-b'>
+              <div className="flex items-center justify-between gap-4">
+                <SheetTitle className='text-xl flex items-center gap-2'>
+                  <Wand2 className="h-5 w-5 text-primary" />
+                  Chat History
+                </SheetTitle>
+                
                 <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-4 gap-2"
-                  onClick={() => refetch()}
+                  variant="ghost" 
+                  size="icon" 
+                  className="rounded-full h-8 w-8 hover:bg-muted" 
+                  onClick={() => setIsOpen(false)}
                 >
-                  <RefreshCcw className="h-3.5 w-3.5" />
-                  Retry
+                  <X className="h-4 w-4" />
                 </Button>
               </div>
-            ) : totalChats === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full py-12 text-center px-4">
-                <MessageSquare className="h-10 w-10 text-muted-foreground mb-3 opacity-50" />
-                <p className="text-base font-medium">No conversations found</p>
-                <p className="text-sm text-muted-foreground mt-1 max-w-xs">
-                  {searchTerm 
-                    ? `No results for "${searchTerm}". Try a different search term.` 
-                    : "Start a new chat to get help with your legal questions"}
-                </p>
-                {searchTerm && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="mt-4"
-                    onClick={() => setSearchTerm('')}
-                  >
-                    Clear search
-                  </Button>
-                )}
+              
+              <div className="flex items-center gap-2 mt-3">
+                <div className="relative flex-grow">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Search conversations..." 
+                    className="pl-9 h-9"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  {searchTerm && (
+                    <button 
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      onClick={() => setSearchTerm('')}
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-9 w-9 shrink-0"
+                      title="Sort conversations"
+                    >
+                      <SlidersHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+                    {sortOptions.map(option => (
+                      <DropdownMenuItem 
+                        key={option.value}
+                        className="flex items-center gap-2 cursor-pointer"
+                        onClick={() => setSortBy(option.value)}
+                      >
+                        {option.icon}
+                        <span>{option.label}</span>
+                        {sortBy === option.value && (
+                          <Badge variant="secondary" className="ml-auto h-5 text-[10px]">
+                            Active
+                          </Badge>
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
-            ) : (
-              <ScrollArea className="h-full pr-4 pb-24">
-                <div className="p-4 flex flex-col">
+              
+              <Tabs 
+                value={activeTab} 
+                onValueChange={setActiveTab}
+                className="mt-3"
+              >
+                <TabsList className="grid grid-cols-4 w-full">
+                  <TabsTrigger value="all">All</TabsTrigger>
+                  <TabsTrigger value="general">Chats</TabsTrigger>
+                  <TabsTrigger value="course_specific">Course</TabsTrigger>
+                  <TabsTrigger value="past_question">PQ</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </SheetHeader>
+
+            <ScrollArea className="flex-1 overflow-y-auto">
+              <div className="flex-1 relative min-h-[300px]">
+                {isPending ? (
+                  <div className="flex flex-col items-center justify-center h-full py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <p className="text-sm text-muted-foreground mt-2">Loading conversations...</p>
+                  </div>
+                ) : error || !chatsResponse?.data ? (
+                  <div className="flex flex-col items-center justify-center h-full py-12 text-center px-4">
+                    <HelpCircle className="h-8 w-8 text-destructive mb-2" />
+                    <p className="text-sm text-muted-foreground">
+                      Failed to load chat history. Please try again later.
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="mt-4 gap-2"
+                      onClick={() => refetch()}
+                    >
+                      <RefreshCcw className="h-3.5 w-3.5" />
+                      Retry
+                    </Button>
+                  </div>
+                ) : totalChats === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full py-12 text-center px-4">
+                    <MessageSquare className="h-10 w-10 text-muted-foreground mb-3 opacity-50" />
+                    <p className="text-base font-medium">No conversations found</p>
+                    <p className="text-sm text-muted-foreground mt-1 max-w-xs">
+                      {searchTerm 
+                        ? `No results for "${searchTerm}". Try a different search term.` 
+                        : "Start a new chat to get help with your legal questions"}
+                    </p>
+                    {searchTerm && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="mt-4"
+                        onClick={() => setSearchTerm('')}
+                      >
+                        Clear search
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="p-4 flex flex-col flex-1">
                   {/* Today's chats */}
                   {filteredChats.today.length > 0 && (
                     <div className="mb-5">
@@ -517,8 +551,9 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
                                 chat={chat} 
                                 isActive={chat.id === currentChatId}
                                 icon={getChatIcon(chat.chat_type)}
-                                onDelete={(e) => handleDeleteChat(chat.id, e)}
+                                onDelete={(e) => handleDeleteChat(chat, e)}
                                 closeDrawer={() => setIsOpen(false)}
+                                showDeleteLoading={deleteLoading && deleteTargetChat?.id === chat.id}
                               />
                             ))}
                           </motion.div>
@@ -564,8 +599,9 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
                                 chat={chat} 
                                 isActive={chat.id === currentChatId}
                                 icon={getChatIcon(chat.chat_type)}
-                                onDelete={(e) => handleDeleteChat(chat.id, e)}
+                                onDelete={(e) => handleDeleteChat(chat, e)}
                                 closeDrawer={() => setIsOpen(false)}
+                                showDeleteLoading={deleteLoading && deleteTargetChat?.id === chat.id}
                               />
                             ))}
                           </motion.div>
@@ -611,8 +647,9 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
                                 chat={chat} 
                                 isActive={chat.id === currentChatId}
                                 icon={getChatIcon(chat.chat_type)}
-                                onDelete={(e) => handleDeleteChat(chat.id, e)}
+                                onDelete={(e) => handleDeleteChat(chat, e)}
                                 closeDrawer={() => setIsOpen(false)}
+                                showDeleteLoading={deleteLoading && deleteTargetChat?.id === chat.id}
                               />
                             ))}
                           </motion.div>
@@ -658,8 +695,9 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
                                 chat={chat} 
                                 isActive={chat.id === currentChatId}
                                 icon={getChatIcon(chat.chat_type)}
-                                onDelete={(e) => handleDeleteChat(chat.id, e)}
+                                onDelete={(e) => handleDeleteChat(chat, e)}
                                 closeDrawer={() => setIsOpen(false)}
+                                showDeleteLoading={deleteLoading && deleteTargetChat?.id === chat.id}
                               />
                             ))}
                           </motion.div>
@@ -667,26 +705,66 @@ const ChatHistory = ({ user, currentChatId, trigger }: ChatHistoryProps) => {
                       </AnimatePresence>
                     </div>
                   )}
-                </div>
-              </ScrollArea>
-            )}
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+            
+            <SheetFooter className="p-4 border-t">
+              <Button 
+                className="w-full gap-2"
+                onClick={() => {
+                  router.push('/dashboard/chat')
+                  setIsOpen(false)
+                }}
+              >
+                <Plus className="h-4 w-4" />
+                New Chat
+              </Button>
+            </SheetFooter>
           </div>
-          
-          <SheetFooter className="p-4 border-t">
+        </SheetContent>
+      </Sheet>
+
+      {/* Delete confirmation dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={open => {
+        if (!deleteLoading) setDeleteDialogOpen(open)
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Conversation</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this conversation? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center gap-3 mt-2">
+            <MessageCircle className="h-6 w-6 text-destructive" />
+            <span className="font-medium">
+              {deleteTargetChat?.title || 'Untitled conversation'}
+            </span>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button 
+                variant="outline" 
+                disabled={deleteLoading}
+                onClick={() => setDeleteDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+            </DialogClose>
             <Button 
-              className="w-full gap-2"
-              onClick={() => {
-                router.push('/dashboard/chat')
-                setIsOpen(false)
-              }}
+              variant="destructive" 
+              onClick={confirmDeleteChat}
+              disabled={deleteLoading}
             >
-              <Plus className="h-4 w-4" />
-              New Chat
+              {deleteLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Delete
             </Button>
-          </SheetFooter>
-        </div>
-      </SheetContent>
-    </Sheet>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 
