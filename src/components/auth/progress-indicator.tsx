@@ -1,61 +1,55 @@
-import React from 'react';
-import { Check, User, AtSign, ImageIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import React from 'react'
 
 interface ProgressIndicatorProps {
-  currentStep: number;
+  currentStep: number
 }
 
 const ProgressIndicator = ({ currentStep }: ProgressIndicatorProps) => {
-  const steps = [
-    { id: 1, icon: User, label: 'Basic Info' },
-    { id: 2, icon: AtSign, label: 'Username & Contact' },
-    { id: 3, icon: ImageIcon, label: 'Avatar' },
-  ];
-
   return (
-    <div className="w-full mb-8">
-      <div className="flex items-center justify-between relative">
-        {/* Progress line */}
-        <div className="absolute top-1/2 left-0 w-full h-0.5 bg-secondary transform -translate-y-1/2 z-0" />
-        
-        {/* Steps */}
-        <div className="flex justify-between w-full relative z-10">
-          {steps.map((step) => {
-            const isCompleted = currentStep > step.id;
-            const isActive = currentStep === step.id;
-            
-            return (
-              <div key={step.id} className="flex flex-col items-center">
-                <div 
-                  className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300",
-                    isCompleted ? "bg-green-500 text-white" : 
-                    isActive ? "bg-primary text-primary-foreground ring-4 ring-primary/20" : 
-                    "bg-secondary text-secondary-foreground"
-                  )}
-                >
-                  {isCompleted ? (
-                    <Check className="w-5 h-5" />
-                  ) : (
-                    <step.icon className="w-5 h-5" />
-                  )}
-                </div>
-                <span 
-                  className={cn(
-                    "mt-2 text-xs font-medium transition-all duration-300",
-                    isActive ? "text-foreground" : "text-muted-foreground"
-                  )}
-                >
-                  {step.label}
-                </span>
-              </div>
-            );
-          })}
+    <div className="flex justify-center mb-8">
+      <div className="flex items-center space-x-3 md:space-x-5">
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+          currentStep === 1 
+            ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' 
+            : 'bg-primary/20 text-primary border border-primary/30'
+        }`}>1</div>
+        <div className="w-12 md:w-16 h-1 bg-border rounded-full">
+          <div className={`h-full bg-primary rounded-full transition-all ${
+            currentStep > 1 ? 'w-full' : 'w-0'
+          }`}></div>
         </div>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+          currentStep === 2 
+            ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' 
+            : currentStep > 2 
+              ? 'bg-primary/20 text-primary border border-primary/30'
+              : 'bg-muted text-muted-foreground'
+        }`}>2</div>
+        <div className="w-12 md:w-16 h-1 bg-border rounded-full">
+          <div className={`h-full bg-primary rounded-full transition-all ${
+            currentStep > 2 ? 'w-full' : 'w-0'
+          }`}></div>
+        </div>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+          currentStep === 3 
+            ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' 
+            : currentStep > 3
+              ? 'bg-primary/20 text-primary border border-primary/30'
+              : 'bg-muted text-muted-foreground'
+        }`}>3</div>
+        <div className="w-12 md:w-16 h-1 bg-border rounded-full">
+          <div className={`h-full bg-primary rounded-full transition-all ${
+            currentStep > 3 ? 'w-full' : 'w-0'
+          }`}></div>
+        </div>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+          currentStep === 4 
+            ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' 
+            : 'bg-muted text-muted-foreground'
+        }`}>4</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ProgressIndicator;
+export default ProgressIndicator

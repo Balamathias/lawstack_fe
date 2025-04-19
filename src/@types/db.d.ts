@@ -10,7 +10,11 @@ export interface User {
     avatar: string | null,
     phone: string | null,
     created_at: string,
-    date_joined: string
+    /** @deprecated: Date Joined would be removed in the future, use `joined` instead. */
+    date_joined: string,
+    joined: string
+    institution: string | null,
+    institution_name: string | null,
 }
 
 export interface Question {

@@ -7,7 +7,9 @@ import { stackbase } from '../server.entry'
 export interface Institution {
     id: string,
     name: string,
+    /** @deprecated: `short_name` would be removed in the future; use `alias` instead */
     short_name: string,
+    alias: string,
     type: string,
     country: string,
     state: string,

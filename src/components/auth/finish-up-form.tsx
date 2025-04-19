@@ -3,6 +3,7 @@ import StepOne from './step-one'
 import StepTwo from './step-two'
 import { getUser } from '@/services/server/auth'
 import StepThree from './step-three'
+import StepInstitution from './step-intitution'
 import ProgressIndicator from './progress-indicator'
 
 interface FinishUpFormProps {
@@ -26,6 +27,7 @@ const FinishUpForm = async ({ searchParams }: FinishUpFormProps) => {
             {(!step || (step === 1)) && <StepOne />}
             {((step === 2)) && <StepTwo user={user} />}
             {((step === 3)) && <StepThree user={user} />}
+            {((step === 4)) && <StepInstitution user={user} />}
 
         </div>
     </div>

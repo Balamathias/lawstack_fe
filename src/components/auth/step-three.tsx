@@ -48,8 +48,8 @@ const StepThree = ({ user }: Props) => {
           if (data?.error) {
               return toast.error(data.message || data?.error?.message)
           }
-          toast.success('Avatar saved successfully. You are all set!')
-          router.replace('/dashboard?rel=welcome')
+          toast.success('Avatar saved successfully. Let\'s select your institution!')
+          router.replace('/finish-up?step=4') // Update this to go to step 4 instead of dashboard
         },
         onError: (error) => {
           toast.error('An error occurred. Please try again.')
