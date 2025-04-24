@@ -30,13 +30,16 @@ export const useSubscription = (id: string) =>
 export const useCreateSubscription = () =>
   useMutation({
     mutationKey: [QUERY_KEYS.create_subscription],
-    mutationFn: server.createSubscription,
+    mutationFn: (payload: { 
+      plan: string; 
+      coupon_code?: string;
+    }) => server.createSubscription(payload),
   });
 
 export const usePaystackInitialize = () =>
   useMutation({
     mutationKey: [QUERY_KEYS.paystack_initialize],
-    mutationFn: server.paystackInitialize,
+    mutationFn: (subscriptionId: string) => server.paystackInitialize(subscriptionId),
   });
 
 export const useActivateSubscription = () =>

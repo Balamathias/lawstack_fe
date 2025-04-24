@@ -231,6 +231,13 @@ export interface Plan {
   price: number;
   duration: string;
   paystack_plan_code?: string;
+  description: string;
+  features: string[];
+  is_active: boolean;
+  label: string;
+  discount_info_text?: string;
+  discount_percent?: number;
+  discount_amount?: number;
   created_at: string;
   updated_at: string;
 }

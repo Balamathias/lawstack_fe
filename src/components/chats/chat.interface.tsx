@@ -48,7 +48,7 @@ const AI_MODELS = [
     isPremium: true,
   },
   {
-    id: 'gemini-2.5-pro-exp',
+    id: 'gemini-2.5-flash-preview-04-17',
     name: 'Expert',
     description: 'Highest accuracy for complex legal questions',
     icon: <Shield className="h-4 w-4 text-indigo-500" />,
