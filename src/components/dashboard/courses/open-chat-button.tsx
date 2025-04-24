@@ -25,6 +25,18 @@ const OpenChatButton = ({ course, user }: Props) => {
         course: course?.id
     }, {
         onSuccess: (data) => {
+            if (data?.error) {
+                if (data?.status === 401) {
+                    toast.info("You are not authorized to create a chat.", {
+                        description: "Please log in to create a chat.",
+                    })
+                } else {
+                    toast.warning(data?.message, {
+                        description: data?.message || "An error occurred while creating the chat.",
+                    })
+                }
+                return
+            }
             router.push(`/dashboard/chat/${data?.data?.id}`)
         },
         onError: (error) => {
