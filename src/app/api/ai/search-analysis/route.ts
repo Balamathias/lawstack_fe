@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { stackbase } from '@/services/server.entry';
 import { getUser } from '@/services/server/auth';
+import { AIModels } from '@/lib/utils';
 
 export const runtime = 'edge'
 
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
     }
     
     const response = await openai.chat.completions.create({
-      model: 'gemini-2.0-flash',
+      model: AIModels.expert,
       messages: [
         {
           role: 'system',

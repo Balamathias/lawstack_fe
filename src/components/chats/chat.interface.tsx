@@ -10,7 +10,7 @@ import ChatHistory from './chat-history';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import ScrollToBottomButton from '../ui/scroll-to-bottom-button';
-import { convertMarkdownToPlainText } from '@/lib/utils';
+import { AIModels, convertMarkdownToPlainText } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
@@ -41,14 +41,14 @@ interface Props {
 // Available AI models
 const AI_MODELS = [
   {
-    id: 'gemini-1.5-pro',
+    id: AIModels.default,
     name: 'Standard',
     description: 'Balanced model for most legal questions',
     icon: <Command className="h-4 w-4" />,
     isDefault: false,
   },
-  {
-    id: 'gemini-2.0-flash',
+    {
+    id: AIModels.getModel('advanced'),
     name: 'Advanced',
     description: 'Enhanced reasoning and legal analysis capabilities',
     icon: <Sparkles className="h-4 w-4 text-amber-500" />,
@@ -56,7 +56,7 @@ const AI_MODELS = [
     isPremium: true,
   },
   {
-    id: 'gemini-2.5-flash-preview-04-17',
+    id: AIModels.getModel('expert'),
     name: 'Expert',
     description: 'Highest accuracy for complex legal questions',
     icon: <Shield className="h-4 w-4 text-indigo-500" />,
