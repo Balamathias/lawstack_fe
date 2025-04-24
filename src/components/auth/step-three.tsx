@@ -58,10 +58,10 @@ const StepThree = ({ user }: Props) => {
     }
 
   return (
-    <div className='w-full min-h-[90vh] flex items-center justify-center px-4 py-8 md:py-12'>
+    <div className='w-full min-h-[90vh] flex items-center justify-center px-1 py-8 md:py-12'>
         {isPending && (<LoadingOverlay loader="1" />)}
         
-        <Card className='w-full max-w-3xl p-6 md:p-8 backdrop-blur-sm bg-card/70 shadow-xl border border-border/50 animate-fade-in'>
+        <Card className='w-full max-w-3xl px-2 md:p-8 backdrop-blur-sm bg-card/70 shadow-xl border border-border/50 animate-fade-in'>
             <div className='flex flex-col gap-y-8'>
                 <div className='flex justify-center mb-2 transform hover:scale-105 transition-transform duration-300'>
                     <Logo />

@@ -60,7 +60,7 @@ const StepTwo = ({ user }: Props) => {
                 </div>
             </div>
             
-            <div className="p-6 md:p-8 bg-card/60 backdrop-blur-sm border border-border/40 rounded-xl shadow-lg animate-fade-in relative overflow-hidden">
+            <div className="p-2.5 md:p-8 bg-card/60 backdrop-blur-sm border border-border/40 rounded-xl shadow-lg animate-fade-in relative overflow-hidden">
                 {/* Decorative elements */}
                 <div className="absolute -right-12 -top-12 w-40 h-40 bg-primary/5 rounded-full blur-2xl"></div>
                 <div className="absolute -left-12 -bottom-12 w-40 h-40 bg-primary/5 rounded-full blur-2xl"></div>

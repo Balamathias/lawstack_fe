@@ -100,7 +100,7 @@ const StepInstitution = ({ user }: StepInstitutionProps) => {
   const uniqueTypes = Array.from(new Set(institutions.map(i => i.type)))
 
   return (
-    <div className='w-full min-h-[90vh] flex items-center justify-center px-4 py-8 md:py-12 relative overflow-hidden'>
+    <div className='w-full min-h-[90vh] flex items-center justify-center md:px-4 py-8 md:py-12 relative overflow-hidden'>
       {/* Decorative background patterns */}
       <div className="fixed inset-0 bg-grid-pattern opacity-30 pointer-events-none"></div>
       <div className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full bg-primary/10 blur-3xl animate-pulse-glow pointer-events-none"></div>
@@ -108,7 +108,7 @@ const StepInstitution = ({ user }: StepInstitutionProps) => {
       
       {(isPending || isLoading) && (<LoadingOverlay loader="2" />)}
       
-      <Card className='w-full max-w-4xl p-6 md:p-8 glass-effect shadow-xl border border-border/50 animate-fade-in relative backdrop-blur-lg'>
+      <Card className='w-full max-w-4xl p-2 md:p-6 md:p-8 glass-effect shadow-xl border border-border/50 animate-fade-in relative backdrop-blur-lg'>
         {/* Background decorative elements */}
         <div className="absolute inset-0 overflow-hidden rounded-lg pointer-events-none">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10"></div>

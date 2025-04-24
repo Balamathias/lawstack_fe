@@ -82,7 +82,7 @@ const OTPForm = () => {
 
     return (
         <Form {...form}>
-            <div className='flex flex-col justify-center mx-auto py-10 px-8 md:px-12 backdrop-blur-sm bg-background/95 border border-border shadow-xl rounded-xl w-full max-w-[520px] transition-all animate-fade-in'>
+            <div className='flex flex-col justify-center mx-auto py-10 px-2.5 md:px-12 backdrop-blur-sm bg-background/95 border border-border shadow-xl rounded-xl w-full max-w-[520px] transition-all animate-fade-in'>
                 <div className='space-y-10'>
                     {/* Header */}
                     <div className='flex flex-col items-center'>
@@ -99,7 +99,7 @@ const OTPForm = () => {
                         </h1>
                         
                         <p className='text-muted-foreground text-center max-w-sm'>
-                            We've sent a code to <span className='font-semibold text-foreground'>{email}</span>
+                            {"We've"} sent a code to <span className='font-semibold text-foreground'>{email}</span>
                         </p>
                     </div>
 

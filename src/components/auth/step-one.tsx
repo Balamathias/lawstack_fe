@@ -45,7 +45,7 @@ const StepOne = () => {
         <div className='w-full flex items-center justify-center min-h-[80vh] py-10'>
                 {isPending && (<LoadingOverlay />)}
                 
-                <div className="w-full max-w-[540px] px-6">
+                <div className="w-full max-w-[540px] px-2 md:px-6">
                         <form 
                                 className='w-full flex flex-col gap-y-8 rounded-2xl border border-border/40 bg-card/50 backdrop-blur-sm p-8 shadow-xl'
                                 onSubmit={handleSubmit}
