@@ -46,7 +46,7 @@ const CourseDetail = ({ promisedCourse, searchParams }: Props) => {
       <Card className="border-secondary/40 bg-card/50 backdrop-blur-sm overflow-hidden border shadow-lg relative">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-20 md:w-64 h-64 bg-gradient-to-br from-primary/5 to-primary/10 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-16 md:w-48 h-48 bg-gradient-to-tr from-primary/10 to-primary/5 rounded-full -translate-x-1/3 translate-y-1/3 blur-2xl"></div>
+        <div className="absolute bottom-0 left-0 w-10 md:w-48 h-48 bg-gradient-to-tr from-primary/10 to-primary/5 rounded-full -translate-x-1/3 translate-y-1/3 blur-2xl"></div>
         <div className="absolute top-1/2 left-1/4 w-8 md:w-24 h-24 bg-blue-500/5 rounded-full blur-xl"></div>
         
         <CardHeader className="pb-3 relative z-10">
