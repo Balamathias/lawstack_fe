@@ -1,6 +1,7 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { QUERY_KEYS } from './query-keys';
 import * as server from '../server/subscriptions';
+import { Subscription } from '@/@types/db';
 
 export const usePlans = () =>
   useQuery({
@@ -30,10 +31,7 @@ export const useSubscription = (id: string) =>
 export const useCreateSubscription = () =>
   useMutation({
     mutationKey: [QUERY_KEYS.create_subscription],
-    mutationFn: (payload: { 
-      plan: string; 
-      coupon_code?: string;
-    }) => server.createSubscription(payload),
+    mutationFn: (payload: Partial<Subscription>) => server.createSubscription(payload),
   });
 
 export const usePaystackInitialize = () =>
