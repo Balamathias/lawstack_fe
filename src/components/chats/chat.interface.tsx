@@ -27,6 +27,8 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 
+const LOCALSTORAGE_MODEL_KEY = 'lawstack-selected-ai-model';
+
 interface Props {
   chatId?: string;
   initialMessages?: Message[];
@@ -152,6 +154,34 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
       }
     }
   }, [chat]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const savedModelId = localStorage.getItem(LOCALSTORAGE_MODEL_KEY);
+        if (savedModelId) {
+          const savedModel = AI_MODELS.find(model => model.id === savedModelId);
+          if (savedModel) {
+            setSelectedModel(savedModel);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading AI model from localStorage:', error);
+      }
+    }
+  }, []);
+
+  const updateSelectedModel = (model: typeof selectedModel) => {
+    setSelectedModel(model);
+
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(LOCALSTORAGE_MODEL_KEY, model.id);
+      } catch (error) {
+        console.error('Error saving AI model to localStorage:', error);
+      }
+    }
+  };
 
   const handleSendMessage = async () => {
     if (inputValue.trim() === '') return;
@@ -725,7 +755,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
                 "flex items-start gap-3 px-3.5 py-3 rounded-lg m-1 cursor-pointer hover:bg-secondary/70 transition-all relative group",
                 selectedModel.id === model.id ? "bg-secondary/80 shadow-sm" : "bg-transparent"
               )}
-              onClick={() => setSelectedModel(model)}
+              onClick={() => updateSelectedModel(model)}
               role="button"
               tabIndex={0}
               aria-label={`Select ${model.name} model`}
@@ -778,7 +808,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
               size="sm" 
               className="h-7 text-xs gap-1 hover:bg-secondary/70"
               title="Reset to default model"
-              onClick={() => setSelectedModel(AI_MODELS[1])}
+              onClick={() => updateSelectedModel(AI_MODELS[1])}
             >
               <RotateCw className="h-3 w-3" />
               Reset
