@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Send, Paperclip, MoreVertical, UserCircle, Loader2, LucideScale, Sparkles, Check, Clipboard, X, File, Image as ImageIcon, MessageCircle, FileText, BookOpen, ExternalLink, Settings, Shield, Command, Zap, BadgeInfo, RotateCw, ChevronDown, HelpCircle, Share2, RefreshCw, ThumbsUp, ThumbsDown, Copy } from 'lucide-react';
 import { Message, User } from '@/@types/db';
 import { useSendMessage } from '@/services/client/chat';
@@ -72,9 +72,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const [messageGroups, setMessageGroups] = useState<Record<string, Partial<Message>[]>>({});
   const [copyState, setCopyState] = useState<Record<string, boolean>>({});
-  const [suggestedFollowUps, setSuggestedFollowUps] = useState<string[]>([]);
   const [isExpanded, setIsExpanded] = useState<Record<string, boolean>>({});
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [fileDialogOpen, setFileDialogOpen] = useState(false);
@@ -120,22 +118,25 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
   useEffect(() => {
     const container = messagesContainerRef.current;
     if (!container) return;
-
+    let ticking = false;
     const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
-
-      const scrollingUp = scrollTop < lastScrollTop.current;
-      lastScrollTop.current = scrollTop;
-
-      if (isNearBottom && !scrollingUp && !shouldAutoScroll) {
-        setShouldAutoScroll(true);
-      } else if (!isNearBottom && shouldAutoScroll || scrollingUp) {
-        setShouldAutoScroll(false);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const { scrollTop, scrollHeight, clientHeight } = container;
+          const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+          const scrollingUp = scrollTop < lastScrollTop.current;
+          lastScrollTop.current = scrollTop;
+          if (isNearBottom && !scrollingUp && !shouldAutoScroll) {
+            setShouldAutoScroll(true);
+          } else if ((!isNearBottom && shouldAutoScroll) || scrollingUp) {
+            setShouldAutoScroll(false);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
-
-    container.addEventListener('scroll', handleScroll);
+    container.addEventListener('scroll', handleScroll, { passive: true });
     return () => container.removeEventListener('scroll', handleScroll);
   }, [shouldAutoScroll]);
 
@@ -344,40 +345,36 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
   };
 
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
+    if (!textareaRef.current) return;
+    let raf: number;
+    const resize = () => {
+      textareaRef.current!.style.height = 'auto';
+      textareaRef.current!.style.height = `${textareaRef.current!.scrollHeight}px`;
+    };
+    raf = requestAnimationFrame(resize);
+    return () => cancelAnimationFrame(raf);
   }, [inputValue]);
 
-  useEffect(() => {
+  const messageGroups = useMemo(() => {
     const groups: Record<string, Partial<Message>[]> = {};
-
     messages.forEach((message) => {
       if (!message.created_at) return;
-
       try {
         const messageDate = new Date(message.created_at);
-
         if (isNaN(messageDate.getTime())) return;
-
         const dateKey = messageDate.toLocaleDateString();
-        if (!groups[dateKey]) {
-          groups[dateKey] = [];
-        }
+        if (!groups[dateKey]) groups[dateKey] = [];
         groups[dateKey].push(message);
       } catch (e) {
         console.error('Date parsing error:', e);
       }
     });
-
-    setMessageGroups(groups);
+    return groups;
   }, [messages]);
 
-  useEffect(() => {
+  const suggestedFollowUpsMemo = useMemo(() => {
     const lastAiMessage = messages.findLast((m) => m.sender === 'ai');
-    if (!lastAiMessage || streamingMessageId) return;
-
+    if (!lastAiMessage || streamingMessageId) return [];
     const generateSuggestions = (content: string) => {
       if (content.includes('legal precedent') || content.includes('case law')) {
         return ['Can you cite specific cases?', 'How does this apply to my situation?'];
@@ -389,8 +386,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
         return ['Can you explain that in simpler terms?', 'What should be my next steps?'];
       }
     };
-
-    setSuggestedFollowUps(generateSuggestions(lastAiMessage.content || ''));
+    return generateSuggestions(lastAiMessage.content || '');
   }, [messages, streamingMessageId]);
 
   const handleCopy = (id: string, content: string) => {
@@ -505,7 +501,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
     return undefined;
   };
 
-  const AnimatedMessage = ({ message, index }: { message: Partial<Message>; index: number }) => {
+  const AnimatedMessage = useCallback(({ message, index }: { message: Partial<Message>; index: number }) => {
     const isStreaming = streamingMessageId === message.id && message.sender === 'ai';
     const isHistorical = message.id ? historicalMessages.has(message.id.toString()) : false;
     const precedingUserMessageId = message.sender === 'ai' ? findPrecedingUserMessageId(index) : undefined;
@@ -630,7 +626,15 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
         </div>
       </div>
     );
-  };
+  }, [
+    streamingMessageId,
+    historicalMessages,
+    copyState,
+    feedbackState,
+    isRetrying,
+    isLoading,
+    selectedModel,
+  ]);
 
   const renderAttachments = (attachments: any[]) => {
     if (!attachments || attachments.length === 0) return null;
@@ -707,7 +711,6 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
       <div className="flex items-center justify-between p-2 sm:p-4 bg-background/70 backdrop-blur-sm z-10">
         <div className="flex items-center space-x-2">
           <Logo />
-          <h2 className="text-xl font-muted-foreground hidden sm:block">AI</h2>
         </div>
         <div className="flex items-center gap-3">
           <Popover>
@@ -908,13 +911,13 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
               </div>
             ))}
 
-            {suggestedFollowUps.length > 0 &&
+            {suggestedFollowUpsMemo.length > 0 &&
               !isLoading &&
               messages[messages.length - 1]?.sender === 'ai' && (
                 <div className="pl-10 mb-6 animate-fade-in hidden">
                   <div className="text-xs text-muted-foreground mb-2">Suggested follow-ups:</div>
                   <div className="flex flex-wrap gap-2">
-                    {suggestedFollowUps.map((suggestion, i) => (
+                    {suggestedFollowUpsMemo.map((suggestion, i) => (
                       <button
                         key={i}
                         className="text-sm bg-secondary/40 hover:bg-secondary/60 px-3 py-1.5 rounded-full transition-colors"
@@ -995,7 +998,9 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
+                // Prevent "Enter" from sending on mobile devices
+                const isMobile = typeof window !== "undefined" && /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+                if (e.key === 'Enter' && !e.shiftKey && !isMobile) {
                   e.preventDefault();
                   if (selectedFiles.length > 0) {
                     handleSendWithFiles();

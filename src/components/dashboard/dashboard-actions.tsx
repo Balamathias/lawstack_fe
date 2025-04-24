@@ -41,7 +41,7 @@ const actionItems = [
     delay: 0.2,
   },
   {
-    title: 'Smart Assist',
+    title: 'Smart Assistant',
     description: 'Chat with LawStack AI for personalized help.',
     icon: Sparkles,
     href: '/dashboard/chat',
