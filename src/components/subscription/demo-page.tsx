@@ -53,7 +53,7 @@ export default function SubscriptionDemoPage() {
                 name: 'LawStack Bronze',
                 price: 1000,
                 duration: 'monthly',
-              },
+              } as any,
               status: 'active',
               start_date: new Date().toISOString(),
               end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),

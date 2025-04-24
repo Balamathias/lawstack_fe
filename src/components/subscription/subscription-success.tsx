@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { CheckCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, Loader2, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useActivateSubscription } from '@/services/client/subscriptions';
 import { toast } from 'sonner';

@@ -218,7 +218,7 @@ const SubscriptionModal = ({
   return (
     <DynamicModal
       open={isOpen}
-      setOpen={(value) => {
+      setOpen={(value: any) => {
         if (typeof value === 'function') {
           setIsOpen(value(isOpen));
         } else {
@@ -295,7 +295,7 @@ const SubscriptionModal = ({
                   )}
 
                   <motion.div
-                    variants={isPlanSelected ? pulseAnimation : {}}
+                    variants={(isPlanSelected ? pulseAnimation : {}) as any}
                     animate={isPlanSelected ? "animate" : "initial"}
                     className={cn(
                       "h-full rounded-xl overflow-hidden backdrop-blur-sm transition-all duration-300 border p-5 flex flex-col",

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Paperclip, MoreVertical, UserCircle, Loader2, LucideScale, Sparkles, Check, Clipboard, X, File, Image as ImageIcon, MessageCircle, FileText, BookOpen, ExternalLink, Settings, Shield, Command, Zap, BadgeInfo, RotateCw, ChevronDown, HelpCircle } from 'lucide-react';
+import { Send, Paperclip, MoreVertical, UserCircle, Loader2, LucideScale, Sparkles, Check, Clipboard, X, File, Image as ImageIcon, MessageCircle, FileText, BookOpen, ExternalLink, Settings, Shield, Command, Zap, BadgeInfo, RotateCw, ChevronDown, HelpCircle, Share2, RefreshCw, ThumbsUp, ThumbsDown, Copy } from 'lucide-react';
 import { Message, User } from '@/@types/db';
 import { useSendMessage } from '@/services/client/chat';
 import MarkdownPreview from '../markdown-preview';
@@ -20,6 +20,12 @@ import { toast } from 'sonner';
 import Logo from '../logo';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 interface Props {
   chatId?: string;
@@ -74,6 +80,12 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedModel, setSelectedModel] = useState(AI_MODELS[1]);
+  const [feedbackState, setFeedbackState] = useState<Record<string, 'up' | 'down' | null>>({});
+  const [isRetrying, setIsRetrying] = useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [messageToShare, setMessageToShare] = useState<Partial<Message> | null>(null);
+  const [shareUrl, setShareUrl] = useState<string>('');
+  const [isGeneratingShareUrl, setIsGeneratingShareUrl] = useState(false);
 
   const { mutate: sendMessage, isPending: isLoading } = useSendMessage(chatId!);
 
@@ -354,48 +366,240 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
   const handleCopy = (id: string, content: string) => {
     const plainText = convertMarkdownToPlainText(content);
     navigator.clipboard.writeText(plainText);
-
+    
     setCopyState({ ...copyState, [id]: true });
+    toast.success("Content copied to clipboard");
 
     setTimeout(() => {
       setCopyState({ ...copyState, [id]: false });
     }, 2000);
   };
 
-  const toggleExpand = (id: string) => {
-    setIsExpanded((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  const handleRetry = (precedingUserMessageId: string | undefined) => {
+    if (isRetrying || isLoading) return;
+
+    setIsRetrying(true);
+
+    const messageIndex = messages.findIndex(m => m.id === precedingUserMessageId);
+    if (messageIndex !== -1) {
+      const userMessage = messages[messageIndex];
+
+      if (userMessage.content) {
+        sendMessage(
+          { content: userMessage.content, model: selectedModel.id },
+          {
+            onSuccess: (data) => {
+              const { ai_message } = data?.data || {};
+              if (ai_message) {
+                const messageId = ai_message.id || Date.now().toString();
+                setStreamingMessageId(messageId);
+
+                const aiResponseIndex = messageIndex + 1;
+                const newMessages = [...messages];
+
+                if (aiResponseIndex < newMessages.length && newMessages[aiResponseIndex].sender === 'ai') {
+                  newMessages[aiResponseIndex] = {
+                    ...ai_message,
+                    id: messageId,
+                  };
+                } else {
+                  newMessages.push({
+                    ...ai_message,
+                    id: messageId,
+                  });
+                }
+
+                setMessages(newMessages);
+
+                const streamDuration = Math.min(ai_message.content.length * 30, 5000);
+                setTimeout(() => {
+                  setStreamingMessageId(null);
+                  setIsRetrying(false);
+                }, streamDuration);
+              } else {
+                setIsRetrying(false);
+              }
+            },
+            onError: () => {
+              setIsRetrying(false);
+              toast.error("Failed to regenerate response");
+            }
+          }
+        );
+      } else {
+        setIsRetrying(false);
+      }
+    } else {
+      setIsRetrying(false);
+    }
   };
 
-  const formatDateHeader = (dateString: string) => {
-    try {
-      const messageDate = new Date(dateString);
+  const handleFeedback = (messageId: string, type: 'up' | 'down') => {
+    if (feedbackState[messageId] === type) {
+      setFeedbackState({...feedbackState, [messageId]: null});
+      toast.success("Feedback removed");
+    } else {
+      setFeedbackState({...feedbackState, [messageId]: type});
 
-      if (isNaN(messageDate.getTime())) {
-        return 'Recent Messages';
-      }
-
-      const today = new Date();
-      const yesterday = new Date();
-      yesterday.setDate(today.getDate() - 1);
-
-      if (messageDate.toDateString() === today.toDateString()) {
-        return 'Today';
-      } else if (messageDate.toDateString() === yesterday.toDateString()) {
-        return 'Yesterday';
+      if (type === 'up') {
+        toast.success("Thanks for your positive feedback!");
       } else {
-        return messageDate.toLocaleDateString('en-US', {
-          weekday: 'long',
-          month: 'short',
-          day: 'numeric',
-        });
+        toast.success("Thanks for your feedback. We'll work to improve.");
       }
-    } catch (e) {
-      console.error('Date formatting error:', e);
-      return 'Messages';
     }
+  };
+
+  const handleShare = (message: Partial<Message>) => {
+    setMessageToShare(message);
+    setIsGeneratingShareUrl(true);
+
+    setTimeout(() => {
+      const randomId = Math.random().toString(36).substring(2, 10);
+      setShareUrl(`${process.env.NEXT_PUBLIC_APP_URL}/shared/${message.id}`);
+      setIsGeneratingShareUrl(false);
+      setShareDialogOpen(true);
+    }, 800);
+  };
+
+  const copyShareUrl = () => {
+    navigator.clipboard.writeText(shareUrl);
+    toast.success("Share link copied to clipboard");
+  };
+
+  const findPrecedingUserMessageId = (currentIndex: number): string | undefined => {
+    for (let i = currentIndex - 1; i >= 0; i--) {
+      if (messages[i].sender === 'user') {
+        return messages[i].id as string;
+      }
+    }
+    return undefined;
+  };
+
+  const AnimatedMessage = ({ message, index }: { message: Partial<Message>; index: number }) => {
+    const isStreaming = streamingMessageId === message.id && message.sender === 'ai';
+    const isHistorical = message.id ? historicalMessages.has(message.id.toString()) : false;
+    const precedingUserMessageId = message.sender === 'ai' ? findPrecedingUserMessageId(index) : undefined;
+
+    return (
+      <div
+        className={`max-w-[90%] px-4 mt-2 backdrop-blur-sm ${
+          message.sender === 'user'
+            ? 'dark:bg-secondary/40 bg-primary/95 dark:text-foreground text-white rounded-2xl rounded-tr-sm shadow-sm py-2'
+            : 'text-card-foreground rounded-2xl border-none'
+        } ${isStreaming ? 'relative overflow-hidden' : ''}`}
+      >
+        {message?.sender === 'user' ? (
+          <>
+            <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+            {message.attachments && renderAttachments(message.attachments)}
+          </>
+        ) : (
+          <div className={isStreaming ? 'animate-fade-in-text' : ''}>
+            <div>
+              <MarkdownPreview className='text-base' content={message?.content!} />
+            </div>
+            {isStreaming && (
+              <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
+            )}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between mt-1">
+          <span className="text-xs opacity-70">
+            {message?.created_at ? formatTime(message.created_at) : ''}
+          </span>
+
+          {message.sender === 'ai' && !isStreaming && (
+            <div className="flex items-center opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+              <TooltipProvider delayDuration={300}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-secondary/50 transition-all"
+                      onClick={() => handleCopy(message.id as string, message.content as string)}
+                    >
+                      {copyState[message.id as string] ? (
+                        <Check className="h-3.5 w-3.5 text-green-500" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" />
+                      )}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">
+                    {copyState[message.id as string] ? "Copied!" : "Copy response"}
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      className={`text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-secondary/50 transition-all ${isRetrying ? 'animate-spin text-primary' : ''}`}
+                      onClick={() => handleRetry(precedingUserMessageId)}
+                      disabled={isRetrying || isLoading}
+                    >
+                      <RefreshCw className="h-3.5 w-3.5" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">
+                    Regenerate response
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-secondary/50 transition-all"
+                      onClick={() => handleShare(message)}
+                    >
+                      <Share2 className="h-3.5 w-3.5" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">
+                    Share response
+                  </TooltipContent>
+                </Tooltip>
+
+                <div className="mx-0.5 border-r border-border h-4"></div>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      className={cn(
+                        "text-muted-foreground p-1.5 rounded-md hover:bg-secondary/50 transition-all",
+                        feedbackState[message.id as string] === 'up' && "text-green-500"
+                      )}
+                      onClick={() => handleFeedback(message.id as string, 'up')}
+                    >
+                      <ThumbsUp className="h-3.5 w-3.5" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">
+                    {feedbackState[message.id as string] === 'up' ? "Helpful - Click to undo" : "Mark as helpful"}
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      className={cn(
+                        "text-muted-foreground p-1.5 rounded-md hover:bg-secondary/50 transition-all",
+                        feedbackState[message.id as string] === 'down' && "text-amber-500"
+                      )}
+                      onClick={() => handleFeedback(message.id as string, 'down')}
+                    >
+                      <ThumbsDown className="h-3.5 w-3.5" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">
+                    {feedbackState[message.id as string] === 'down' ? "Not helpful - Click to undo" : "Mark as not helpful"}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   const renderAttachments = (attachments: any[]) => {
@@ -439,57 +643,33 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
     );
   };
 
-  const AnimatedMessage = ({ message }: { message: Partial<Message> }) => {
-    const isStreaming = streamingMessageId === message.id && message.sender === 'ai';
-    const isHistorical = message.id ? historicalMessages.has(message.id.toString()) : false;
+  const formatDateHeader = (dateString: string) => {
+    try {
+      const messageDate = new Date(dateString);
 
-    return (
-      <div
-        className={`max-w-[90%] px-4 mt-2 backdrop-blur-sm ${
-          message.sender === 'user'
-            ? 'dark:bg-secondary/40 bg-primary/95 dark:text-foreground text-white rounded-2xl rounded-tr-sm shadow-sm py-2'
-            : 'text-card-foreground rounded-2xl border-none'
-        } ${isStreaming ? 'relative overflow-hidden' : ''}`}
-      >
-        {message?.sender === 'user' ? (
-          <>
-            <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
-            {message.attachments && renderAttachments(message.attachments)}
-          </>
-        ) : (
-          <div className={isStreaming ? 'animate-fade-in-text' : ''}>
-            <div
-            >
-              <MarkdownPreview className='text-base' content={message?.content!} />
-            </div>
-            {isStreaming && (
-              <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
-            )}
-          </div>
-        )}
+      if (isNaN(messageDate.getTime())) {
+        return 'Recent Messages';
+      }
 
-        <div className="flex items-center justify-between mt-1">
-          <span className="text-xs opacity-70">
-            {message?.created_at ? formatTime(message.created_at) : ''}
-          </span>
+      const today = new Date();
+      const yesterday = new Date();
+      yesterday.setDate(today.getDate() - 1);
 
-          {message.sender === 'ai' && (
-            <div className="opacity-75 group-hover:opacity-100 transition-opacity flex gap-1">
-              <button
-                className="text-xs text-muted-foreground hover:text-foreground p-1 rounded-sm cursor-pointer"
-                onClick={() => handleCopy(message.id as string, message.content as string)}
-              >
-                {copyState[message.id as string] ? (
-                  <Check className="h-3 w-3 text-green-500" />
-                ) : (
-                  <Clipboard className="h-3 w-3" />
-                )}
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    );
+      if (messageDate.toDateString() === today.toDateString()) {
+        return 'Today';
+      } else if (messageDate.toDateString() === yesterday.toDateString()) {
+        return 'Yesterday';
+      } else {
+        return messageDate.toLocaleDateString('en-US', {
+          weekday: 'long',
+          month: 'short',
+          day: 'numeric',
+        });
+      }
+    } catch (e) {
+      console.error('Date formatting error:', e);
+      return 'Messages';
+    }
   };
 
   return (
@@ -654,43 +834,47 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
                   <div className="h-[1px] flex-grow bg-border"></div>
                 </div>
 
-                {groupMessages.map((message, index) => (
-                  <div
-                    key={message.id}
-                    className={`flex mb-4 ${
-                      message.sender === 'user' ? 'justify-end' : 'justify-start'
-                    } ${
-                      index === groupMessages.length - 1 && message.sender === 'ai'
-                        ? 'animate-slide-in-up'
-                        : index === 0
-                        ? 'animate-slide-in-up'
-                        : 'animate-fade-in'
-                    }`}
-                  >
-                    {message.sender === 'ai' && (
-                      <div className="flex-shrink-0 mr-2 mt-2">
-                        <div className="bg-primary/10 p-1 rounded-full backdrop-blur-sm shadow-sm">
-                          <LucideScale size={18} className="text-primary" />
+                {groupMessages.map((message, index) => {
+                  const globalIndex = messages.findIndex(m => m.id === message.id);
+
+                  return (
+                    <div
+                      key={message.id}
+                      className={`flex mb-4 ${
+                        message.sender === 'user' ? 'justify-end' : 'justify-start'
+                      } ${
+                        index === groupMessages.length - 1 && message.sender === 'ai'
+                          ? 'animate-slide-in-up'
+                          : index === 0
+                          ? 'animate-slide-in-up'
+                          : 'animate-fade-in'
+                      } group`}
+                    >
+                      {message.sender === 'ai' && (
+                        <div className="flex-shrink-0 mr-2 mt-2">
+                          <div className="bg-primary/10 p-1 rounded-full backdrop-blur-sm shadow-sm">
+                            <LucideScale size={18} className="text-primary" />
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    <AnimatedMessage message={message} />
+                      <AnimatedMessage message={message} index={globalIndex} />
 
-                    {message.sender === 'user' && (
-                      <div className="flex-shrink-0 ml-2 mt-2">
-                        {user?.avatar ? (
-                          <Avatar>
-                            <AvatarImage src={user?.avatar} alt={user?.username!} />
-                            <AvatarFallback>{user?.username?.[0].toUpperCase()!}</AvatarFallback>
-                          </Avatar>
-                        ) : (
-                          <UserCircle size={22} className="text-primary bg-background rounded-full" />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                      {message.sender === 'user' && (
+                        <div className="flex-shrink-0 ml-2 mt-2">
+                          {user?.avatar ? (
+                            <Avatar>
+                              <AvatarImage src={user?.avatar} alt={user?.username!} />
+                              <AvatarFallback>{user?.username?.[0].toUpperCase()!}</AvatarFallback>
+                            </Avatar>
+                          ) : (
+                            <UserCircle size={22} className="text-primary bg-background rounded-full" />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             ))}
 
@@ -905,6 +1089,54 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
               <p className="text-xs text-center mt-1 text-muted-foreground">{uploadProgress}% Uploaded</p>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogTitle>Share Response</DialogTitle>
+          
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Share this AI response with others via a link. The link will provide access to this response only.
+            </p>
+            
+            {isGeneratingShareUrl ? (
+              <div className="flex flex-col items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                <p className="text-sm text-muted-foreground mt-4">Generating shareable link...</p>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center space-x-2">
+                  <Input 
+                    value={shareUrl} 
+                    readOnly 
+                    className="flex-1"
+                  />
+                  <Button size="sm" onClick={copyShareUrl}>
+                    <Copy className="h-4 w-4 mr-1" />
+                    Copy
+                  </Button>
+                </div>
+                
+                <div className="flex items-center space-x-2 pt-2">
+                  <Button variant="outline" className="w-full" onClick={() => setShareDialogOpen(false)}>
+                    Close
+                  </Button>
+                  <Button 
+                    className="w-full" 
+                    onClick={() => {
+                      window.open(shareUrl, "_blank");
+                    }}
+                  >
+                    <ExternalLink className="h-4 w-4 mr-1" />
+                    Open
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </div>
