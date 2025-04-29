@@ -82,7 +82,7 @@ const LoginForm = () => {
     <div className="flex items-center justify-center w-full">
         <Form {...form}>
             {isPending && (<LoadingOverlay />)}
-            <div className='flex flex-col items-center justify-center gap-y-6 md:p-8 p-2 backdrop-blur-sm border border-border rounded-xl w-full max-w-[500px] shadow-lg bg-card/70 relative overflow-hidden'>
+            <div className='flex flex-col items-center justify-center gap-y-6 md:p-8 p-4 backdrop-blur-sm border border-border rounded-xl w-full max-w-[500px] shadow-lg bg-card/70 relative overflow-hidden'>
                 <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
                 <div className="absolute top-0 left-0 w-32 h-32 bg-primary/10 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl" />
                 <div className="absolute bottom-0 right-0 w-32 h-32 bg-primary/10 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl" />

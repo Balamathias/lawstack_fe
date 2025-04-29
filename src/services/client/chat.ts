@@ -21,6 +21,7 @@ export const useCreateChat = () => {
         mutationKey: ['create-chat'],
         mutationFn: async (data: Record<string, any>) => {
             const res = await axios.post(`${API_URL}/chats/`, data, {
+            // const res = await axios.post(`${API_URL}/agent/chats/`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -60,6 +61,7 @@ export const useSendMessage = (chat_id: string) => {
                 throw new Error('Authorization token is missing.');
             }
             const res = await axios.post(`${API_URL}/chats/${chat_id}/send-and-respond/`, data, {
+            // const res = await axios.post(`${API_URL}/agent/chats/${chat_id}/message/`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

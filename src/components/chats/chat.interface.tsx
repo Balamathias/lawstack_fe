@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { Send, Paperclip, MoreVertical, UserCircle, Loader2, LucideScale, Sparkles, Check, Clipboard, X, File, Image as ImageIcon, MessageCircle, FileText, BookOpen, ExternalLink, Settings, Shield, Command, Zap, BadgeInfo, RotateCw, ChevronDown, HelpCircle, Share2, RefreshCw, ThumbsUp, ThumbsDown, Copy } from 'lucide-react';
-import { Message, User } from '@/@types/db';
+import { Send, Paperclip, MoreVertical, UserCircle, Loader2, LucideScale, Sparkles, Check, Clipboard, X, File, Image as ImageIcon, MessageCircle, FileText, BookOpen, ExternalLink, Settings, Shield, Command, Zap, BadgeInfo, RotateCw, ChevronDown, HelpCircle, Share2, RefreshCw, ThumbsUp, ThumbsDown, Copy, Trash2, Plus } from 'lucide-react';
+import { Message, MessageAttachment, User } from '@/@types/db';
 import { useSendMessage } from '@/services/client/chat';
 import MarkdownPreview from '../markdown-preview';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -26,6 +26,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { supabase } from '@/lib/supabase';
+import { v4 as uuidv4 } from 'uuid';
 
 const LOCALSTORAGE_MODEL_KEY = 'lawstack-selected-ai-model';
 
@@ -36,6 +38,19 @@ interface Props {
   user?: User;
   chat?: any; // Assuming chat is passed as a prop
   handleTitleChange?: (title: string) => void; // Assuming handleTitleChange is passed as a prop
+}
+
+// Interface for uploaded file structure
+interface UploadedFile {
+  id: string;
+  file: File;
+  previewUrl: string;
+  progress: number;
+  status: 'uploading' | 'complete' | 'error';
+  url?: string;
+  type: string;
+  name: string;
+  size: number;
 }
 
 // Available AI models
@@ -86,6 +101,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
   const [messageToShare, setMessageToShare] = useState<Partial<Message> | null>(null);
   const [shareUrl, setShareUrl] = useState<string>('');
   const [isGeneratingShareUrl, setIsGeneratingShareUrl] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
   const { mutate: sendMessage, isPending: isLoading } = useSendMessage(chatId!);
 
@@ -233,7 +249,62 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Function to upload file to Supabase storage
+  const uploadFileToSupabase = async (file: File): Promise<UploadedFile> => {
+    const fileId = uuidv4();
+    const fileName = file.name;
+    const fileType = file.type;
+    const filePath = `${user?.id || 'anonymous'}/${chatId || 'temp'}/${fileId}-${fileName}`;
+    
+    // Create an uploadedFile object with initial state
+    const uploadedFile: UploadedFile = {
+      id: fileId,
+      file,
+      previewUrl: URL.createObjectURL(file),
+      progress: 0,
+      status: 'uploading',
+      type: fileType,
+      name: fileName,
+      size: file.size
+    };
+    
+    try {
+      // Upload file to Supabase storage bucket 'userdata'
+      const { data, error } = await supabase.storage
+        .from('userdata')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+      
+      if (error) {
+        console.error('Error uploading file:', error);
+        throw error;
+      }
+      
+      // Get public URL of the uploaded file
+      const { data: { publicUrl } } = supabase.storage
+        .from('userdata')
+        .getPublicUrl(filePath);
+      
+      // Update the uploadedFile with the URL and status
+      return {
+        ...uploadedFile,
+        url: publicUrl,
+        status: 'complete',
+        progress: 100
+      };
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      return {
+        ...uploadedFile,
+        status: 'error',
+        progress: 0
+      };
+    }
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
@@ -245,58 +316,112 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
       return true;
     });
 
-    setSelectedFiles((prev) => [...prev, ...validFiles]);
-    setFileDialogOpen(true);
+    if (validFiles.length === 0) return;
 
+    // Create temporary file objects with preview URLs
+    const newUploadedFiles: UploadedFile[] = validFiles.map(file => ({
+      id: uuidv4(),
+      file,
+      previewUrl: URL.createObjectURL(file),
+      progress: 0,
+      status: 'uploading',
+      type: file.type,
+      name: file.name,
+      size: file.size
+    }));
+    
+    // Add the new files to the state
+    setUploadedFiles(prev => [...prev, ...newUploadedFiles]);
+    
+    // Show file dialog
+    setFileDialogOpen(true);
+    
+    // Clear the input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-  };
-
-  const removeFile = (index: number) => {
-    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleSendWithFiles = async () => {
-    if (selectedFiles.length === 0 && inputValue.trim() === '') return;
-    setIsUploading(true);
-
-    const formData = new FormData();
-    formData.append('content', inputValue.trim());
-    formData.append('model', selectedModel.id);
-
-    selectedFiles.forEach((file) => {
-      formData.append('files', file);
+    
+    // Upload files in parallel
+    const uploadPromises = newUploadedFiles.map(async (fileObj) => {
+      const uploadedFile = await uploadFileToSupabase(fileObj.file);
+      
+      // Update the state with the uploaded file information
+      setUploadedFiles(prev => 
+        prev.map(f => f.id === fileObj.id ? uploadedFile : f)
+      );
+      
+      return uploadedFile;
     });
+    
+    try {
+      await Promise.all(uploadPromises);
+      toast.success(`${validFiles.length} file${validFiles.length > 1 ? 's' : ''} uploaded successfully`);
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      toast.error('Some files failed to upload. Please try again.');
+    }
+  };
 
-    const userMessage: Partial<Message> = {
-      id: Date.now().toString(),
+  const removeUploadedFile = (id: string) => {
+    setUploadedFiles(prev => {
+      const fileToRemove = prev.find(f => f.id === id);
+      if (fileToRemove?.previewUrl) {
+        URL.revokeObjectURL(fileToRemove.previewUrl);
+      }
+      return prev.filter(f => f.id !== id);
+    });
+  };
+
+  // Modify handleSendWithFiles to automatically clear the files after sending
+  const handleSendWithFiles = async () => {
+    if (uploadedFiles.length === 0 && inputValue.trim() === '') return;
+    
+    const failedUploads = uploadedFiles.filter(file => file.status === 'error');
+    if (failedUploads.length > 0) {
+      toast.error('Please remove failed uploads before sending');
+      return;
+    }
+    
+    const pendingUploads = uploadedFiles.filter(file => file.status === 'uploading');
+    if (pendingUploads.length > 0) {
+      toast.info('Please wait for all uploads to complete');
+      return;
+    }
+    
+    // Create file URLs array for the backend
+    const fileUrls = uploadedFiles.map(file => file.url).filter(Boolean) as string[];
+    
+    const userMessage: Partial<Omit<Message, 'attachments'> & { attachments?: Partial<MessageAttachment>[]}> = {
+      id: Date . now().toString(),
       content: inputValue,
       sender: 'user',
       created_at: new Date().toISOString(),
+      attachments: uploadedFiles.map(file => ({
+        url: file.url,
+        filename: file.name,
+        file_type: file.type,
+        size: file.size
+      }))
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages((prev: any) => [...prev, userMessage]);
     setInputValue('');
     setShouldAutoScroll(true);
-    setFileDialogOpen(false);
-
+    
     try {
       sendMessage(
-        {
-          formData,
-          onUploadProgress: (progressEvent: any) => {
-            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-            setUploadProgress(percentCompleted);
-          },
+        { 
+          content: inputValue.trim(), 
+          model: selectedModel.id,
+          file_urls: fileUrls
         },
         {
           onSuccess: (data) => {
             const { user_message, ai_message } = data?.data || {};
 
             if (user_message) {
-              setMessages((prev) =>
-                prev.map((msg) => (msg.id === userMessage.id ? user_message : msg))
+              setMessages(prev =>
+                prev.map(msg => (msg.id === userMessage.id ? user_message : msg))
               );
             }
 
@@ -304,7 +429,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
               const messageId = ai_message.id || Date.now().toString();
               setStreamingMessageId(messageId);
 
-              setMessages((prev) => [
+              setMessages(prev => [
                 ...prev,
                 {
                   ...ai_message,
@@ -318,22 +443,27 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
               }, streamDuration);
             }
 
-            setSelectedFiles([]);
-            setUploadProgress(0);
-            setIsUploading(false);
+            // Clear uploaded files after successful send
+            clearUploadedFiles();
           },
           onError: () => {
-            setUploadProgress(0);
-            setIsUploading(false);
-            toast.error('Failed to upload files. Please try again.');
+            toast.error('Failed to send message. Please try again.');
           },
         }
       );
     } catch (error) {
       console.error('Error sending message with files:', error);
-      setIsUploading(false);
       toast.error('Error sending message with files');
     }
+  };
+
+  // Add a function to clear uploaded files
+  const clearUploadedFiles = () => {
+    uploadedFiles.forEach(file => {
+      if (file.previewUrl) URL.revokeObjectURL(file.previewUrl);
+    });
+    setUploadedFiles([]);
+    setFileDialogOpen(false);
   };
 
   const formatTime = (date: string) => {
@@ -636,6 +766,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
     selectedModel,
   ]);
 
+  // Modified renderAttachments to handle our new attachment format
   const renderAttachments = (attachments: any[]) => {
     if (!attachments || attachments.length === 0) return null;
 
@@ -645,16 +776,16 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
           const isImage = attachment.file_type?.startsWith('image/');
 
           return (
-            <div key={index} className="flex items-center gap-2 bg-background/50 p-2 rounded-md border">
+            <div key={index} className="flex items-center gap-2 p-2 rounded-md border border-border/40 backdrop-blur-sm">
               {isImage ? (
                 <div className="relative">
                   <a href={attachment.url} target="_blank" rel="noopener noreferrer" className="block">
                     <Image
                       src={attachment.url}
-                      alt={attachment.filename}
+                      alt={attachment.filename || 'Image'}
                       width={200}
                       height={120}
-                      className="rounded-md object-cover max-h-40"
+                      className="rounded-xl object-cover max-h-44"
                       style={{ objectFit: 'contain' }}
                     />
                   </a>
@@ -667,7 +798,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
                   className="flex items-center gap-2 hover:text-primary transition-colors"
                 >
                   <File className="h-5 w-5" />
-                  <span className="text-sm truncate max-w-[200px]">{attachment.filename}</span>
+                  <span className="text-sm truncate max-w-[200px]">{attachment.filename || 'File'}</span>
                 </a>
               )}
             </div>
@@ -797,6 +928,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
               </div>
             </div>
           ))}
+
               </div>
               
               <div className="border-t border-border/30 px-4 py-2.5 bg-muted/30">
@@ -971,7 +1103,111 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
         }}
       />
 
+      {/* Improved chat input area with integrated file upload UI */}
       <div className="p-3 bg-card/70 backdrop-blur-md border border-border/50 shadow-[0_-1px_10px_rgba(0,0,0,0.03)] rounded-xl mt-auto sticky bottom-0">
+        {/* File preview area - only shown when files are selected */}
+        {uploadedFiles.length > 0 && (
+          <div className="mb-2 py-1.5 px-2 rounded-lg bg-background/50 border border-border/30 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-1">
+              <h4 className="text-xs font-medium flex items-center">
+                <Paperclip className="h-3 w-3 mr-1 text-primary/70" />
+                <span className="text-primary/90">Files ({uploadedFiles.length})</span>
+              </h4>
+              <button
+                onClick={clearUploadedFiles}
+                className="text-xs text-muted-foreground hover:text-destructive transition-colors"
+              >
+                Clear
+              </button>
+            </div>
+            
+            <div className="flex flex-wrap gap-1.5 max-h-[96px] overflow-y-auto pb-1 scrollbar-thin">
+              {uploadedFiles.map((file) => {
+                const isImage = file.type.startsWith('image/');
+                
+                return (
+                  <div 
+                    key={file.id}
+                    className={cn(
+                      "relative group rounded-md border overflow-hidden",
+                      "bg-card/80 shadow-sm transition-all flex-shrink-0",
+                      file.status === 'error' ? "border-red-300/50" : "border-border/50"
+                    )}
+                    style={{ width: isImage ? '48px' : '120px', height: isImage ? '48px' : '32px' }}
+                  >
+                    {isImage ? (
+                      <div className="h-full w-full relative">
+                        <Image
+                          src={file.previewUrl}
+                          alt={file.name}
+                          fill
+                          className="object-cover"
+                        />
+                        
+                        {file.status === 'uploading' && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-background/60">
+                            <div className="h-4 w-4 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="h-full w-full flex items-center px-2 py-1">
+                        <File className="h-3 w-3 text-primary/70 flex-shrink-0 mr-1.5" />
+                        <span className="text-xs truncate max-w-[75px]">{file.name}</span>
+                        
+                        {file.status === 'uploading' && (
+                          <div className="ml-auto">
+                            <div className="h-3 w-3 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Status indicators */}
+                    {file.status === 'complete' && (
+                      <div className="absolute top-0.5 right-0.5 bg-green-500 rounded-full w-3 h-3 flex items-center justify-center">
+                        <Check className="h-2 w-2 text-white" />
+                      </div>
+                    )}
+                    
+                    {file.status === 'error' && (
+                      <div className="absolute top-0.5 right-0.5 bg-red-500 rounded-full w-3 h-3 flex items-center justify-center">
+                        <X className="h-2 w-2 text-white" />
+                      </div>
+                    )}
+
+                    {/* Remove button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeUploadedFile(file.id);
+                      }}
+                      className={cn(
+                        "absolute inset-0 bg-background/60 flex items-center justify-center",
+                        "opacity-0 group-hover:opacity-100 transition-opacity"
+                      )}
+                      disabled={file.status === 'uploading'}
+                    >
+                      <div className="bg-background/80 rounded-full p-1">
+                        <X className="h-2.5 w-2.5 text-foreground" />
+                      </div>
+                    </button>
+                  </div>
+                );
+              })}
+              
+              {/* Add more files button - more compact */}
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="flex items-center justify-center h-8 w-8 rounded-md border border-dashed border-border hover:border-primary/50 bg-background/50 transition-colors flex-shrink-0"
+              >
+                <Plus className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Input area */}
         <div className="flex items-end space-x-2 backdrop-blur-sm rounded-xl p-1.5 shadow-inner bg-transparent">
           <input
             type="file"
@@ -982,27 +1218,34 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
             accept="image/*,.pdf,.doc,.docx,.txt"
           />
 
-          <button
-            className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary/50 rounded-full transition-all"
-            title="Attach file"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Paperclip size={18} />
-          </button>
+          <TooltipProvider delayDuration={300}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary/50 rounded-full transition-all"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Paperclip size={18} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-xs">
+                Attach files
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
           <div className="flex-1 relative">
             <textarea
               ref={textareaRef}
               className="w-full py-2 px-3 bg-transparent border-none focus:ring-0 resize-none outline-none text-foreground min-h-[40px] max-h-32"
-              placeholder={selectedFiles.length > 0 ? 'Add a message (optional)...' : 'Type your legal query...'}
+              placeholder={uploadedFiles.length > 0 ? 'Add a message (optional)...' : 'Type your legal query...'}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => {
-                // Prevent "Enter" from sending on mobile devices
                 const isMobile = typeof window !== "undefined" && /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
                 if (e.key === 'Enter' && !e.shiftKey && !isMobile) {
                   e.preventDefault();
-                  if (selectedFiles.length > 0) {
+                  if (uploadedFiles.length > 0) {
                     handleSendWithFiles();
                   } else {
                     handleSendMessage();
@@ -1015,40 +1258,21 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
 
           <button
             className={`p-2.5 rounded-full transition-all flex items-center justify-center ${
-              (inputValue.trim() === '' && selectedFiles.length === 0) || isLoading || isUploading
+              (inputValue.trim() === '' && uploadedFiles.length === 0) || isLoading
                 ? 'bg-secondary/70 text-muted-foreground cursor-not-allowed'
                 : 'bg-primary/90 text-primary-foreground hover:bg-primary shadow-sm'
             }`}
-            onClick={selectedFiles.length > 0 ? handleSendWithFiles : handleSendMessage}
-            disabled={(inputValue.trim() === '' && selectedFiles.length === 0) || isLoading || isUploading}
+            onClick={uploadedFiles.length > 0 ? handleSendWithFiles : handleSendMessage}
+            disabled={(inputValue.trim() === '' && uploadedFiles.length === 0) || isLoading}
             title="Send message"
           >
-            {isUploading ? (
+            {isLoading ? (
               <Loader2 size={16} className="animate-spin" />
             ) : (
               <Send size={16} className={inputValue.trim() === '' ? '' : 'mr-[1px] mb-[1px]'} />
             )}
           </button>
         </div>
-
-        {selectedFiles.length > 0 && (
-          <div className="flex items-center justify-between mt-2 px-2">
-            <button
-              className="text-xs text-primary flex items-center hover:underline"
-              onClick={() => setFileDialogOpen(true)}
-            >
-              <Paperclip size={12} className="mr-1" />
-              {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''} selected
-            </button>
-
-            <button
-              className="text-xs text-muted-foreground hover:text-destructive"
-              onClick={() => setSelectedFiles([])}
-            >
-              Clear
-            </button>
-          </div>
-        )}
 
         <div className="flex items-center justify-center mt-2">
           <div className="text-xs text-muted-foreground/70 flex items-center">
@@ -1058,75 +1282,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
         </div>
       </div>
 
-      <Dialog open={fileDialogOpen} onOpenChange={setFileDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogTitle>Selected Files</DialogTitle>
-
-          <div className="max-h-[300px] overflow-y-auto py-2">
-            {selectedFiles.map((file, index) => {
-              const isImage = file.type.startsWith('image/');
-              const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-
-              return (
-                <div key={index} className="flex items-center justify-between p-2 border-b">
-                  <div className="flex items-center gap-3">
-                    {isImage ? (
-                      <div className="flex-shrink-0 h-12 w-12 rounded-md overflow-hidden relative bg-muted">
-                        <Image
-                          src={URL.createObjectURL(file)}
-                          alt={file.name}
-                          fill
-                          style={{ objectFit: 'cover' }}
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex-shrink-0 h-10 w-10 rounded-md bg-muted flex items-center justify-center">
-                        <File className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                    )}
-
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium truncate max-w-[200px]">{file.name}</p>
-                      <p className="text-xs text-muted-foreground">{fileSizeMB} MB</p>
-                    </div>
-                  </div>
-
-                  <button
-                    className="p-1 rounded-full hover:bg-secondary"
-                    onClick={() => removeFile(index)}
-                  >
-                    <X size={16} className="text-muted-foreground" />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="flex justify-between items-center mt-4">
-            <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-              Add More
-            </Button>
-            <Button onClick={handleSendWithFiles} disabled={isUploading}>
-              {isUploading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Uploading...
-                </>
-              ) : (
-                <>Send</>
-              )}
-            </Button>
-          </div>
-
-          {isUploading && (
-            <div className="mt-2">
-              <Progress value={uploadProgress} className="h-1" />
-              <p className="text-xs text-center mt-1 text-muted-foreground">{uploadProgress}% Uploaded</p>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
+      {/* Keep share dialog and remove file dialog since we've moved the UI */}
       <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogTitle>Share Response</DialogTitle>
