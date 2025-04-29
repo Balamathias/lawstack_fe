@@ -340,6 +340,8 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+
+    return toast.info('File uploads are not currently supported.')
     
     // Upload files in parallel
     const uploadPromises = newUploadedFiles.map(async (fileObj) => {
