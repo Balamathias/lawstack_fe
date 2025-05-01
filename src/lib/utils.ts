@@ -207,3 +207,12 @@ export const AIModels = {
   getModel: (model: AIModelKey) => AIModelMap[model] || AIModelMap.default,
   allModels: () => Object.keys(AIModelMap) as AIModelKey[],
 };
+
+export const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-NG', {
+        style: 'currency',
+        currency: 'NGN',
+        minimumFractionDigits: 0, // Optional: remove decimals if not needed
+        maximumFractionDigits: 0, // Optional: remove decimals if not needed
+    }).format(amount);
+};

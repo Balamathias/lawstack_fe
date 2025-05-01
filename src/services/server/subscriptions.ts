@@ -6,6 +6,7 @@ import { stackbase } from '../server.entry';
 export const getPlans = async (): Promise<StackResponse<Plan[]>> => {
     try {
         const { data } = await stackbase.get('/subscriptions/plans/');
+        console.log('Plans data:', data);
         return {
             message: data?.message,
             error: null,

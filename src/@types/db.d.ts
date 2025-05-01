@@ -232,7 +232,7 @@ export interface Plan {
   duration: string;
   paystack_plan_code?: string;
   description: string;
-  features: string[];
+  features: string;
   is_active: boolean;
   label: string;
   discount_info_text?: string;

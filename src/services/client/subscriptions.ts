@@ -6,19 +6,19 @@ import { Subscription } from '@/@types/db';
 export const usePlans = () =>
   useQuery({
     queryKey: [QUERY_KEYS.get_plans],
-    queryFn: server.getPlans,
+    queryFn: () => server.getPlans(),
   });
 
 export const useCoupons = () =>
   useQuery({
     queryKey: [QUERY_KEYS.get_coupons],
-    queryFn: server.getCoupons,
+    queryFn: () => server.getCoupons(),
   });
 
 export const useSubscriptions = () =>
   useQuery({
     queryKey: [QUERY_KEYS.get_subscriptions],
-    queryFn: server.getSubscriptions,
+    queryFn: () => server.getSubscriptions(),
   });
 
 export const useSubscription = (id: string) =>
