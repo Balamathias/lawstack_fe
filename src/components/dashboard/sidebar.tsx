@@ -16,7 +16,8 @@ import {
   ChevronRight,
   Shield,
   LucideScale,
-  ArrowRight
+  ArrowRight,
+  Crown
 } from "lucide-react"
 import Logo from '../logo'
 import { Button } from '../ui/button'
@@ -75,6 +76,11 @@ export const dashboardLinks = [
     tooltip: "Settings",
     href: "/dashboard/settings",
     icon: Settings,
+  },
+  {
+    tooltip: "Subscriptions",
+    href: "/dashboard/subscriptions",
+    icon: Crown,
   },
 ]
 
