@@ -1,3 +1,5 @@
+"use server"
+
 import { Plan, Coupon, Subscription, SubscriptionResponse, PlanResponse, CouponResponse, PaystackInitResponse } from '@/@types/db';
 import { StackResponse } from '@/@types/generics';
 import { stackbase } from '../server.entry';
@@ -6,7 +8,6 @@ import { stackbase } from '../server.entry';
 export const getPlans = async (): Promise<StackResponse<Plan[]>> => {
     try {
         const { data } = await stackbase.get('/subscriptions/plans/');
-        console.log('Plans data:', data);
         return {
             message: data?.message,
             error: null,
@@ -46,7 +47,7 @@ export const getCoupons = async (): Promise<StackResponse<Coupon[]>> => {
 // Get all subscriptions for current user
 export const getSubscriptions = async (): Promise<StackResponse<Subscription[]>> => {
     try {
-        const { data } = await stackbase.get('/subscriptions/');
+        const { data } = await stackbase.get('/subscriptions/my/');
         return {
             message: data?.message,
             error: null,
@@ -103,10 +104,10 @@ export const createSubscription = async (payload: Partial<Subscription>): Promis
     }
 };
 
-// Initialize Paystack payment for a subscription
-export const paystackInitialize = async (subscriptionId: string): Promise<StackResponse<PaystackInitResponse | null>> => {
+
+export const paystackInitialize = async ({ subscriptionId, planId }: { subscriptionId: string, planId: string }): Promise<StackResponse<PaystackInitResponse | null>> => {
     try {
-        const { data } = await stackbase.post(`/subscriptions/${subscriptionId}/paystack_initialize/`);
+        const { data } = await stackbase.post(`/subscriptions/${subscriptionId}/paystack_initialize/`, { plan_id: planId });
         return {
             message: data?.message,
             error: null,
@@ -122,6 +123,25 @@ export const paystackInitialize = async (subscriptionId: string): Promise<StackR
         };
     }
 };
+
+export const paystackInit = async (planId: string): Promise<StackResponse<PaystackInitResponse | null>> => {
+    try {
+        const { data } = await stackbase.post('/subscriptions/paystack_init/', { plan_id: planId });
+        return {
+            message: data?.message,
+            error: null,
+            data: data as PaystackInitResponse,
+            status: data?.status,
+        };
+    } catch (error: any) {
+        return {
+            message: error?.response?.data?.message || error?.response?.data?.detail || 'Paystack initialization failed',
+            error: error?.response?.data || error,
+            data: null,
+            status: error?.response?.status || 500,
+        };
+    }
+}
 
 // Activate a subscription
 export const activateSubscription = async (id: string): Promise<StackResponse<Subscription | null>> => {

@@ -2,15 +2,18 @@
 
 import { getSubscriptions } from '@/services/server/subscriptions';
 import { formatDistance, format, isPast } from 'date-fns';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plan, Subscription, SubscriptionStatus } from '@/@types/db';
+import { Plan, Subscription, SubscriptionStatus, User } from '@/@types/db';
 import StatusBadge from './StatusBadge';
 import SubscriptionCard from './SubscriptionCard';
 import FeaturesList from './FeaturesList';
 import EmptyState from './EmptyState';
 import UpgradePrompt from './UpgradePrompt';
 import { formatCurrency } from '@/lib/utils';
+import PlanModal from './plan-modal';
+import { StackResponse } from '@/@types/generics';
+import { Button } from '@/components/ui/button';
 
 type SubscriptionData = {
     data: Subscription[];
@@ -18,13 +21,15 @@ type SubscriptionData = {
     error?: string;
 };
 
-const SubscriptionComponent = ({ initialData }: { initialData?: Subscription[] }) => {
+const SubscriptionComponent = ({ initialData, getPlans, user }: { initialData?: Subscription[],  getPlans: Promise<StackResponse<Plan[]>>, user: User | null }) => {
     const [subscriptionData, setSubscriptionData] = useState<SubscriptionData>({
         data: initialData || [],
         status: initialData ? 'success' : 'loading',
     });
     const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
     const [expandedCard, setExpandedCard] = useState<string | null>(null);
+
+    const { data: plans, status: plansStatus } = use(getPlans)
 
     useEffect(() => {
         if (!initialData) {
@@ -106,7 +111,7 @@ const SubscriptionComponent = ({ initialData }: { initialData?: Subscription[] }
     }
 
     if (subscriptionData.data.length === 0) {
-        return <EmptyState />;
+        return <EmptyState plans={plans} user={user}/>;
     }
 
     return (
@@ -120,12 +125,19 @@ const SubscriptionComponent = ({ initialData }: { initialData?: Subscription[] }
                         Manage your active subscriptions and billing information
                     </p>
                 </div>
-                <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-all flex items-center gap-2 justify-center animate-fade-in">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    Upgrade Plan
-                </button>
+                <PlanModal
+                    trigger={
+                        <Button 
+                            disabled={user?.is_subscribed}
+                            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-all flex items-center gap-2 justify-center animate-fade-in">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
+                            Upgrade Plan
+                        </Button>
+                    }
+                    plans={plans}
+                />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -144,7 +156,7 @@ const SubscriptionComponent = ({ initialData }: { initialData?: Subscription[] }
                         ))}
                     </div>
 
-                    <UpgradePrompt />
+                    <UpgradePrompt user={user} />
                 </div>
 
                 <div className="lg:col-span-4">

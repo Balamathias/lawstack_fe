@@ -1,4 +1,44 @@
-const UpgradePrompt = () => {
+import { User } from "@/@types/db";
+
+interface Props {
+    user: User | null
+}
+
+const UpgradePrompt = ({ user }: Props) => {
+  const isSubscribed = user?.is_subscribed;
+
+  if (isSubscribed) {
+    return (
+      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-card/60 to-card/80 border border-green-300/20 p-6 shadow-sm animate-fade-in-delay">
+        <div className="absolute top-0 right-0">
+          <svg width="218" height="109" viewBox="0 0 218 109" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-10">
+            <circle cx="109" cy="109" r="109" fill="url(#paint0_linear_subscribed)" />
+            <defs>
+              <linearGradient id="paint0_linear_subscribed" x1="0" y1="0" x2="218" y2="218" gradientUnits="userSpaceOnUse">
+                <stop stopColor="var(--primary)" />
+                <stop offset="1" stopColor="var(--foreground)" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
+          <div className="flex items-center gap-3">
+            <svg className="h-8 w-8 text-primary animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <circle cx="12" cy="12" r="10" strokeWidth={2} stroke="currentColor" fill="#bbf7d0" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12l2 2 4-4" stroke="var(--primary)" />
+            </svg>
+            <div>
+              <h3 className="text-xl font-semibold mb-1">You're already subscribed!</h3>
+              <p className="text-muted-foreground text-sm">
+                Enjoy all the benefits of LawStack Pro. Thank you for being a valued member.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative overflow-hidden rounded-xl bg-gradient-radial from-primary/20 to-card border border-border p-6 shadow-sm animate-fade-in-delay">
       {/* Decorative elements */}

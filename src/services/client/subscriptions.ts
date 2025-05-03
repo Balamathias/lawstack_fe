@@ -37,8 +37,16 @@ export const useCreateSubscription = () =>
 export const usePaystackInitialize = () =>
   useMutation({
     mutationKey: [QUERY_KEYS.paystack_initialize],
-    mutationFn: (subscriptionId: string) => server.paystackInitialize(subscriptionId),
+    mutationFn: (data: { planId: string, subscriptionId: string }) => server.paystackInitialize(data),
   });
+
+export const usePaystackInit = () =>
+  useMutation({
+    mutationKey: [QUERY_KEYS.paystack_init],
+    mutationFn: (planId: string) => server.paystackInit(planId),
+  });
+
+
 
 export const useActivateSubscription = () =>
   useMutation({

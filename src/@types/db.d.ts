@@ -15,6 +15,8 @@ export interface User {
     joined: string
     institution: string | null,
     institution_name: string | null,
+    is_subscribed: boolean,
+    last_login: string | null,
 }
 
 export interface Question {

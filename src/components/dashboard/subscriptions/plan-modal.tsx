@@ -3,12 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { Plan, Subscription } from '@/@types/db';
 import DynamicModal from '@/components/dynamic-modal';
-import { usePlans } from '@/services/client/subscriptions';
+import { usePaystackInit, usePlans } from '@/services/client/subscriptions';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Crown, ArrowRight, Sparkles } from 'lucide-react';
+import { Check, Crown, ArrowRight, Sparkles, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn, formatCurrency } from '@/lib/utils';
+import { DialogTitle } from '@/components/ui/dialog';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface PlanModalProps {
   open?: boolean;
@@ -33,20 +35,20 @@ const PlanModal = ({
   title = "Choose Your Plan",
   showComparison = true
 }: PlanModalProps) => {
-  // Fetch plans if they weren't provided as props
-  const { data: fetchedPlansData, isLoading: isLoadingPlans } = usePlans();
+  const { data: fetchedPlansData, isPending: isLoadingPlans } = usePlans();
+  const { mutate: paystackInit, isPending: isPendingPaystackInit } = usePaystackInit();
+
+  const router = useRouter();
+
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(
     currentSubscription?.plan?.id || null
   );
   const [activeTab, setActiveTab] = useState<string>('cards');
   
-  // Determine if we're loading data
   const isLoading = propIsLoading || (isLoadingPlans && !propPlans);
   
-  // Use provided plans or fetched plans
   const plans = propPlans || fetchedPlansData?.data || [];
   
-  // Sort plans with free first, then by price
   const sortedPlans = React.useMemo(() => {
     const freePlan = plans.find(p => p.price === 0);
     const paidPlans = plans
@@ -56,12 +58,10 @@ const PlanModal = ({
     return freePlan ? [freePlan, ...paidPlans] : paidPlans;
   }, [plans]);
   
-  // Set default selected plan
   useEffect(() => {
     if (currentSubscription?.plan?.id) {
       setSelectedPlanId(currentSubscription.plan.id);
     } else if (sortedPlans.length > 0) {
-      // Default to free plan or first available plan
       const defaultPlan = sortedPlans.find(p => p.price === 0) || sortedPlans[0];
       setSelectedPlanId(defaultPlan.id);
     }
@@ -72,9 +72,52 @@ const PlanModal = ({
     if (onSelectPlan) {
       onSelectPlan(plan);
     }
+
+    if (plan.price > 0) {
+      paystackInit(plan.id, {
+        onSuccess: ({ data, error }) => {
+          if (error) {
+            toast.error(error.message);
+          } else {
+
+            const authorization_url = data?.data?.authorization_url;
+
+            if (authorization_url) {
+              const popup = window.open(
+                authorization_url,
+                'paystack_popup',
+                'width=600,height=700'
+              );
+              if (!popup) {
+                toast.error("Popup blocked! Please allow popups and try again.");
+                return;
+              }
+
+              const pollTimer = setInterval(() => {
+                if (popup.closed) {
+                  clearInterval(pollTimer);
+
+                  router.refresh()
+
+                  toast.success("Payment window closed. If you completed payment, your subscription will update shortly.");
+                  setOpen?.(false);
+                }
+              }, 500);
+            } else {
+              toast.error("Failed to initialize payment. Please try again.");
+            }
+          }
+        },
+        onError: (error) => {
+          console.error("Paystack initialization error:", error);
+          toast.error("Failed to initialize payment. Please try again.");
+        }
+      });
+    } else {
+      setOpen?.(false);
+    }
   };
   
-  // Find all unique features across plans
   const allFeatures = React.useMemo(() => {
     const featuresSet = new Set<string>();
     sortedPlans.forEach(plan => {
@@ -89,8 +132,8 @@ const PlanModal = ({
       setOpen={setOpen} 
       trigger={trigger} 
       title={
-        <div className="flex flex-col items-center space-y-2">
-          <h3 className="text-xl font-bold tracking-tight text-center">{title}</h3>
+        <DialogTitle className="flex flex-col items-center space-y-2">
+          <div className="text-xl font-bold tracking-tight text-center">{title}</div>
           <p className="text-sm text-muted-foreground text-center">
             {currentSubscription 
               ? "Upgrade your current plan for more premium features" 
@@ -117,7 +160,7 @@ const PlanModal = ({
               </Button>
             </div>
           )}
-        </div>
+        </DialogTitle>
       } 
       dialogClassName="sm:max-w-4xl"
     >
@@ -133,7 +176,7 @@ const PlanModal = ({
             <p className="text-muted-foreground mt-2">Please check back later for subscription options.</p>
           </div>
         ) : activeTab === 'cards' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-1">
             <AnimatePresence>
               {sortedPlans.map((plan) => (
                 <PlanCard
@@ -142,6 +185,8 @@ const PlanModal = ({
                   isCurrentPlan={currentSubscription?.plan?.id === plan.id}
                   isSelected={selectedPlanId === plan.id}
                   onSelect={handleSelectPlan}
+                  isPendingPaystackInit={isPendingPaystackInit}
+                  isDisabled={isPendingPaystackInit} // Disable all cards during processing
                 />
               ))}
             </AnimatePresence>
@@ -180,8 +225,14 @@ const PlanModal = ({
                           size="sm"
                           className="mt-2 px-4"
                           onClick={() => handleSelectPlan(plan)}
+                          disabled={isPendingPaystackInit} // Disable all buttons during processing
                         >
-                          {currentSubscription?.plan?.id === plan.id 
+                          {isPendingPaystackInit ? (
+                            <span className="flex items-center">
+                              <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                              Processing...
+                            </span>
+                          ) : currentSubscription?.plan?.id === plan.id 
                             ? "Current" 
                             : selectedPlanId === plan.id 
                               ? "Selected" 
@@ -225,13 +276,48 @@ const PlanCard = ({
   plan, 
   isCurrentPlan, 
   isSelected, 
-  onSelect 
+  onSelect,
+  isPendingPaystackInit,
+  isDisabled
 }: { 
   plan: Plan, 
   isCurrentPlan: boolean, 
   isSelected: boolean, 
-  onSelect: (plan: Plan) => void 
+  onSelect: (plan: Plan) => void,
+  isPendingPaystackInit: boolean,
+  isDisabled: boolean
 }) => {
+  // Random pattern for this plan card (using different patterns for visual variety)
+  const patterns = [
+    // Pattern 1: Dots grid
+    <svg key="dots" className="absolute inset-0 w-full h-full opacity-[0.03] dark:opacity-[0.02]" xmlns="http://www.w3.org/2000/svg">
+      <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+        <circle cx="5" cy="5" r="1.5" fill="currentColor" />
+      </pattern>
+      <rect width="100%" height="100%" fill="url(#dots)" />
+    </svg>,
+    
+    // Pattern 2: Diagonal lines
+    <svg key="diagonals" className="absolute inset-0 w-full h-full opacity-[0.03] dark:opacity-[0.02]" xmlns="http://www.w3.org/2000/svg">
+      <pattern id="diag" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 0,20 l 20,-20 M -5,5 l 10,-10 M 15,25 l 10,-10" stroke="currentColor" strokeWidth="1" />
+      </pattern>
+      <rect width="100%" height="100%" fill="url(#diag)" />
+    </svg>,
+    
+    // Pattern 3: Grid
+    <svg key="grid" className="absolute inset-0 w-full h-full opacity-[0.03] dark:opacity-[0.02]" xmlns="http://www.w3.org/2000/svg">
+      <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5" />
+      </pattern>
+      <rect width="100%" height="100%" fill="url(#grid)" />
+    </svg>
+  ];
+
+  // Get consistent pattern for each plan based on plan id
+  const patternIndex = plan.id.charCodeAt(0) % patterns.length;
+  const pattern = patterns[patternIndex];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -239,18 +325,34 @@ const PlanCard = ({
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        "relative flex flex-col overflow-hidden rounded-xl border cursor-pointer transition-all",
-        isSelected ? "ring-2 ring-primary border-primary" : "hover:border-primary/50",
+        "relative flex flex-col overflow-hidden rounded-xl shadow-sm transition-all",
+        "backdrop-blur-sm bg-card/80 border",
+        isSelected ? "ring-2 ring-primary border-primary" : "hover:border-primary/50 hover:shadow-md",
         isCurrentPlan && "border-primary/70",
-        plan.label === 'premium' && "bg-gradient-to-br from-amber-50/40 to-card dark:from-amber-950/30 dark:to-card",
-        plan.label === 'pro' && "bg-gradient-to-br from-blue-50/40 to-card dark:from-blue-950/30 dark:to-card"
+        isDisabled && "opacity-70 pointer-events-none",
+        plan.label === 'premium' && "bg-gradient-to-br from-amber-50/40 to-card/95 dark:from-amber-950/30 dark:to-card/95",
+        plan.label === 'pro' && "bg-gradient-to-br from-blue-50/40 to-card/95 dark:from-blue-950/30 dark:to-card/95"
       )}
-      onClick={() => onSelect(plan)}
+      onClick={() => !isDisabled && onSelect(plan)}
     >
+      {/* Decorative pattern background */}
+      {pattern}
+      
+      {/* Decorative gradient orb */}
+      <div 
+        className={cn(
+          "absolute -top-10 -right-10 w-24 h-24 rounded-full blur-xl opacity-40",
+          plan.label === 'premium' && "bg-amber-300/40 dark:bg-amber-700/20",
+          plan.label === 'pro' && "bg-blue-300/40 dark:bg-blue-700/20",
+          !plan.label && "bg-primary/30"
+        )} 
+        aria-hidden="true"
+      />
+
       {/* Current plan badge */}
       {isCurrentPlan && (
-        <div className="absolute top-0 right-0">
-          <div className="bg-primary text-primary-foreground text-xs font-medium py-1 px-3 rounded-bl-lg">
+        <div className="absolute top-0 right-0 z-20">
+          <div className="bg-primary text-primary-foreground text-xs font-medium py-1 px-3 rounded-bl-lg shadow-sm">
             Current
           </div>
         </div>
@@ -258,8 +360,8 @@ const PlanCard = ({
       
       {/* Premium badge */}
       {plan.label === 'premium' && (
-        <div className="absolute top-3 left-3 flex items-center">
-          <span className="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 text-xs font-semibold py-1 px-2 rounded-full flex items-center">
+        <div className="absolute top-3 left-3 z-20">
+          <span className="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 text-xs font-semibold py-1 px-2.5 rounded-full flex items-center shadow-sm">
             <Crown className="h-3 w-3 mr-1" />
             Premium
           </span>
@@ -268,19 +370,19 @@ const PlanCard = ({
       
       {/* Pro badge */}
       {plan.label === 'pro' && (
-        <div className="absolute top-3 left-3 flex items-center">
-          <span className="bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 text-xs font-semibold py-1 px-2 rounded-full flex items-center">
+        <div className="absolute top-3 left-3 z-20">
+          <span className="bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 text-xs font-semibold py-1 px-2.5 rounded-full flex items-center shadow-sm">
             <Sparkles className="h-3 w-3 mr-1" />
             Pro
           </span>
         </div>
       )}
 
-      <div className="p-6 flex-1">
-        <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+      <div className="p-4 sm:p-6 flex-1 relative z-10">
+        <h3 className="text-lg sm:text-xl font-semibold mb-2">{plan.name}</h3>
         
         <div className="flex items-baseline mb-4">
-          <span className="text-3xl font-bold">
+          <span className="text-2xl sm:text-3xl font-bold">
             {plan.price === 0 ? "Free" : `${formatCurrency(plan.price)}`}
           </span>
           {plan.price > 0 && (
@@ -288,41 +390,47 @@ const PlanCard = ({
           )}
         </div>
         
-        <p className="text-muted-foreground text-sm mb-5 line-clamp-2">
+        <p className="text-muted-foreground text-sm mb-4 sm:mb-5 line-clamp-2">
           {plan.description}
         </p>
         
         {/* Features */}
-        <ul className="space-y-3 mb-6">
+        <ul className="space-y-2 sm:space-y-3 mb-5 sm:mb-6">
           {plan.features.split(',').slice(0, 4).map((feature, idx) => (
             <li key={idx} className="flex items-start">
               <Check className="h-4 w-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
-              <span className="text-sm">{feature}</span>
+              <span className="text-xs sm:text-sm">{feature.trim()}</span>
             </li>
           ))}
           
-          {plan.features.length > 4 && (
+          {plan.features.split(',').length > 4 && (
             <li className="text-xs text-muted-foreground pl-6">
-              +{plan.features.length - 4} more features
+              +{plan.features.split(',').length - 4} more features
             </li>
           )}
         </ul>
       </div>
       
       {/* Action button */}
-      <div className="p-4 bg-muted/40 border-t border-border">
+      <div className="p-3 sm:p-4 bg-muted/40 backdrop-blur-sm border-t border-border relative z-10">
         <Button 
           variant={isSelected ? "default" : "outline"}
           className="w-full"
           size="sm"
+          disabled={isDisabled}
         >
-          {isCurrentPlan 
+          {isPendingPaystackInit && isSelected ? (
+            <span className="flex items-center justify-center">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Processing...
+            </span>
+          ) : isCurrentPlan 
             ? "Current Plan" 
             : isSelected 
               ? "Selected" 
               : "Select Plan"
           }
-          {!isCurrentPlan && (
+          {!isCurrentPlan && !isPendingPaystackInit && !isDisabled && (
             <ArrowRight className="ml-2 h-4 w-4" />
           )}
         </Button>
@@ -330,7 +438,7 @@ const PlanCard = ({
       
       {/* Discount/promo info */}
       {plan.discount_info_text && (
-        <div className="bg-muted p-2 text-xs text-center font-medium">
+        <div className="bg-muted/50 backdrop-blur-sm p-2 text-xs text-center font-medium border-t border-border relative z-10">
           {plan.discount_info_text}
         </div>
       )}

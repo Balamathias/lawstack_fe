@@ -103,6 +103,7 @@ export const QUERY_KEYS = {
   bulk_update_case_status: "bulk_update_case_status",
 
   // Subscription keys
+  paystack_init: 'paystack_init',
   get_plans: 'get_plans',
   get_coupons: 'get_coupons',
   get_subscriptions: 'get_subscriptions',

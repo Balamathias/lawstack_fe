@@ -312,7 +312,7 @@ input[type="range"]::-moz-range-thumb {
   --muted-foreground: hsl(30 16.3% 46.9%);
   --accent: hsl(38 100% 96%);
   --accent-foreground: hsl(30 47.4% 11.2%);
-  --destructive: hsl(0 84.2% 60.2%);
+  --destructive: hsl(0 84.2% 60%);
   --destructive-foreground: hsl(38 100% 99%);
   --border: hsl(30 31.8% 91.4%);
   --input: hsl(30 31.8% 91.4%);
@@ -335,7 +335,7 @@ input[type="range"]::-moz-range-thumb {
   --muted-foreground: hsl(336 16.3% 46.9%);
   --accent: hsl(330 100% 96%);
   --accent-foreground: hsl(336 47.4% 11.2%);
-  --destructive: hsl(0 84.2% 60.2%);
+  --destructive: hsl(0 84.2% 60%);
   --destructive-foreground: hsl(336 100% 99%);
   --border: hsl(336 31.8% 91.4%);
   --input: hsl(336 31.8% 91.4%);
@@ -358,7 +358,7 @@ input[type="range"]::-moz-range-thumb {
   --muted-foreground: hsl(170 16.3% 46.9%);
   --accent: hsl(160 84% 96%);
   --accent-foreground: hsl(170 47.4% 11.2%);
-  --destructive: hsl(0 84.2% 60.2%);
+  --destructive: hsl(0 84.2% 60%);
   --destructive-foreground: hsl(355 100% 100%);
   --border: hsl(170 31.8% 91.4%);
   --input: hsl(170 31.8% 91.4%);
@@ -683,70 +683,93 @@ input[type="range"]::-moz-range-thumb {
   .animate-bounce-slow {
     animation: bounce 2s infinite;
   }
-}
 
-/* For scrolling to bottom button */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
-.animate-float {
-  animation: float 2s ease-in-out infinite;
-}
-
-/* For AI message typing effect */
-.typing-dots {
-  display: inline-flex;
-  gap: 2px;
-  align-items: center;
-}
-
-/* Typing dots animation */
-.typing-dots div {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--primary);
-  opacity: 0.6;
-  animation: bounce 1s infinite ease-in-out;
-}
-
-.typing-dots div:nth-child(1) { animation-delay: 0s; }
-.typing-dots div:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots div:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-
-@keyframes fadeInText {
-  from { opacity: 0.7; }
-  to { opacity: 1; }
-}
-
-.animate-fade-in-text {
-  animation: fadeInText 1.5s ease-in-out;
-}
-
-/* Timer animation - make it more noticeable */
-@keyframes pulse-warning {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.05); }
-}
+  .backdrop-blur-sm {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
   
-.timer-warning {
-  animation: pulse-warning 1.2s ease-in-out infinite;
+  .backdrop-blur-md {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  .backdrop-blur-lg {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+  
+  .animate-fade-in-delay {
+    animation: fade-in 0.5s ease-out 0.2s forwards;
+    opacity: 0;
+  }
 }
 
-/* Add animation for selected answer */
-@keyframes highlight-selection {
-  0% { background-color: hsl(var(--primary) / 0.05); }
-  50% { background-color: hsl(var(--primary) / 0.2); }
-  100% { background-color: hsl(var(--primary) / 0.1); }
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
 }
 
-.quiz-option-selected {
-  animation: highlight-selection 0.5s ease-out;
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Add additional styling for the plan cards */
+.plan-card-premium {
+  background-image: 
+    linear-gradient(to bottom right, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.05), transparent),
+    linear-gradient(to top left, rgba(251, 191, 36, 0.05), transparent);
+}
+
+.plan-card-pro {
+  background-image: 
+    linear-gradient(to bottom right, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05), transparent),
+    linear-gradient(to top left, rgba(59, 130, 246, 0.05), transparent);
+}
+
+/* Responsive typography adjustments */
+@media (max-width: 640px) {
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+  .text-xl {
+    font-size: 1.125rem;
+  }
 }

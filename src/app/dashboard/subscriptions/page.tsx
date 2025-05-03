@@ -1,6 +1,6 @@
-import PlanModal from '@/components/dashboard/subscriptions/plan-modal'
 import SubscriptionComponent from '@/components/dashboard/subscriptions/subscription.component'
 import Loader from '@/components/loader'
+import { getUser } from '@/services/server/auth'
 import { getPlans, getSubscriptions } from '@/services/server/subscriptions'
 import { Metadata } from 'next'
 import React, { Suspense } from 'react'
@@ -16,18 +16,16 @@ interface Props {
 }
 
 const Page: React.FC<Props> = async ({ params, searchParams }) => {
-    const { data: subs } = await getSubscriptions()
-    const { data: plans } = await getPlans()
+  const { data: subs } = await getSubscriptions()
+  const { data: user } = await getUser()
+
+  console.log("USER: ", user)
+
   return (
     <div className='max-w-7xl mx-auto w-full px-4 pb-20 pt-4 md:pt-8 lg:pt-12 max-lg:mt-14 space-y-8'>
         <Suspense fallback={<Loader variant='dots' />}>
-            <SubscriptionComponent initialData={subs} />
+            <SubscriptionComponent initialData={subs} getPlans={getPlans()} user={user}/>
         </Suspense>
-
-        <PlanModal
-            trigger={<button className='btn btn-primary'>Select a Plan</button>}
-            plans={plans}
-        />
     </div>
   )
 }
