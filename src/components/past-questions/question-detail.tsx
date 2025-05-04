@@ -103,7 +103,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
         <div className="flex flex-wrap gap-3 items-center text-xs sm:text-sm text-muted-foreground">
         <div className="flex items-center gap-1">
           <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-          <span>{getSemester(data.semester)} Semester</span>
+          <span>{getSemester(data.semester)}</span>
         </div>
         
         {data.level && (
