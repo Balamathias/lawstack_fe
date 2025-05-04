@@ -43,8 +43,8 @@ export default function PaystackCallbackPage() {
   }, [router, reference]);
 
   return (
-    <div className="container max-w-lg mx-auto py-16 px-4 min-h-[60vh] flex items-center justify-center">
-      <div className="w-full bg-card border border-border rounded-xl shadow-lg overflow-hidden">
+    <div className="container max-w-lg mx-auto py-16 px-4 min-h-[90vh] flex items-center justify-center">
+      <div className="w-full bg-backgroundrounded-xl shadow-lg overflow-hidden">
         <div className={`p-8 ${
           status === 'success' 
             ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20' 

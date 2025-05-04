@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Delius, Inter, Poppins, Roboto } from "next/font/google";
+import { Roboto, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -8,7 +8,7 @@ import { TanstackQueryProvider } from "@/lib/tanstack.query";
 
 import NextTopLoader from "nextjs-toploader";
 
-const inter = Roboto({ weight: ['300', '400', '500', '600'], subsets: ['latin'], variable: '--font-inter' });
+const inter = Inter({ weight: ['300', '400', '500', '600'], subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: {

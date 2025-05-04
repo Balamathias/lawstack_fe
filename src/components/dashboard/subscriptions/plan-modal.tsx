@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { cn, formatCurrency } from '@/lib/utils';
 import { DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 
 interface PlanModalProps {
   open?: boolean;
@@ -44,6 +44,7 @@ const PlanModal = ({
     currentSubscription?.plan?.id || null
   );
   const [activeTab, setActiveTab] = useState<string>('cards');
+  const [isRedirecting, setIsRedirecting] = useState(false);
   
   const isLoading = propIsLoading || (isLoadingPlans && !propPlans);
   
@@ -74,43 +75,40 @@ const PlanModal = ({
     }
 
     if (plan.price > 0) {
+      // Set redirecting state to show loading UI
+      setIsRedirecting(true);
+      
       paystackInit(plan.id, {
         onSuccess: ({ data, error }) => {
           if (error) {
             toast.error(error.message);
+            setIsRedirecting(false);
           } else {
-
             const authorization_url = data?.data?.authorization_url;
 
             if (authorization_url) {
-              const popup = window.open(
-                authorization_url,
-                'paystack_popup',
-                'width=600,height=700'
-              );
-              if (!popup) {
-                toast.error("Popup blocked! Please allow popups and try again.");
-                return;
-              }
-
-              const pollTimer = setInterval(() => {
-                if (popup.closed) {
-                  clearInterval(pollTimer);
-
-                  router.refresh()
-
-                  toast.success("Payment window closed. If you completed payment, your subscription will update shortly.");
-                  setOpen?.(false);
-                }
-              }, 500);
+              // Store selected plan in session storage before redirecting
+              sessionStorage.setItem('pendingSubscriptionPlan', plan.id);
+              sessionStorage.setItem('subscriptionRedirectTime', Date.now().toString());
+              
+              // Close the modal first
+              setOpen?.(false);
+              
+              // Show a toast before redirecting
+              toast.info("Redirecting to payment page...");
+              
+              // Redirect to the authorization URL
+              router.push(authorization_url)
             } else {
               toast.error("Failed to initialize payment. Please try again.");
+              setIsRedirecting(false);
             }
           }
         },
         onError: (error) => {
           console.error("Paystack initialization error:", error);
           toast.error("Failed to initialize payment. Please try again.");
+          setIsRedirecting(false);
         }
       });
     } else {
@@ -134,14 +132,14 @@ const PlanModal = ({
       title={
         <DialogTitle className="flex flex-col items-center space-y-2">
           <div className="text-xl font-bold tracking-tight text-center">{title}</div>
-          <p className="text-sm text-muted-foreground text-center">
+          <p className="text-sm text-muted-foreground text-center hidden">
             {currentSubscription 
               ? "Upgrade your current plan for more premium features" 
               : "Choose a plan that works best for you"}
           </p>
           
           {showComparison && sortedPlans.length > 1 && (
-            <div className="flex items-center space-x-2 mt-3 bg-muted rounded-full p-1">
+            <div className=" items-center space-x-2 mt-3 bg-muted rounded-full p-1 hidden">
               <Button 
                 variant={activeTab === 'cards' ? 'default' : 'ghost'} 
                 size="sm" 
@@ -176,7 +174,7 @@ const PlanModal = ({
             <p className="text-muted-foreground mt-2">Please check back later for subscription options.</p>
           </div>
         ) : activeTab === 'cards' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-1 max-sm:mb-40">
             <AnimatePresence>
               {sortedPlans.map((plan) => (
                 <PlanCard
@@ -422,7 +420,7 @@ const PlanCard = ({
           {isPendingPaystackInit && isSelected ? (
             <span className="flex items-center justify-center">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Processing...
+              Redirecting...
             </span>
           ) : isCurrentPlan 
             ? "Current Plan" 

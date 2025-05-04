@@ -216,3 +216,6 @@ export const formatCurrency = (amount: number) => {
         maximumFractionDigits: 0, // Optional: remove decimals if not needed
     }).format(amount);
 };
+
+export const PAGE_SIZE = 30; // Default page size for pagination
+export const PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100]; // Options for page size selection

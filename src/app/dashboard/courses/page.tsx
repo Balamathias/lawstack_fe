@@ -4,11 +4,11 @@ import { Metadata } from 'next'
 import { getUser } from '@/services/server/auth'
 import ExploreCourses, { ExploreCoursesSkeleton } from '@/components/dashboard/explore-courses'
 import SearchCourse from '@/components/dashboard/search.course'
-import { Bookmark, BookOpen, GraduationCap, Library, Sparkles, Timer } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Bookmark, BookOpen, GraduationCap, Library, ScrollText, Sparkles, Timer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, PAGE_SIZE } from '@/lib/utils'
+import SwitchCourses from '@/components/dashboard/courses/switch-courses'
+import { getCourses } from '@/services/server/courses'
 
 export const metadata: Metadata = {
   title: 'Explore Courses | Law Stack',
@@ -27,7 +27,7 @@ const Page = async ({ params: _params, searchParams: _searchParams }: Props) => 
   return (
     <div className='max-w-6xl flex flex-col space-y-6 md:py-10 py-6 mx-auto w-full px-4 pb-20 max-lg:mt-14'>
       {/* Simplified hero section with glassmorphic design */}
-      <section className="relative rounded-3xl overflow-hidden">
+      <section className="relative rounded-3xl overflow-hidden hidden">
         {/* Subtle background patterns */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 opacity-70"></div>
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay"></div>
@@ -76,91 +76,36 @@ const Page = async ({ params: _params, searchParams: _searchParams }: Props) => 
           </div>
         </div>
       </section>
-      
-      {/* Refined tabs and content */}
-      <Tabs defaultValue="all" className="w-full">
-        <div className="flex flex-col gap-4 mb-4 md:mb-8">
-          {/* Tabs navigation with improved mobile handling */}
-          <div className="w-full overflow-x-auto scrollbar-hide -mx-1 px-1 py-2">
-            <TabsList className="bg-background/50 backdrop-blur-md border border-white/10 p-1 rounded-xl h-auto w-max min-w-full md:min-w-0">
-              <TabsTrigger 
-                value="all" 
-                className={cn(
-                  "rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all",
-                  "data-[state=inactive]:bg-transparent data-[state=inactive]:text-muted-foreground"
-                )}
-              >
-                All Courses
-              </TabsTrigger>
-              <TabsTrigger 
-                value="bookmarked"
-                className={cn(
-                  "rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all",
-                  "data-[state=inactive]:bg-transparent data-[state=inactive]:text-muted-foreground"
-                )}
-              >
-                Bookmarked
-              </TabsTrigger>
-              <TabsTrigger 
-                value="popular"
-                className={cn(
-                  "rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all",
-                  "data-[state=inactive]:bg-transparent data-[state=inactive]:text-muted-foreground"
-                )}
-              >
-                Popular
-              </TabsTrigger>
-            </TabsList>
+
+      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 p-6 shadow-sm border border-primary/20">
+          {/* Background pattern */}
+          <div className="absolute inset-0 pointer-events-none opacity-20">
+              <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.05)_25%,rgba(68,68,68,.05)_50%,transparent_50%,transparent_75%,rgba(68,68,68,.05)_75%)] bg-[length:8px_8px]"></div>
           </div>
           
-          {/* Search component - full width on mobile */}
-          <div className="w-full">
-            <SearchCourse />
-          </div>
-        </div>
-        
-        <TabsContent value="all" className="mt-0 space-y-4 sm:space-y-6 focus-visible:outline-none focus-visible:ring-0">
-          <Suspense fallback={<ExploreCoursesSkeleton />}>
-            <ExploreCourses searchParams={searchParams} />
-          </Suspense>
-        </TabsContent>
-        
-        <TabsContent value="bookmarked" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
-          <div className="flex flex-col items-center justify-center py-12 sm:py-20 text-center space-y-4 sm:space-y-5">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary/5 rounded-full blur-xl"></div>
-              <div className="relative bg-gradient-to-br from-background to-background/80 backdrop-blur-md p-4 sm:p-6 rounded-full border border-primary/10 shadow-lg">
-                <Bookmark className="h-8 w-8 sm:h-12 sm:w-12 text-primary/60" />
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                  <h1 className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-2.5 text-foreground mb-2">
+                      <ScrollText className="h-7 w-7 text-primary" />
+                      Course Explorer
+                  </h1>
+                  <p className="text-muted-foreground max-w-2xl">
+                    Discover comprehensive Nigerian law courses, curated for your academic journey.
+                  </p>
               </div>
-            </div>
-            
-            <h3 className="text-xl sm:text-2xl font-medium mt-2 sm:mt-4">Your Bookmarked Courses</h3>
-            
-            <p className="text-muted-foreground max-w-md text-sm sm:text-base leading-relaxed px-4">
-              Keep track of courses that interest you. Bookmarked courses will appear here for quick access.
-            </p>
-            
-            {!user ? (
-              <Button className="mt-2 sm:mt-4 text-sm sm:text-base bg-gradient-to-r from-primary to-primary/90 shadow-lg shadow-primary/20">
-                Sign in to bookmark courses
-              </Button>
-            ) : (
-              <Button variant="outline" className="mt-2 sm:mt-4 text-sm sm:text-base backdrop-blur-md bg-background/50 border-primary/20">
-                Browse courses
-              </Button>
-            )}
+              <SwitchCourses className="self-end" />
           </div>
-        </TabsContent>
-        
-        <TabsContent value="popular" className="mt-0 space-y-4 sm:space-y-6 focus-visible:outline-none focus-visible:ring-0">
+      </div>
+
+      <div className="w-full">
+        <SearchCourse />
+      </div>
+
+      <div className="mt-0 space-y-4 sm:space-y-6 focus-visible:outline-none focus-visible:ring-0">
           <Suspense fallback={<ExploreCoursesSkeleton />}>
-            <ExploreCourses searchParams={{ 
-              ...searchParams,
-              sort: "popular"
-            }} />
+            <ExploreCourses searchParams={searchParams} getCourses={getCourses({params: { ordering: '-created_at', page_size: PAGE_SIZE, ...searchParams }})} />
           </Suspense>
-        </TabsContent>
-      </Tabs>
+      </div>
     </div>
   )
 }

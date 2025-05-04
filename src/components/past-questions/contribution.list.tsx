@@ -74,12 +74,12 @@ const ContributionList: React.FC<Props> = async ({ past_question }) => {
             <span 
                 className={cn('flex items-center cursor-pointer justify-center w-12 h-12 rounded-full',
                   'bg-secondary/70 text-muted-foreground hover:bg-secondary/40 hover:text-white', {
-                      'bg-pink-500/20 text-pink-500 hover:bg-pink-500/40 hover:text-white': true,
+                      'bg-pink-500/20 text-pink-500 hover:bg-pink-500/40 hover:text-white': false,
                   })}>
                   <LucideHeart size={18} />
             </span>
             }
-            color='pink'
+            color='blue'
         />
       ) : (
         <ul className="space-y-4">
