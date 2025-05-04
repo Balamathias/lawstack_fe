@@ -49,6 +49,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 		'prose-td:p-2 prose-td:border prose-td:border-border',
 		'prose-li:marker:text-muted-foreground',
 		'max-w-none',
+		'leading-relaxed',
 		className
 	)}
 	>
@@ -72,7 +73,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 			</h3>
 			),
 			p: ({ children, ...props }) => (
-			<p className="mb-4 leading-relaxed" {...props}>
+			<p className="mb-4" {...props}>
 				{children}
 			</p>
 			),

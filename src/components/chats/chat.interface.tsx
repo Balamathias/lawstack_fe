@@ -656,7 +656,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
         ) : (
           <div className={isStreaming ? 'animate-fade-in-text' : ''}>
             <div>
-              <MarkdownPreview className='text-base' content={message?.content!} />
+              <MarkdownPreview className='text-base leading-loose' content={message?.content!} />
             </div>
             {isStreaming && (
               <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
