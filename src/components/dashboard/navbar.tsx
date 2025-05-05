@@ -75,14 +75,14 @@ const MobileSidebar = ({ user }: { user: User | null }) => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <button className="focus:outline-none">
-          <Avatar className="h-9 w-9 border-2 border-primary/10 hover:border-primary/20 transition-colors cursor-pointer">
-            <AvatarImage src={user?.avatar || ''} alt={user?.username || 'User'} />
-            <AvatarFallback className="bg-primary/10 text-primary">
-              {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
-            </AvatarFallback>
-          </Avatar>
-        </button>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="h-9 w-9 rounded-full border border-border hover:bg-accent/50"
+          aria-label="Menu"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
       </SheetTrigger>
       <SheetContent side="left" className="sm:max-w-sm w-[85%] p-0">
         <div className="flex flex-col h-full overflow-hidden">
@@ -250,17 +250,20 @@ const Navbar = ({ user }: NavbarProps) => {
       <div className="flex flex-row justify-between items-center w-full mx-auto px-1">
         <Logo />
         
-        <div className="flex items-center gap-3">
-          {/* Menu button for secondary navigation */}
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className="h-9 w-9 rounded-full hidden"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
+        <div className="flex items-center gap-2">
+          {/* Account button - optional */}
+          {user && (
+            <Button 
+              variant="outline"
+              size="sm"
+              className="text-xs h-8 px-3 border-border/70 text-muted-foreground"
+              onClick={() => window.location.href = '/dashboard/account'}
+            >
+              Account
+            </Button>
+          )}
           
-          {/* Mobile sidebar trigger */}
+          {/* Mobile menu trigger */}
           <MobileSidebar user={user} />
         </div>
       </div>
