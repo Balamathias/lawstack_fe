@@ -248,9 +248,9 @@ const Navbar = ({ user }: NavbarProps) => {
       <div className="flex flex-row justify-between items-center w-full mx-auto px-1">
         <Logo />
         
-        <div className="items-center gap-2 hidden">
+        <div className="items-center gap-2">
           {/* Account button - optional */}
-          {user && (
+          {/* {user && (
             <Button 
               variant="outline"
               size="sm"
@@ -259,7 +259,7 @@ const Navbar = ({ user }: NavbarProps) => {
             >
               Account
             </Button>
-          )}
+          )} */}
           
           {/* Mobile menu trigger */}
           <MobileSidebar user={user} />
