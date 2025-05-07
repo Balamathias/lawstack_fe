@@ -74,7 +74,7 @@ const MobileSidebar = ({ user }: { user: User | null }) => {
   
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
+      <SheetTrigger>
       <Avatar className="h-10 w-10 border border-border">
         <AvatarImage src={user?.avatar || ''} />
         <AvatarFallback className="bg-primary/10 text-primary">
