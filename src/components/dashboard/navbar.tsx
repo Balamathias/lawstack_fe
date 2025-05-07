@@ -75,14 +75,12 @@ const MobileSidebar = ({ user }: { user: User | null }) => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-9 w-9 rounded-full border border-border hover:bg-accent/50"
-          aria-label="Menu"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
+      <Avatar className="h-10 w-10 border border-border">
+        <AvatarImage src={user?.avatar || ''} />
+        <AvatarFallback className="bg-primary/10 text-primary">
+          {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
+        </AvatarFallback>
+      </Avatar>
       </SheetTrigger>
       <SheetContent side="left" className="sm:max-w-sm w-[85%] p-0">
         <div className="flex flex-col h-full overflow-hidden">
@@ -250,7 +248,7 @@ const Navbar = ({ user }: NavbarProps) => {
       <div className="flex flex-row justify-between items-center w-full mx-auto px-1">
         <Logo />
         
-        <div className="flex items-center gap-2">
+        <div className="items-center gap-2 hidden">
           {/* Account button - optional */}
           {user && (
             <Button 

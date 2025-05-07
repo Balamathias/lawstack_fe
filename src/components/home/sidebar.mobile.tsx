@@ -12,45 +12,49 @@ import {
 import { 
     CreditCard, 
     LogOutIcon, 
-    LucideCreditCard, 
     LucideHelpCircle, 
     LucideLeafyGreen, 
     LucideNotebookPen, 
     LayoutDashboard,
     Menu, 
-    Sparkles 
+    Sparkles,
+    ChevronRight
 } from 'lucide-react'
 import Logo from '../logo'
 import { Button } from '../ui/button'
 import { User } from '@/@types/db'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 
 const features = [
     {
         icon: <Sparkles className="text-emerald-500" />,
         title: 'AI Insights',
-        description: 'Get AI-powered legal insights'
+        description: 'Get AI-powered legal insights',
+        href: '/ai-insights'
     },
     {
         icon: <LucideHelpCircle className="text-emerald-500" />,
         title: 'Past Questions',
-        description: 'Browse previous legal questions'
+        description: 'Browse previous legal questions',
+        href: '/questions'
     },
     {
         icon: <LucideNotebookPen className="text-emerald-500" />,
         title: 'Learn',
-        description: 'Access legal learning resources'
+        description: 'Access legal learning resources',
+        href: '/learn'
     },
     {
         icon: <LucideLeafyGreen className="text-emerald-500" />,
         title: 'Grow with LawStack',
-        description: 'Explore growth opportunities'
+        description: 'Explore growth opportunities',
+        href: '/growth'
     },
     {
-        icon: <LucideCreditCard className="text-emerald-500" />,
+        icon: <CreditCard className="text-emerald-500" />,
         title: 'Pricing',
-        description: 'View our pricing plans'
+        description: 'View our pricing plans',
+        href: '/pricing'
     },
 ]
 
@@ -63,79 +67,85 @@ const MobileSidebar = ({ user }: Props) => {
     <div>
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative overflow-hidden group">
-                    <Menu size={24} className='cursor-pointer transition-all duration-300 group-hover:scale-110' />
-                    <span className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-md"></span>
+                <Button variant="ghost" size="icon" className="relative h-10 w-10 rounded-full">
+                    <Menu size={20} className='text-foreground/80' />
                 </Button>
             </SheetTrigger>
 
-            <SheetContent className='bg-white/80 dark:bg-black/80 backdrop-blur-xl border-l border-white/20 dark:border-gray-800/50 shadow-2xl'>
-                <SheetHeader className='border-b border-white/10 dark:border-gray-800/50 pb-4'>
-                    <SheetTitle className="flex justify-center">
+            <SheetContent side="left" className='bg-white dark:bg-gray-950 border-0 shadow-lg p-0'>
+                <SheetHeader className='border-b border-gray-100 dark:border-gray-800 p-4'>
+                    <SheetTitle className="flex justify-start">
                         <Logo />
                     </SheetTitle>
                 </SheetHeader>
 
-                <div className='flex flex-col gap-y-8 px-4 py-8'>
-                    {
-                        features.map((feature, index) => (
-                            <SheetClose key={index} asChild>
-                                <Link href={`#`} className='flex items-center gap-x-4 p-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-all relative group'>
-                                    <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-900/20 dark:to-green-900/30 shadow-sm">
+                <div className='flex flex-col'>
+                    {features.map((feature, index) => (
+                        <SheetClose key={index} asChild>
+                            <Link 
+                                href={feature.href} 
+                                className='flex items-center justify-between px-4 py-3.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900/50'
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="w-9 h-9 flex items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-900/20">
                                         {feature.icon}
                                     </div>
                                     <div>
-                                        <h4 className='font-medium' title={feature.description}>{feature.title}</h4>
-                                        <p className='text-xs text-muted-foreground'>{feature.description}</p>
+                                        <h4 className='font-medium'>{feature.title}</h4>
+                                        <p className='text-xs text-muted-foreground mt-0.5'>{feature.description}</p>
                                     </div>
-                                    <div className="absolute inset-0 border border-emerald-500/0 rounded-xl group-hover:border-emerald-500/10 transition-all duration-300"></div>
-                                </Link>
-                            </SheetClose>
-                        ))
-                    }
+                                </div>
+                                <ChevronRight size={16} className="text-gray-400" />
+                            </Link>
+                        </SheetClose>
+                    ))}
                 </div>
 
-                <SheetFooter className='flex flex-col gap-y-3 border-t border-white/10 dark:border-gray-800/50 pt-6'>
-                    <Button
-                        variant={'secondary'}
-                        className='w-full gap-2 bg-gradient-to-r from-emerald-400/20 to-green-500/20 hover:from-emerald-400/30 hover:to-green-500/30'
-                    >
-                        <CreditCard className="h-4 w-4" />
-                        Pricing
-                    </Button>
-
-                    {
-                        user ? (
+                <SheetFooter className='flex flex-col gap-y-2 border-t border-gray-100 dark:border-gray-800 px-4 py-4 mt-auto'>
+                    {user ? (
+                        <>
                             <Button
-                                variant={'destructive'}
-                                className='w-full gap-2'
+                                className='w-full justify-start gap-3 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white h-11'
+                                asChild
+                            >
+                                <Link href={'/dashboard'}>
+                                    <LayoutDashboard className="h-4 w-4" />
+                                    Dashboard
+                                </Link>
+                            </Button>
+                            
+                            <Button
+                                variant={'ghost'}
+                                className='w-full justify-start gap-3 text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 h-11'
                             >
                                 <LogOutIcon className="h-4 w-4" />
-                                Log Out
+                                Sign Out
                             </Button>
-                        ): (
+                        </>
+                    ) : (
+                        <>
                             <Button
-                                className='w-full gap-2 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white'
+                                className='w-full justify-start gap-3 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white h-11'
                                 asChild
                             >
                                 <Link href={'/login'}>
                                     <LogOutIcon className="h-4 w-4" />
-                                    Log In
+                                    Sign In
                                 </Link>
                             </Button>
-                        )
-                    }
-
-                    <Button
-                        className='w-full gap-2'
-                        asChild
-                        variant={'outline'}
-                    >
-                        <Link href={'/dashboard'}>
-                            <LayoutDashboard className="h-4 w-4" />
-                            Dashboard
-                        </Link>
-                    </Button>
+                            
+                            <Button
+                                variant={'outline'}
+                                className='w-full justify-start gap-3 border-gray-200 dark:border-gray-800 h-11'
+                                asChild
+                            >
+                                <Link href={'/pricing'}>
+                                    <CreditCard className="h-4 w-4" />
+                                    Pricing Plans
+                                </Link>
+                            </Button>
+                        </>
+                    )}
                 </SheetFooter>
             </SheetContent>
         </Sheet>
