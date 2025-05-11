@@ -4,6 +4,7 @@ import { getUser } from '@/services/server/auth'
 import { Metadata } from 'next'
 import React, { Suspense } from 'react'
 import { Loader2 } from 'lucide-react'
+import { getChats } from '@/services/server/chats'
 
 export const metadata: Metadata = {
     title: 'AI Assistant | LawStack',
@@ -38,7 +39,10 @@ const QuickStartSkeleton = () => (
 )
 
 const Page = async () => {
-  const { data: user } = await getUser()
+  const [{ data: user }, { data: chats }] = await Promise.all([
+    getUser(),
+    getChats()
+  ])
 
   return (
     <div className='w-full flex flex-col gap-y-8 max-w-7xl mx-auto p-3 sm:p-8 pb-16 max-lg:mt-14 animate-fade-in relative'>
@@ -46,14 +50,9 @@ const Page = async () => {
         <BackButton />
 
         <Suspense fallback={<QuickStartSkeleton />}>
-          <QuickStart user={user} chat_id={undefined} />
+          <QuickStart user={user} chat_id={undefined} chats={chats} />
         </Suspense>
       </div>
-      
-      {/* Decorative elements */}
-      {/* <div className="fixed bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none z-10 opacity-50" />
-      <div className="fixed top-1/4 right-0 w-96 h-96 bg-primary/5 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl opacity-50 pointer-events-none"></div>
-      <div className="fixed bottom-1/4 left-0 w-80 h-80 bg-primary/5 rounded-full -translate-x-1/2 translate-y-1/2 blur-3xl opacity-40 pointer-events-none"></div> */}
     </div>
   )
 }

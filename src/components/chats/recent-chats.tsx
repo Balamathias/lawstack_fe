@@ -30,7 +30,8 @@ import { Badge } from '../ui/badge'
 
 interface RecentChatsProps {
   user?: User | null
-  currentChatId?: string
+  currentChatId?: string,
+  chats: Chat[]
 }
 
 export function RecentChatsLoading() {
@@ -122,8 +123,7 @@ const GuestChatPrompt = () => {
   );
 };
 
-export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
-  const { data: chatsResponse, isPending, error } = useGetChats()
+export default function RecentChats({ user, currentChatId, chats }: RecentChatsProps) {
   const router = useRouter()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [scrollPosition, setScrollPosition] = useState(0)
@@ -186,7 +186,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
     updateMaxScroll()
     
     return () => window.removeEventListener('resize', updateMaxScroll)
-  }, [chatsResponse])
+  }, [chats])
   
   if (!user) {
     return <GuestChatPrompt />;
@@ -223,11 +223,11 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
     }
   }
   
-  if (isPending) {
-    return <RecentChatsLoading />
-  }
+  // if (isPending) {
+  //   return <RecentChatsLoading />
+  // }
 
-  if (error || !chatsResponse?.data || chatsResponse.data.length === 0) {
+  if (chats?.length === 0) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -278,7 +278,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
     )
   }
 
-  const recentChats = (chatsResponse.data as Chat[]).slice(0, 10)
+  const recentChats = (chats as Chat[]).slice(0, 10)
   
   return (
     <motion.div 
@@ -292,7 +292,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
           <div className="p-2 rounded-lg bg-primary/10 text-primary">
             <MessageSquareMore className="h-4 w-4" />
           </div>
-          <h3 className="text-base font-medium">Recent Conversations</h3>
+          <h3 className="text-sm md:text-base font-medium">Recent Conversations</h3>
           <Badge variant="outline" className="ml-1 text-xs py-0 px-2 rounded-full">
             {recentChats.length}
           </Badge>

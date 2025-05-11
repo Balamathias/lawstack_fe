@@ -149,7 +149,8 @@ const ChatHistoryItem = ({ chat, isActive, icon, onDelete, closeDrawer, showDele
         <div className="flex items-start gap-3">
           <div className={cn(
             "p-2 rounded-md text-foreground/80 flex-shrink-0 transition-colors",
-            isActive ? "bg-primary/10 text-primary" : "bg-muted"
+            isActive ? "bg-primary/10 text-primary" : "bg-muted",
+            "hidden"
           )}>
             {icon}
           </div>
@@ -196,7 +197,7 @@ const ChatHistoryItem = ({ chat, isActive, icon, onDelete, closeDrawer, showDele
               {chat.message_preview || "No messages yet"}
             </p>
             
-            <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+            <div className="flex_ items-center justify-between text-[11px] text-muted-foreground hidden">
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
                 <time title={`${formattedDate} at ${formattedTime}`}>

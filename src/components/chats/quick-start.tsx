@@ -27,7 +27,7 @@ import CourseSelector from '../courses/course-selector'
 import PastQuestionSelector from '../questions/past-question-selector'
 import { useSearchParams } from 'next/navigation'
 import RecentChats from './recent-chats'
-import { User } from '@/@types/db'
+import { Chat, User } from '@/@types/db'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import ChatHistory from './chat-history'
@@ -52,7 +52,8 @@ interface Props {
     token: string
   },
   user: User | null,
-  chat_id?: string
+  chat_id?: string,
+  chats: Chat[]
 }
 
 const QuickStartOption = ({ 
@@ -266,7 +267,7 @@ const GuestPrompt = ({ onLoginClick }: { onLoginClick: () => void }) => {
   );
 };
 
-const QuickStart = ({ user, chat_id }: Props) => {
+const QuickStart = ({ user, chat_id, chats }: Props) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false)
@@ -423,6 +424,7 @@ const QuickStart = ({ user, chat_id }: Props) => {
               <RecentChats 
                 user={user} 
                 currentChatId={chat_id} 
+                chats={chats}
               />
             )}
           </motion.div>
