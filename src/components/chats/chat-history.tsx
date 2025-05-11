@@ -157,7 +157,7 @@ const ChatHistoryItem = ({ chat, isActive, icon, onDelete, closeDrawer, showDele
           <div className="flex-1 min-w-0">
             <div className="flex justify-between items-start gap-1">
               <h4 className={cn(
-                "text-sm font-medium truncate max-w-[170px]",
+                "text-sm font-medium",
                 isActive ? "text-primary" : "text-foreground"
               )}>
                 {chat.title || "New conversation"}
@@ -192,7 +192,7 @@ const ChatHistoryItem = ({ chat, isActive, icon, onDelete, closeDrawer, showDele
               </AnimatePresence>
             </div>
             
-            <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5 mb-1.5">
+            <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5 mb-1.5 hidden">
               {chat.message_preview || "No messages yet"}
             </p>
             

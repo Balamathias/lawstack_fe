@@ -345,6 +345,10 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
         tabIndex={0}
         role="region"
         aria-label="Recent conversations"
+        style={{
+          scrollbarWidth: 'none', /* Firefox */
+          msOverflowStyle: 'none', /* IE and Edge */
+        }}
       >
         <div className="flex gap-4 min-w-full pb-1">
           <AnimatePresence>
@@ -403,7 +407,7 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
                         <div className={cn(
                           "p-2 rounded-lg border transition-all duration-200",
                           chatTypeClass,
-                          "group-hover:shadow-sm group-hover:scale-105"
+                          "group-hover:shadow-sm group-hover:scale-105 hidden"
                         )}>
                           {getChatIcon(chat.chat_type)}
                         </div>
@@ -420,13 +424,13 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
                     </div>
                     
                     <h4 className={cn(
-                      "font-medium text-sm truncate mb-2 transition-colors duration-200",
+                      "font-medium text-sm mb-2 transition-colors duration-200",
                       isActive ? "text-primary" : "group-hover:text-primary"
                     )}>
                       {chat.title || "New conversation"}
                     </h4>
                     
-                    <p className="text-xs text-muted-foreground line-clamp-2 flex-1 min-h-[40px]">
+                    <p className="text-xs text-muted-foreground line-clamp-2 flex-1 min-h-[40px] hidden">
                       {chat.message_preview || "No messages yet"}
                     </p>
                     
