@@ -1,7 +1,7 @@
 'use server'
 
 import { StackResponse, PaginatedStackResponse } from '@/@types/generics'
-import { User } from '@/@types/db'
+import { User, UserStatistics } from '@/@types/db'
 import { stackbase } from '../server.entry'
 
 interface UserPayload {
@@ -120,6 +120,21 @@ export const updateUser = async (id: string, payload: UpdateUserPayload): Promis
 export const deleteUser = async (id: string): Promise<StackResponse<User | null>> => {
     try {
         const { data } = await stackbase.delete(`/users/${id}/`)
+        return data
+    } catch (error: any) {
+        return {
+            message: error?.response?.data?.message || error.response?.data?.detail,
+            error: error?.response?.data,
+            data: null,
+            status: error?.response?.status
+        }
+    }
+}
+
+
+export const getUserStatistics = async (): Promise<StackResponse<UserStatistics | null>> => {
+    try {
+        const { data } = await stackbase.get('/users/statistics/')
         return data
     } catch (error: any) {
         return {

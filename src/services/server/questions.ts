@@ -1,6 +1,6 @@
 'use server'
 
-import { Question, QuestionSuggestion } from '@/@types/db'
+import { GlobalPastQuestionAnalytics, PastQuestionAnalytics, Question, QuestionSuggestion } from '@/@types/db'
 import { PaginatedStackResponse, StackResponse } from '@/@types/generics'
 import { stackbase } from '../server.entry'
 
@@ -85,6 +85,34 @@ export const updateQuestion = async (id: string, payload: Partial<Question>): Pr
 export const deleteQuestion = async (id: string): Promise<StackResponse<Question | null>> => {
     try {
         const { data } = await stackbase.delete(`/past-questions/${id}/`)
+        return data
+    } catch (error: any) {
+        return {
+            message: error?.response?.data?.message || error.response?.data?.detail,
+            error: error?.response?.data,
+            data: null,
+            status: error?.response?.status
+        }
+    }
+}
+
+export const getQuestionsAnalytics = async (): Promise<StackResponse<GlobalPastQuestionAnalytics | null>> => {
+    try {
+        const { data } = await stackbase.get('/past-questions/global_analytics/')
+        return data
+    } catch (error: any) {
+        return {
+            message: error?.response?.data?.message || error.response?.data?.detail,
+            error: error?.response?.data,
+            data: null,
+            status: error?.response?.status
+        }
+    }
+}
+
+export const getQuestionAnalytics = async (id: string): Promise<StackResponse<PastQuestionAnalytics | null>> => {
+    try {
+        const { data } = await stackbase.get(`/past-questions/${id}/analytics/`)
         return data
     } catch (error: any) {
         return {

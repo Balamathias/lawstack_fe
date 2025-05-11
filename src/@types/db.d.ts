@@ -309,3 +309,109 @@ export interface PaystackInitResponse {
   status: number;
   error: any;
 }
+
+
+export interface UserStatistics {
+  total_users: number;
+  active_users: number;
+  staff_users: number;
+  admin_users: number;
+  
+  registration_stats: {
+    today: number;
+    yesterday: number;
+    two_days_ago: number;
+    this_week: number;
+    last_week: number;
+    this_month: number;
+    last_month: number;
+    this_quarter: number;
+    this_year: number;
+  };
+  
+  activity_stats: {
+    active_today: number;
+    active_this_week: number;
+    active_this_month: number;
+  };
+}
+
+
+export interface CourseAnalytics {
+  course_info: Course;
+  basic_stats: {
+    views: number;
+    institution_count: number;
+    institutions: {
+      id: string;
+      name: string;
+    }[];
+  };
+  past_question_stats: {
+    total_count: number;
+    by_year: { year: string; count: number }[];
+    by_semester: { semester: string; count: number }[];
+    by_type: { type: string; count: number }[];
+    most_viewed: Question[];
+  };
+  ai_question_stats: {
+    total_count: number;
+    by_difficulty: { difficulty: string; count: number }[];
+    by_semester: { semester: string; count: number }[];
+  };
+  quiz_stats: {
+    total_created: number;
+    completed: number;
+    average_score: number;
+    questions_answered: number;
+    correct_answers: number;
+  };
+  user_engagement: {
+    bookmarks: number;
+    contributions: number;
+    chats: number;
+  };
+  performance_trend: {
+    quiz_id: string;
+    title: string;
+    score: number;
+    completed_at: string | null;
+  }[];
+  generated_at: string;
+}
+
+export interface PastQuestionAnalytics {
+  question_info: Question;
+  view_count: number;
+  bookmark_count: number;
+  contribution_count: number;
+  contributions: Contribution[];
+  related_questions: Question[];
+  generated_at: string;
+}
+
+export interface GlobalPastQuestionAnalytics {
+  total_questions: number;
+  by_year: { year: string; count: number }[];
+  by_semester: { semester: string; count: number }[];
+  by_type: { type: string; count: number }[];
+  by_institution: { institution_id: string; institution_name: string; count: number }[];
+  by_course: { course_id: string; course_name: string; count: number }[];
+  most_viewed: Question[];
+  most_bookmarked: Question[];
+  most_contributed: Question[];
+  average_views_per_question: number;
+  generated_at: string;
+}
+
+export interface GlobalCourseAnalytics {
+  total_courses: number;
+  total_views: number;
+  institutions_with_courses: number;
+  institution_types: {
+    type: string;
+    course_count: number;
+  }[];
+  most_viewed_courses: Course[];
+  generated_at: string;
+}
