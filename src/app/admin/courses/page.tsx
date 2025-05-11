@@ -14,8 +14,6 @@ const Page = async ({ params, searchParams }: Props) => {
   const { data: stats } = await getCoursesAnalytics()
   const { data: courses, count } = await getCourses({ params: { ...(await searchParams), page_size: PAGE_SIZE }})
 
-  console.log(stats)
-
   return (
     <div className='flex flex-col gap-4 p-4 md:p-10 max-w-7xl mx-auto'>
       <CoursesOverview stats={stats!} />
