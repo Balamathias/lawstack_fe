@@ -14,6 +14,8 @@ import { formatCurrency } from '@/lib/utils';
 import PlanModal from './plan-modal';
 import { StackResponse } from '@/@types/generics';
 import { Button } from '@/components/ui/button';
+import { LucideCheck } from 'lucide-react';
+import { toast } from 'sonner';
 
 type SubscriptionData = {
     data: Subscription[];
@@ -130,10 +132,12 @@ const SubscriptionComponent = ({ initialData, getPlans, user }: { initialData?: 
                         <Button 
                             disabled={user?.is_subscribed}
                             className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-all flex items-center gap-2 justify-center animate-fade-in">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                            </svg>
-                            Upgrade Plan
+                            {
+                                user?.is_subscribed ? <LucideCheck /> : (<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>)
+                            }
+                            {user?.is_subscribed ? 'Subscribed' : 'Get Started'}
                         </Button>
                     }
                     plans={plans}
@@ -226,10 +230,18 @@ const SubscriptionComponent = ({ initialData, getPlans, user }: { initialData?: 
 
                                     {/* Actions */}
                                     <div className="flex gap-3 mt-6">
-                                        <button className="flex-1 py-2 px-4 bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-all text-sm">
+                                        <button 
+                                            className="flex-1 py-2 px-4 bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-all text-sm"
+                                            onClick={() => {toast.info('Manage plan feature is not available yet.')}}
+                                        >
                                             Manage Plan
                                         </button>
-                                        <button className="py-2 px-4 border border-border rounded-md hover:bg-secondary transition-all text-sm">
+                                        <button
+                                            className="py-2 px-4 border border-border rounded-md hover:bg-secondary transition-all text-sm"
+                                            onClick={() => {toast.info('Cancel feature is not available yet.', {
+                                                description: 'You can cancel your subscription from Paystack\'s options.',
+                                            })}}
+                                        >
                                             Cancel
                                         </button>
                                     </div>

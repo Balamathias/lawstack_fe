@@ -168,7 +168,7 @@ const ThemeSettings = () => {
   const { themes, isAnimated, setIsAnimated } = useTheme()
   const { theme: nextTheme, setTheme: setNextTheme, resolvedTheme } = useNextTheme()
   const [mounted, setMounted] = useState(false)
-  const [activeTab, setActiveTab] = useState<"colors" | "appearance">("colors")
+  const [activeTab, setActiveTab] = useState<"colors" | "appearance">("appearance")
   const [previewMode, setPreviewMode] = useState<DarkVariant>("lights-out")
   const [colorMode, setColorMode] = useLocalStorage<string>('theme-color-mode', 'lights-out');
   const [customColor, setCustomColor] = useState<HSLColor>({ hue: 221, saturation: 83, lightness: 53 });
@@ -426,13 +426,13 @@ const ThemeSettings = () => {
         >
           <div className="flex justify-between items-center mb-6 flex-wrap">
             <TabsList className="bg-card/50 border">
-              <TabsTrigger value="colors" className="flex items-center gap-1.5 data-[state=active]:bg-primary/10">
-                <Palette className="h-4 w-4" />
-                <span>Theme Colors</span>
-              </TabsTrigger>
               <TabsTrigger value="appearance" className="flex items-center gap-1.5 data-[state=active]:bg-primary/10">
                 <EyeIcon className="h-4 w-4" />
                 <span>Appearance</span>
+              </TabsTrigger>
+              <TabsTrigger value="colors" className="flex items-center gap-1.5 data-[state=active]:bg-primary/10">
+                <Palette className="h-4 w-4" />
+                <span>Theme Colors</span>
               </TabsTrigger>
             </TabsList>
             
@@ -446,89 +446,6 @@ const ThemeSettings = () => {
               <span>Reset</span>
             </Button>
           </div>
-
-          <TabsContent value="colors" className="space-y-6 mt-2">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium">Color Theme</h3>
-                <Badge variant="outline" className="bg-primary/10 px-2 py-1 gap-1 text-primary">
-                  <div className={cn(
-                    "h-3.5 w-3.5 rounded-full",
-                    themeColors.find(t => t.id === theme)?.icon || "bg-gray-500"
-                  )}></div>
-                  <span>{themeColors.find(t => t.id === theme)?.name || "Default"}</span>
-                </Badge>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {themeColors.map((colorTheme) => (
-                  <motion.div
-                    key={colorTheme.id}
-                    whileHover={{ y: -4, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-                    whileTap={{ scale: 0.98 }}
-                    className={cn(
-                      "relative cursor-pointer rounded-xl border-2 p-0 transition-all overflow-hidden",
-                      theme === colorTheme.id
-                        ? "border-primary"
-                        : "border-transparent hover:border-primary/20"
-                    )}
-                    onClick={() => {
-                      handleThemeChange(colorTheme.id)
-                    }}
-                  >
-                    {/* Color preview area */}
-                    <div className={cn(
-                      "h-24 w-full flex items-end justify-end p-3",
-                      colorTheme.preview
-                    )}>
-                      {theme === colorTheme.id && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="bg-primary text-primary-foreground h-8 w-8 rounded-full flex items-center justify-center"
-                        >
-                          <Check className="h-5 w-5" />
-                        </motion.div>
-                      )}
-                    </div>
-                    
-                    <div className="p-4">
-                      <div className="flex items-start gap-3">
-                        <div className={cn(
-                          "h-10 w-10 rounded-full flex items-center justify-center text-white shrink-0",
-                          colorTheme.icon
-                        )}>
-                          <Palette className="h-5 w-5" />
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium flex items-center gap-1.5">
-                            {colorTheme.name}
-                            {theme === colorTheme.id && (
-                              <Badge variant="outline" className="ml-1 bg-primary/10 text-primary text-[10px] px-1 py-0 h-4">
-                                Active
-                              </Badge>
-                            )}
-                          </h4>
-                          <p className="text-sm text-muted-foreground mt-1">{colorTheme.description}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex gap-1 mt-3 h-2">
-                        {colorTheme.colors.map((color, i) => (
-                          <div 
-                            key={i}
-                            className="h-2 w-full rounded-full"
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </TabsContent>
 
           <TabsContent value="appearance" className="space-y-8 mt-2">
             <div>
@@ -911,6 +828,90 @@ const ThemeSettings = () => {
               </div>
             </div>
           </TabsContent>
+
+          <TabsContent value="colors" className="space-y-6 mt-2">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium">Color Theme</h3>
+                <Badge variant="outline" className="bg-primary/10 px-2 py-1 gap-1 text-primary">
+                  <div className={cn(
+                    "h-3.5 w-3.5 rounded-full",
+                    themeColors.find(t => t.id === theme)?.icon || "bg-gray-500"
+                  )}></div>
+                  <span>{themeColors.find(t => t.id === theme)?.name || "Default"}</span>
+                </Badge>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {themeColors.map((colorTheme) => (
+                  <motion.div
+                    key={colorTheme.id}
+                    whileHover={{ y: -4, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                    whileTap={{ scale: 0.98 }}
+                    className={cn(
+                      "relative cursor-pointer rounded-xl border-2 p-0 transition-all overflow-hidden",
+                      theme === colorTheme.id
+                        ? "border-primary"
+                        : "border-transparent hover:border-primary/20"
+                    )}
+                    onClick={() => {
+                      handleThemeChange(colorTheme.id)
+                    }}
+                  >
+                    {/* Color preview area */}
+                    <div className={cn(
+                      "h-24 w-full flex items-end justify-end p-3",
+                      colorTheme.preview
+                    )}>
+                      {theme === colorTheme.id && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="bg-primary text-primary-foreground h-8 w-8 rounded-full flex items-center justify-center"
+                        >
+                          <Check className="h-5 w-5" />
+                        </motion.div>
+                      )}
+                    </div>
+                    
+                    <div className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className={cn(
+                          "h-10 w-10 rounded-full flex items-center justify-center text-white shrink-0",
+                          colorTheme.icon
+                        )}>
+                          <Palette className="h-5 w-5" />
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium flex items-center gap-1.5">
+                            {colorTheme.name}
+                            {theme === colorTheme.id && (
+                              <Badge variant="outline" className="ml-1 bg-primary/10 text-primary text-[10px] px-1 py-0 h-4">
+                                Active
+                              </Badge>
+                            )}
+                          </h4>
+                          <p className="text-sm text-muted-foreground mt-1">{colorTheme.description}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-1 mt-3 h-2">
+                        {colorTheme.colors.map((color, i) => (
+                          <div 
+                            key={i}
+                            className="h-2 w-full rounded-full"
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+          
         </Tabs>
       </CardContent>
     </Card>

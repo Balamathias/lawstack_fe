@@ -110,7 +110,6 @@ const CourseDetail = ({ promisedCourse, searchParams }: Props) => {
               <Button 
                 asChild
                 className="w-full sm:w-auto bg-gradient-to-r from-blue-600/90 to-blue-500 hover:from-blue-600 hover:to-blue-500/90 text-white shadow-md border border-blue-600/20 gap-2 transition-all group relative overflow-hidden"
-                style={{ minWidth: "160px" }}
               >
                 <Link href={`/dashboard/quizzes?course=${course?.id}`} className="flex items-center justify-center">
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 to-blue-400/30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
