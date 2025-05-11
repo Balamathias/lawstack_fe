@@ -380,38 +380,142 @@ export interface CourseAnalytics {
   generated_at: string;
 }
 
+export interface GlobalCourseAnalytics {
+  summary: {
+    total_courses: number;
+    total_views: number;
+    total_institutions: number;
+    average_views_per_course: number;
+    average_questions_per_course: number;
+  };
+  distributions: {
+    by_institution_type: { type: string; course_count: number }[];
+    by_level: { level: string; count: number }[];
+  };
+  top_content: {
+    most_viewed: Course[];
+    most_questions: {
+      id: string;
+      name: string;
+      code: string;
+      question_count: number;
+    }[];
+    most_quizzes: {
+      id: string;
+      name: string;
+      code: string;
+      quiz_count: number;
+    }[];
+  };
+  engagement: {
+    most_bookmarked: {
+      id: string;
+      name: string;
+      code: string;
+      bookmark_count: number;
+    }[];
+    most_active: {
+      id: string;
+      name: string;
+      code: string;
+      contribution_count: number;
+    }[];
+    most_chatted: {
+      id: string;
+      name: string;
+      code: string;
+      chat_count: number;
+    }[];
+  };
+  top_institutions: {
+    id: string;
+    name: string;
+    type: string;
+    course_count: number;
+  }[];
+  generated_at: string;
+}
+
 export interface PastQuestionAnalytics {
-  question_info: Question;
-  view_count: number;
-  bookmark_count: number;
-  contribution_count: number;
-  contributions: Contribution[];
+  question: Question;
+  basic_stats: {
+    view_count: number;
+    bookmark_count: number;
+    contribution_count: number;
+    average_views: number;
+  };
+  engagement: {
+    bookmarks_count: number;
+    views_count: number;
+    contributions_count: number;
+    user_interactions: number;
+  };
+  contributions: {
+    total: number;
+    recent: Contribution[];
+    top_contributors: {
+      user_id: string;
+      username: string;
+      avatar: string | null;
+      contribution_count: number;
+    }[];
+  };
   related_questions: Question[];
+  tags: {
+    id: string;
+    name: string;
+    count: number;
+  }[];
+  course: {
+    id: string;
+    name: string;
+    code: string;
+    question_count: number;
+  };
+  institution: {
+    id: string;
+    name: string;
+    question_count: number;
+  };
+  ai_generated_questions: AIQuestion[];
   generated_at: string;
 }
 
 export interface GlobalPastQuestionAnalytics {
-  total_questions: number;
-  by_year: { year: string; count: number }[];
-  by_semester: { semester: string; count: number }[];
-  by_type: { type: string; count: number }[];
-  by_institution: { institution_id: string; institution_name: string; count: number }[];
-  by_course: { course_id: string; course_name: string; count: number }[];
-  most_viewed: Question[];
-  most_bookmarked: Question[];
-  most_contributed: Question[];
-  average_views_per_question: number;
-  generated_at: string;
-}
-
-export interface GlobalCourseAnalytics {
-  total_courses: number;
-  total_views: number;
-  institutions_with_courses: number;
-  institution_types: {
-    type: string;
-    course_count: number;
-  }[];
-  most_viewed_courses: Course[];
+  summary: {
+    total_questions: number;
+    total_views: number;
+    total_bookmarks: number;
+    total_contributions: number;
+    average_views_per_question: number;
+  };
+  distributions: {
+    by_type: { type: string; count: number }[];
+    by_year: { year: string; count: number }[];
+    by_semester: { semester: string; count: number }[];
+  };
+  top_content: {
+    most_viewed: Question[];
+    most_bookmarked: Question[];
+    most_discussed: Question[];
+  };
+  top_entities: {
+    institutions: {
+      id: string;
+      name: string;
+      question_count: number;
+    }[];
+    courses: {
+      id: string;
+      name: string;
+      code: string;
+      question_count: number;
+    }[];
+    tags: {
+      id: string;
+      name: string;
+      question_count: number;
+    }[];
+  };
   generated_at: string;
 }
