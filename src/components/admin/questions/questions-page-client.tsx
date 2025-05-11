@@ -105,8 +105,7 @@ const QuestionsPageClient = () => {
           ) : questionsData?.data?.length === 0 ? (
             <EmptyState />
           ) : (
-            <QuestionsTable 
-              questions={questionsData as PaginatedStackResponse<Question[]>}
+            <div
             />
           )}
         </div>

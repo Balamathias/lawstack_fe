@@ -102,9 +102,7 @@ const CoursesPageClient = () => {
           ) : coursesData?.data?.length === 0 ? (
             <EmptyState />
           ) : (
-            <CoursesTable 
-              courses={coursesData as PaginatedStackResponse<Course[]>}
-            />
+            <div />
           )}
         </div>
       </div>
