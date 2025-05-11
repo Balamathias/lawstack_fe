@@ -59,10 +59,21 @@ const GuestChatPrompt = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full rounded-xl bg-card border border-border overflow-hidden shadow-md relative"
+      className="w-full rounded-xl bg-background/30 backdrop-blur-sm border border-primary/20 overflow-hidden shadow-md relative"
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-60"></div>
-      <div className="p-6 relative">
+      {/* Enhanced background patterns */}
+      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04] pointer-events-none">
+        <div className="absolute inset-0" style={{ 
+          backgroundImage: 'radial-gradient(circle, var(--primary) 1px, transparent 1px)', 
+          backgroundSize: '20px 20px'
+        }}/>
+      </div>
+      
+      {/* Ambient gradients for depth */}
+      <div className="absolute top-0 right-0 w-2/5 h-2/5 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent rounded-full blur-3xl transform translate-x-1/3 -translate-y-1/3"></div>
+      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-primary/10 via-primary/5 to-transparent rounded-full blur-3xl transform -translate-x-1/4 translate-y-1/4"></div>
+      
+      <div className="p-6 relative z-10">
         <div className="flex items-center gap-4 relative z-10">
           <div className="bg-primary/10 text-primary p-3 rounded-xl border border-primary/20">
             <History className="h-5 w-5" />
@@ -78,10 +89,12 @@ const GuestChatPrompt = () => {
               <motion.div
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.98 }}
+                className="relative"
               >
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/60 to-primary/30 rounded-lg blur-sm opacity-60 hover:opacity-80 transition-all duration-300"></div>
                 <Button
                   onClick={() => router.push('/login')}
-                  className="flex items-center gap-2 rounded-lg"
+                  className="flex items-center gap-2 rounded-lg relative z-10"
                 >
                   <LogIn className="h-4 w-4" />
                   <span>Sign In</span>
@@ -94,11 +107,11 @@ const GuestChatPrompt = () => {
               >
                 <Button
                   variant="ghost"
-                  className="text-primary flex items-center gap-1 rounded-lg"
+                  className="text-primary flex items-center gap-1 rounded-lg group"
                   onClick={() => router.push('/dashboard/chat')}
                 >
-                  Try Demo
-                  <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                  <span>Try Demo</span>
+                  <ArrowRight className="h-3.5 w-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </motion.div>
             </div>
@@ -219,28 +232,46 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full rounded-xl bg-card/80 border border-border overflow-hidden shadow-md relative p-6"
+        className="w-full rounded-xl bg-background/30 backdrop-blur-sm border border-border/60 overflow-hidden shadow-md relative"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-60"></div>
+        {/* Background patterns */}
+        <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04] pointer-events-none">
+          <div className="absolute inset-0" style={{ 
+            backgroundImage: 'radial-gradient(circle, var(--primary) 1px, transparent 1px)', 
+            backgroundSize: '20px 20px'
+          }}/>
+        </div>
         
-        <div className="flex items-center gap-4 relative z-10">
-          <div className="bg-primary/10 text-primary p-3 rounded-xl border border-primary/20">
-            <MessageSquareDashed className="h-5 w-5" />
-          </div>
-          
-          <div className="flex-1">
-            <h3 className="text-lg font-medium text-foreground mb-1">No conversations yet</h3>
-            <p className="text-sm text-muted-foreground mb-3">
-              Start a new conversation to see your chat history here
-            </p>
+        {/* Ambient gradient */}
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-b from-primary/5 via-primary/3 to-transparent rounded-full blur-3xl transform translate-x-1/3 -translate-y-1/3"></div>
+        
+        <div className="p-6 relative z-10">
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="bg-primary/10 text-primary p-3 rounded-xl border border-primary/20">
+              <MessageSquareDashed className="h-5 w-5" />
+            </div>
             
-            <Button 
-              onClick={() => router.push('/dashboard/chat')}
-              className="mt-3 flex items-center gap-2 rounded-lg"
-            >
-              <MessageCircle className="h-4 w-4" />
-              Start New Chat
-            </Button>
+            <div className="flex-1">
+              <h3 className="text-lg font-medium text-foreground mb-1">No conversations yet</h3>
+              <p className="text-sm text-muted-foreground mb-3">
+                Start a new conversation to see your chat history here
+              </p>
+              
+              <motion.div
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="relative inline-block mt-3"
+              >
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/60 to-primary/30 rounded-lg blur-sm opacity-60 hover:opacity-80 transition-all duration-300"></div>
+                <Button 
+                  onClick={() => router.push('/dashboard/chat')}
+                  className="flex items-center gap-2 rounded-lg relative z-10"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span>Start New Chat</span>
+                </Button>
+              </motion.div>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -251,15 +282,15 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
   
   return (
     <motion.div 
-      className="w-full py-8 px-1 mt-4"
+      className="w-full py-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-md bg-primary/10 text-primary">
-            <MessageSquareMore size={14} />
+          <div className="p-2 rounded-lg bg-primary/10 text-primary">
+            <MessageSquareMore className="h-4 w-4" />
           </div>
           <h3 className="text-base font-medium">Recent Conversations</h3>
           <Badge variant="outline" className="ml-1 text-xs py-0 px-2 rounded-full">
@@ -298,10 +329,10 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
             <Button 
               variant="outline" 
               size="sm"
-              className="text-xs gap-1.5 h-8 rounded-lg hover:bg-primary/10 hover:text-primary"
+              className="text-xs gap-1.5 h-8 rounded-lg hover:bg-primary/10 hover:text-primary group"
             >
               <span>View All</span>
-              <ArrowRight size={12} />
+              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-200" />
             </Button>
           </Link>
         </div>
@@ -330,40 +361,68 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
                   initial={{ opacity: 0, y: 20, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.3, delay: 0.1 + index * 0.05 }}
-                  whileHover={{ y: -4, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                  whileHover={{ 
+                    y: -4, 
+                    boxShadow: "0 12px 24px -6px rgba(0, 0, 0, 0.12)",
+                    borderColor: "var(--primary)"
+                  }}
                   whileTap={{ y: 0, scale: 0.98 }}
                   className={cn(
-                    'flex-shrink-0 w-[300px] rounded-xl overflow-hidden cursor-pointer bg-card',
-                    'border transition-all',
-                    isActive ? 'border-primary/30 shadow-md ring-1 ring-primary/20' : 'border-border/60 hover:border-primary/30 shadow-sm'
+                    'flex-shrink-0 w-[300px] rounded-xl overflow-hidden cursor-pointer',
+                    'backdrop-blur-sm border transition-all relative group',
+                    isActive 
+                      ? 'border-primary/40 shadow-md bg-background/40' 
+                      : 'border-border/60 hover:border-primary/30 shadow-sm bg-background/30'
                   )}
                   onClick={() => router.push(`/dashboard/chat/${chat.id}`)}
                   tabIndex={0}
                   role="button"
                   aria-current={isActive ? "true" : "false"}
                 >
-                  <div className="p-4 h-full flex flex-col">
+                  {/* Card background effects */}
+                  <div className="absolute inset-0 opacity-[0.01] dark:opacity-[0.03]" style={{ 
+                    backgroundImage: 'radial-gradient(circle, var(--primary) 1px, transparent 1px)', 
+                    backgroundSize: '16px 16px'
+                  }} />
+                  
+                  {/* Active glow effect */}
+                  {isActive && (
+                    <div className="absolute inset-0 bg-primary/5 dark:bg-primary/10 rounded-xl" />
+                  )}
+                  
+                  {/* Top colorful border */}
+                  <div className={cn(
+                    "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary to-primary/40",
+                    isActive ? "opacity-100" : "opacity-0 group-hover:opacity-80",
+                    "transition-opacity duration-300"
+                  )} />
+
+                  <div className="p-4 h-full flex flex-col relative z-10">
                     <div className="flex items-center justify-between gap-3 mb-3">
                       <div className="flex items-center gap-2">
                         <div className={cn(
-                          "p-2 rounded-lg border",
-                          chatTypeClass
+                          "p-2 rounded-lg border transition-all duration-200",
+                          chatTypeClass,
+                          "group-hover:shadow-sm group-hover:scale-105"
                         )}>
                           {getChatIcon(chat.chat_type)}
                         </div>
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 bg-muted/50">
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 bg-muted/50 dark:bg-muted/20">
                           {getChatTypeLabel(chat.chat_type)}
                         </Badge>
                       </div>
                       
                       {isActive && (
-                        <Badge variant="secondary" className="bg-primary/10 text-primary text-[10px] px-1.5 py-0 h-4">
+                        <Badge variant="secondary" className="bg-primary/10 text-primary text-[10px] px-1.5 py-0 h-4 border border-primary/20">
                           Active
                         </Badge>
                       )}
                     </div>
                     
-                    <h4 className="font-medium text-sm truncate mb-2">
+                    <h4 className={cn(
+                      "font-medium text-sm truncate mb-2 transition-colors duration-200",
+                      isActive ? "text-primary" : "group-hover:text-primary"
+                    )}>
                       {chat.title || "New conversation"}
                     </h4>
                     
@@ -378,17 +437,14 @@ export default function RecentChats({ user, currentChatId }: RecentChatsProps) {
                       </div>
                       
                       <motion.div
-                        initial={{ opacity: 0 }}
-                        whileHover={{ opacity: 1 }}
-                        className="text-xs text-primary font-medium flex items-center gap-1 transition-opacity"
+                        initial={{ opacity: 0, x: -5 }}
+                        whileHover={{ opacity: 1, x: 0 }}
+                        className="text-xs text-primary font-medium flex items-center gap-1 transition-all"
                       >
                         <span>Continue</span>
                         <ArrowRight className="h-3 w-3" />
                       </motion.div>
                     </div>
-                    
-                    {/* Decorative gradient at bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </motion.div>
               );

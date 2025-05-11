@@ -1084,11 +1084,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
             </div>
             <div className="bg-card/90 backdrop-blur-sm text-card-foreground px-4 py-3 rounded-2xl rounded-tl-none shadow-sm border-none border-primary/20">
               <div className="flex items-center gap-2">
-                <div className="typing-dots">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
+                <div className="h-3 w-3 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
                 <span className="text-sm text-muted-foreground">Consulting Smart Assistant...</span>
               </div>
             </div>
@@ -1281,7 +1277,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
         <div className="flex items-center justify-center mt-2">
           <div className="text-xs text-muted-foreground/70 flex items-center">
             <HelpCircle size={10} className="mr-1 text-primary/50" />
-            <span className='truncate'>AI can make mistakes, please verify important information.</span>
+            <span className='truncate'>AI can make mistakes, verify important information.</span>
           </div>
         </div>
       </div>

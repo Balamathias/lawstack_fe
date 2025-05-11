@@ -70,12 +70,12 @@ const QuickStartOption = ({
   return (
     <motion.div
       className={cn(
-        "relative overflow-hidden rounded-xl shadow-sm transition-all",
-        "border border-border hover:border-primary/30 dark:hover:border-primary/40",
-        "bg-card/50 backdrop-blur-sm hover:shadow-lg dark:bg-card/40",
+        "relative overflow-hidden rounded-2xl backdrop-blur-sm transition-all border",
+        "border-border/40 dark:border-border/30 hover:border-primary/30 dark:hover:border-primary/40",
+        "bg-background/30 dark:bg-card/20 hover:shadow-lg",
         disabled ? "opacity-60 pointer-events-none" : "cursor-pointer",
         "group h-full",
-        highlight ? "ring-2 ring-primary/20 bg-primary/[0.03]" : ""
+        highlight ? "ring-1 ring-primary/20 bg-primary/[0.03]" : ""
       )}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -84,28 +84,63 @@ const QuickStartOption = ({
         delay: 0.2 + index * 0.1,
         ease: [0.22, 1, 0.36, 1]
       }}
-      whileHover={{ scale: 1.02, y: -4 }}
+      whileHover={{ 
+        scale: 1.02, 
+        y: -4,
+        boxShadow: "0 15px 30px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05)"
+      }}
       whileTap={{ scale: 0.98 }}
       onClick={disabled ? undefined : onClick}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
+      {/* Enhanced background patterns */}
+      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04] pointer-events-none">
+        <div className="absolute inset-0" style={{ 
+          backgroundImage: 'radial-gradient(circle, var(--primary) 1px, transparent 1px)', 
+          backgroundSize: '20px 20px'
+        }}/>
+      </div>
+      
+      {/* Decorative elements */}
+      <motion.div 
+        className="absolute -bottom-20 -right-20 rounded-full w-48 h-48 bg-primary/5 opacity-50 dark:opacity-20"
+        animate={{ 
+          scale: isHovered ? 1.2 : 1,
+          rotate: isHovered ? 10 : 0,
+          opacity: isHovered ? 0.7 : 0.5
+        }}
+        transition={{ duration: 0.5 }}
+      />
+      
+      <motion.div 
+        className="absolute top-1/3 right-0 opacity-5 h-32 w-32 -translate-y-1/2 translate-x-1/2"
+        animate={{ 
+          rotate: isHovered ? 15 : 0,
+          scale: isHovered ? 1.2 : 1
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        {React.cloneElement(icon as React.ReactElement,)}
+      </motion.div>
+
       {/* Highlight gradient bar */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary to-primary/40 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out origin-left" />
 
+      {/* Recommendation badge */}
       {highlight && (
-        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1 bg-primary/10 text-primary text-xs py-0.5 px-2 rounded-full border border-primary/20">
+        <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-primary/10 text-primary text-xs py-0.5 px-2 rounded-full border border-primary/20">
           <Sparkles className="h-3 w-3" />
-          <span className="text-[10px] sm:text-xs">Recommended</span>
+          <span className="text-xs">Recommended</span>
         </div>
       )}
 
-      <div className="p-4 sm:p-6 md:p-7 flex flex-col h-full justify-between relative z-10">
+      <div className="p-6 flex flex-col h-full justify-between relative z-10">
         <div>
-          <div className="flex justify-between items-start mb-3 sm:mb-4">
+          <div className="flex justify-between items-start mb-4">
             <div className={cn(
-              "p-2 sm:p-3 rounded-xl transition-all duration-300 bg-primary/10 text-primary",
-              "group-hover:bg-primary/15 group-hover:scale-105",
+              "p-3 rounded-xl transition-all duration-300 bg-primary/10 text-primary",
+              "group-hover:shadow-md group-hover:scale-105",
               "border border-primary/10 group-hover:border-primary/25"
             )}>
               {React.cloneElement(icon as React.ReactElement)}
@@ -115,12 +150,12 @@ const QuickStartOption = ({
               <TooltipTrigger asChild>
                 <button 
                   className={cn(
-                    "text-muted-foreground hover:text-foreground flex items-center justify-center rounded-full p-1 sm:p-1.5 transition-colors",
-                    "bg-card/80 backdrop-blur-sm hover:bg-card/90 border border-border hover:border-primary/30"
+                    "text-muted-foreground hover:text-foreground flex items-center justify-center rounded-full p-1.5 transition-colors",
+                    "bg-background/80 backdrop-blur-sm hover:bg-card/90 border border-border/50 hover:border-primary/30"
                   )}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <Info size={12} className="sm:w-4 sm:h-4" />
+                  <Info className="w-3.5 h-3.5" />
                 </button>
               </TooltipTrigger>
               <TooltipContent 
@@ -133,44 +168,25 @@ const QuickStartOption = ({
             </Tooltip>
           </div>
           
-          <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2 line-clamp-1 text-foreground group-hover:text-primary transition-colors">
+          <h3 className="font-semibold text-lg mb-2 line-clamp-1 text-foreground group-hover:text-primary transition-colors">
             {title}
           </h3>
-          <p className="text-muted-foreground text-xs sm:text-sm pr-2 sm:pr-4 line-clamp-2 mt-1">{description}</p>
+          <p className="text-sm text-muted-foreground pr-4 line-clamp-2 mt-1">{description}</p>
         </div>
         
         <motion.div 
-          className="flex items-center gap-1.5 text-xs sm:text-sm font-medium mt-3 sm:mt-4 text-primary"
+          className="flex items-center gap-1.5 text-sm font-medium mt-4 text-primary"
           initial={{ opacity: 0.8 }}
-          animate={{ opacity: isHovered ? 1 : 0.8, x: isHovered ? 5 : 0 }}
+          animate={{ 
+            opacity: isHovered ? 1 : 0.8, 
+            x: isHovered ? 5 : 0 
+          }}
           transition={{ duration: 0.2 }}
         >
           <span>Get Started</span>
-          <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+          <ArrowRight className="h-3.5 w-3.5" />
         </motion.div>
       </div>
-      
-      {/* Decorative elements */}
-      <motion.div 
-        className="absolute -bottom-20 -right-20 rounded-full w-40 sm:w-60 h-40 sm:h-60 bg-primary/5 opacity-50 dark:opacity-20"
-        animate={{ 
-          scale: isHovered ? 1.2 : 1,
-          rotate: isHovered ? 10 : 0,
-          opacity: isHovered ? (0.7) : (0.5)
-        }}
-        transition={{ duration: 0.5 }}
-      />
-      
-      <motion.div 
-        className="absolute top-1/3 right-0 opacity-5 h-20 sm:h-40 w-20 sm:w-40 -translate-y-1/2 translate-x-1/2"
-        animate={{ 
-          rotate: isHovered ? 15 : 0,
-          scale: isHovered ? 1.2 : 1
-        }}
-        transition={{ duration: 0.5 }}
-      >
-        {React.cloneElement(icon as React.ReactElement,)}
-      </motion.div>
     </motion.div>
   )
 }
@@ -181,35 +197,48 @@ const GuestPrompt = ({ onLoginClick }: { onLoginClick: () => void }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="rounded-xl overflow-hidden mb-6 sm:mb-10 border border-primary/20 bg-card/60 shadow-md backdrop-blur-sm"
+      className="rounded-xl overflow-hidden mb-8 border border-primary/20 bg-card/40 backdrop-blur-sm shadow-sm"
     >
-      <div className="p-4 sm:p-6 md:p-8 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute top-0 right-0 w-60 sm:w-80 h-60 sm:h-80 bg-primary/5 rounded-full translate-x-1/3 -translate-y-1/3 blur-2xl"></div>
-        <div className="absolute bottom-0 left-0 w-40 sm:w-60 h-40 sm:h-60 bg-primary/5 rounded-full -translate-x-1/3 translate-y-1/3 blur-2xl"></div>
+      <div className="p-6 md:p-8 relative overflow-hidden">
+        {/* Enhanced background elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div 
+            className="absolute inset-0 opacity-[0.03]" 
+            style={{ 
+              backgroundImage: 'radial-gradient(circle, var(--primary) 1px, transparent 1px)', 
+              backgroundSize: '20px 20px'
+            }}
+          />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary/5 rounded-full -translate-x-1/3 translate-y-1/3 blur-3xl"></div>
+        </div>
         
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center relative z-10">
-          <div className="p-3 sm:p-4 rounded-xl bg-primary/10 border border-primary/20 self-start">
-            <Scale className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+        <div className="flex flex-col sm:flex-row gap-6 sm:items-center relative z-10">
+          <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 self-start">
+            <Scale className="h-10 w-10 text-primary" />
           </div>
           
-          <div className="flex-1 space-y-2 sm:space-y-3">
-            <h3 className="text-lg sm:text-xl font-semibold">Welcome to LawStack Assistant</h3>
-            <p className="text-sm sm:text-base text-muted-foreground max-w-xl">
+          <div className="flex-1 space-y-3">
+            <h3 className="text-xl font-semibold">Welcome to LawStack Assistant</h3>
+            <p className="text-base text-muted-foreground max-w-xl">
               Sign in to access the full features of LawStack, including saving your conversations, creating personalized quizzes, and tracking your progress across different legal courses.
             </p>
             
-            <div className="flex flex-wrap gap-2 sm:gap-3 mt-3 sm:mt-4">
+            <div className="flex flex-wrap gap-3 mt-4">
               <motion.div
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
               >
                 <Button 
                   onClick={onLoginClick}
-                  className="flex gap-2 rounded-xl text-sm sm:text-base"
+                  className="flex gap-2 rounded-lg text-base relative overflow-hidden group"
                 >
-                  <LogIn className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span>Log In</span>
+                  <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-primary/80 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 w-full h-full bg-primary transition-opacity duration-300" />
+                  <div className="relative flex items-center gap-2 z-10">
+                    <LogIn className="h-4 w-4" />
+                    <span>Log In</span>
+                  </div>
                 </Button>
               </motion.div>
               
@@ -220,11 +249,11 @@ const GuestPrompt = ({ onLoginClick }: { onLoginClick: () => void }) => {
                 <Button 
                   variant="outline" 
                   asChild
-                  className="flex gap-2 border-primary/20 text-primary rounded-xl text-sm sm:text-base"
+                  className="flex gap-2 border-primary/20 text-primary rounded-lg text-base"
                   size="default"
                 >
                   <Link href="/register">
-                    <UserPlus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                    <UserPlus className="h-4 w-4" />
                     <span>Register</span>
                   </Link>
                 </Button>
@@ -299,41 +328,47 @@ const QuickStart = ({ user, chat_id }: Props) => {
 
   return (
     <TooltipProvider delayDuration={300}>
-      {isPending && <LoadingOverlay />}
+      {isPending && 
+        <div className="fixed inset-0 z-50">
+          <LoadingOverlay />
+        </div>
+      }
       
-      <div className={cn("w-full max-w-5xl mx-auto py-4 sm:py-8 px-3 sm:px-4 relative min-h-[80vh] flex flex-col gap-6 sm:gap-8", delius.variable)}>
+      <div className={cn("w-full max-w-5xl mx-auto py-6 px-4 sm:py-10 relative min-h-[80vh] flex flex-col gap-8", delius.variable)}>
+        {/* Top section with history button */}
         <div className="flex justify-end">
           <ChatHistory 
             user={user} 
             currentChatId={chat_id}
             trigger={
-              <Button variant="outline" size="sm" className="flex items-center gap-2 mb-2 sm:mb-4 text-xs sm:text-sm">
-                <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4" />
+              <Button variant="outline" size="sm" className="flex items-center gap-2 text-sm rounded-lg bg-card/60 backdrop-blur-sm border-primary/20 hover:bg-primary/10 hover:text-primary">
+                <MessageSquare className="h-4 w-4" />
                 <span>Chat History</span>
               </Button>
             }
           />
         </div>
         
-        <div className="relative z-10 w-full flex flex-col flex-1 gap-4 sm:gap-5">
-          {/* Header with animated entry */}
+        {/* Main content area */}
+        <div className="relative z-10 w-full flex flex-col flex-1 gap-6">
+          {/* Enhanced header with animated entry */}
           <motion.div 
-            className="text-center mb-6 sm:mb-12"
+            className="text-center mb-8 sm:mb-12"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
-            <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+            <div className="flex items-center justify-center gap-2 mb-3">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
-                className="bg-primary/10 p-2 sm:p-3 rounded-xl border border-primary/20"
+                // className="bg-primary/10 p-3 rounded-xl border border-primary/20"
               >
-                <Wand2 size={24} className="sm:w-[30px] sm:h-[30px] text-primary" />
+                <Scale className="h-7 w-7 text-primary" />
               </motion.div>
               <motion.span 
-                className="text-primary font-delius font-medium text-lg sm:text-xl"
+                className="text-primary font-delius font-medium text-xl"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4, duration: 0.5 }}
@@ -343,7 +378,7 @@ const QuickStart = ({ user, chat_id }: Props) => {
             </div>
             
             <motion.h2 
-              className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 text-foreground"
+              className="text-3xl md:text-xl font-bold mb-3 text-foreground"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
@@ -352,20 +387,20 @@ const QuickStart = ({ user, chat_id }: Props) => {
             </motion.h2>
             
             <motion.p
-              className="text-sm sm:text-base text-muted-foreground px-2"
+              className="text-base text-muted-foreground max-w-xl mx-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              Choose how you'd like to engage with our AI assistant for personalized legal education and guidance
+              Choose how {"you'd"} like to engage with our AI assistant for personalized legal education and guidance
             </motion.p>
           </motion.div>
           
           {/* Guest prompt if user is not logged in */}
           {isGuest && <GuestPrompt onLoginClick={handleLoginClick} />}
           
-          {/* Main options grid with staggered animation */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-6 sm:mb-10">
+          {/* Enhanced options grid with staggered animation */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mb-8">
             {options.map((option, index) => (
               <QuickStartOption 
                 key={option.title} 
@@ -382,7 +417,7 @@ const QuickStart = ({ user, chat_id }: Props) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="py-3 sm:py-5"
+            className="py-5"
           >
             {!isGuest && (
               <RecentChats 
