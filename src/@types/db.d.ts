@@ -519,3 +519,96 @@ export interface GlobalPastQuestionAnalytics {
   };
   generated_at: string;
 }
+
+export interface GlobalChatAnalytics {
+  summary: {
+    total_chats: number;
+    active_chats: number;
+    inactive_chats: number;
+    total_messages: number;
+    avg_messages_per_chat: number;
+  };
+  time_based: {
+    chats_last_24h: number;
+    chats_last_week: number;
+    chats_last_month: number;
+    chats_per_day_avg: number;
+  };
+  distributions: {
+    by_type: { chat_type: string; count: number }[];
+    message_types: { sender: string; count: number }[];
+    feedback: { feedback: string; count: number }[];
+  };
+  popular_content: {
+    courses: {
+      id: string;
+      name: string;
+      code: string;
+      chat_count: number;
+    }[];
+    past_questions: {
+      id: string;
+      text: string;
+      year: string;
+      semester: string;
+      chat_count: number;
+    }[];
+  };
+  user_engagement: {
+    most_active_users: {
+      id: string;
+      username: string;
+      chat_count: number;
+    }[];
+  };
+  generated_at: string;
+}
+
+export interface GlobalQuizAnalytics {
+  summary: {
+    total_quizzes: number;
+    completed_quizzes: number;
+    in_progress_quizzes: number;
+    pending_quizzes: number;
+    expired_quizzes: number;
+    completion_rate: number;
+    average_score: number;
+    average_completion_time_minutes: number;
+  };
+  questions: {
+    total_questions: number;
+    total_answers: number;
+    correct_answers: number;
+    accuracy_rate: number;
+    difficulty_distribution: { difficulty: string; count: number }[];
+  };
+  time_based: {
+    quizzes_last_24h: number;
+    quizzes_last_week: number;
+    quizzes_last_month: number;
+    daily_average_last_month: number;
+    completions_by_day: Record<string, number>;
+  };
+  course_analytics: {
+    id: string;
+    name: string;
+    code: string;
+    quiz_count: number;
+    completed_count: number;
+    average_score: number;
+  }[];
+  user_engagement: {
+    id: string;
+    username: string;
+    quiz_count: number;
+    completed_count: number;
+    average_score: number;
+  }[];
+  difficult_questions: {
+    question_id: string;
+    question_text: string;
+    correct_rate: number;
+    attempt_count: number;
+  }[];
+  generated_at: string;
+}

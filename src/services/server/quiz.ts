@@ -1,7 +1,7 @@
 'use server'
 
 import { PaginatedStackResponse, StackResponse } from '@/@types/generics'
-import { Quiz, QuizStatistics } from '@/@types/db'
+import { GlobalQuizAnalytics, Quiz, QuizStatistics } from '@/@types/db'
 import { stackbase } from '../server.entry'
 
 /**
@@ -190,6 +190,20 @@ export const generateMCQuestions = async (
       ...params,
       count: params.count || 10
     })
+    return data
+  } catch (error: any) {
+    return {
+      message: error?.response?.data?.message || error.response?.data?.detail,
+      error: error?.response?.data,
+      data: null,
+      status: error?.response?.status
+    }
+  }
+}
+
+export const getQuizzesAnalytics = async (): Promise<StackResponse<GlobalQuizAnalytics | null>> => {
+  try {
+    const { data } = await stackbase.get('/quizzes/global_analytics/')
     return data
   } catch (error: any) {
     return {

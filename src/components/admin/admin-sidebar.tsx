@@ -19,7 +19,9 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
-  LucideScale
+  LucideScale,
+  ClipboardCheck,
+  MessageSquare,
 } from 'lucide-react'
 import { Button } from '../ui/button'
 import { useLogout } from '@/services/client/auth'
@@ -48,6 +50,16 @@ export const adminLinks = [
     tooltip: "Users",
     href: "/admin/users",
     icon: Users,
+  },
+  {
+    tooltip: "Quizzes",
+    href: "/admin/quizzes",
+    icon: ClipboardCheck,
+  },
+  {
+    tooltip: "Chats",
+    href: "/admin/chats",
+    icon: MessageSquare,
   },
   {
     tooltip: "Institutions",

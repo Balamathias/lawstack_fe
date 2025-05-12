@@ -1,17 +1,16 @@
 'use server'
 
-import { Chat, GlobalChatAnalytics, Message } from '@/@types/db'
+import { Quiz, GlobalQuizAnalytics } from '@/@types/db'
 import { PaginatedStackResponse, StackResponse } from '@/@types/generics'
 import { stackbase } from '../server.entry'
 
-
-interface ChatPayload {
+interface QuizPayload {
     params?: Record<string, string | number | boolean>
 }
 
-export const getChats = async (payload?: ChatPayload): Promise<PaginatedStackResponse<Chat[]>> => {    
+export const getQuizzes = async (payload?: QuizPayload): Promise<PaginatedStackResponse<Quiz[]>> => {
     try {
-        const { data } = await stackbase.get('/chats/', { ...payload })
+        const { data } = await stackbase.get('/quizzes/', { ...payload })
         return data
     } catch (error: any) {
         return {
@@ -26,9 +25,9 @@ export const getChats = async (payload?: ChatPayload): Promise<PaginatedStackRes
     }
 }
 
-export const getChat = async (id: string): Promise<StackResponse<Chat | null>> => {
+export const getQuiz = async (id: string): Promise<StackResponse<Quiz | null>> => {
     try {
-        const { data } = await stackbase.get(`/chats/${id}/`)
+        const { data } = await stackbase.get(`/quizzes/${id}/`)
         return data
     } catch (error: any) {
         return {
@@ -40,9 +39,9 @@ export const getChat = async (id: string): Promise<StackResponse<Chat | null>> =
     }
 }
 
-export const createChat = async (payload: Partial<Chat>): Promise<StackResponse<Chat | null>> => {
+export const createQuiz = async (payload: Partial<Quiz>): Promise<StackResponse<Quiz | null>> => {
     try {
-        const { data } = await stackbase.post('/chats/', payload)
+        const { data } = await stackbase.post('/quizzes/', payload)
         return data
     } catch (error: any) {
         return {
@@ -54,9 +53,9 @@ export const createChat = async (payload: Partial<Chat>): Promise<StackResponse<
     }
 }
 
-export const deleteChat = async (id: string): Promise<StackResponse<Chat | null>> => {
+export const updateQuiz = async (id: string, payload: Partial<Quiz>): Promise<StackResponse<Quiz | null>> => {
     try {
-        const { data } = await stackbase.delete(`/chats/${id}/`)
+        const { data } = await stackbase.put(`/quizzes/${id}/`, payload)
         return data
     } catch (error: any) {
         return {
@@ -68,33 +67,30 @@ export const deleteChat = async (id: string): Promise<StackResponse<Chat | null>
     }
 }
 
-export const getChatMessages = async (id: string, params?: Record<string, any>): Promise<PaginatedStackResponse<Message[] | null>> => {
+export const deleteQuiz = async (id: string): Promise<StackResponse<Quiz | null>> => {
     try {
-        const { data } = await stackbase.get(`/chats/${id}/messages/`, { params })
+        const { data } = await stackbase.delete(`/quizzes/${id}/`)
         return data
     } catch (error: any) {
         return {
             message: error?.response?.data?.message || error.response?.data?.detail,
             error: error?.response?.data,
             data: null,
-            status: error?.response?.status,
-            count: 0,
-            next: '',
-            previous: ''
+            status: error?.response?.status
         }
     }
 }
 
-export const getChatsAnalytics = async (): Promise<StackResponse<GlobalChatAnalytics | null>> => {
-  try {
-    const { data } = await stackbase.get('/chats/global_analytics/')
-    return data
-  } catch (error: any) {
-    return {
-      message: error?.response?.data?.message || error.response?.data?.detail,
-      error: error?.response?.data,
-      data: null,
-      status: error?.response?.status
+export const getQuizzesAnalytics = async (): Promise<StackResponse<GlobalQuizAnalytics | null>> => {
+    try {
+        const { data } = await stackbase.get('/quizzes/global_analytics/')
+        return data
+    } catch (error: any) {
+        return {
+            message: error?.response?.data?.message || error.response?.data?.detail,
+            error: error?.response?.data,
+            data: null,
+            status: error?.response?.status
+        }
     }
-  }
 }
