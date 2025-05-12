@@ -514,56 +514,78 @@ export default function QuizDashboard({ initialQuizzes, initialStats, initialCou
       transition={{ duration: 0.5 }}
     >
       {/* Header section with gradient background and patterns */}
-      <div className="relative bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 rounded-2xl p-6 overflow-hidden shadow-sm border border-primary/10">
-        {/* Background pattern */}
-        <div className="absolute inset-0 pointer-events-none opacity-20">
-          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.05)_25%,rgba(68,68,68,.05)_50%,transparent_50%,transparent_75%,rgba(68,68,68,.05)_75%)] bg-[length:8px_8px]"></div>
+      <motion.div 
+        className="relative overflow-hidden rounded-2xl shadow-lg glass-effect border-primary/10 backdrop-blur-sm"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Background patterns and decorative elements */}
+        <div className="absolute inset-0 pointer-events-none opacity-10">
+          <div className="absolute inset-0 bg-neural-pattern"></div>
         </div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full opacity-70"></div>
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-radial from-primary/10 to-transparent opacity-60"></div>
         
-        <div className="relative z-10 flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="bg-primary/10 p-2 rounded-full border border-primary/20">
-                <GraduationCap className="h-5 w-5 text-primary" />
-              </div>
-              <h1 className="text-2xl font-bold">AI-Powered Quizzes</h1>
-            </div>
-            <p className="text-muted-foreground max-w-md">
-              Test your knowledge with AI-generated quizzes tailored to your courses. Track your progress and improve your understanding.
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-3 self-end">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search quizzes..."
-                className="pl-9 w-[200px] sm:w-[250px] h-10 bg-background/80 border-border focus-visible:ring-primary/20"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            
-            <Button 
-              onClick={() => setIsCreating(true)}
-              className="gap-2 bg-primary/90 hover:bg-primary"
-              disabled={createQuizMutation.isPending}
+        <div className="relative z-10 p-6 sm:p-8">
+          <div className="flex flex-col sm:flex-row justify-between gap-6 items-start sm:items-center">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="space-y-3"
             >
-              {createQuizMutation.isPending ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Creating...
-                </>
-              ) : (
-                <>
-                  <PlusCircle className="h-4 w-4" />
-                  New Test
-                </>
-              )}
-            </Button>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="bg-primary/10 p-2.5 rounded-xl border border-primary/20 shadow-sm animate-pulse-custom">
+                  <GraduationCap className="h-5 w-5 text-primary" />
+                </div>
+                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                  AI-Powered Quizzes
+                </h1>
+              </div>
+              <p className="text-muted-foreground max-w-md text-sm sm:text-base animate-fade-in">
+                Test your knowledge with AI-generated quizzes tailored to your courses. 
+                Track your progress and improve your understanding.
+              </p>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto"
+            >
+              <div className="relative w-full sm:w-auto mb-2 sm:mb-0">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search quizzes..."
+                  className="pl-10 w-full sm:w-[220px] md:w-[250px] bg-background/70 border-primary/20 shadow-sm focus-visible:ring-primary/30"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              
+              <Button 
+                onClick={() => setIsCreating(true)}
+                className="gap-2 bg-primary/90 hover:bg-primary shadow-sm w-full sm:w-auto"
+                disabled={createQuizMutation.isPending}
+              >
+                {createQuizMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle className="h-4 w-4" />
+                    New Test
+                  </>
+                )}
+              </Button>
+            </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Statistics and Performance Section */}
       {loadingStats ? (

@@ -38,19 +38,9 @@ export const dashboardLinks = [
     icon: Home,
   },
   {
-    tooltip: "Past Questions",
-    href: "/dashboard/past-questions",
-    icon: BookOpen,
-  },
-  {
     tooltip: "Smart Assistant",
     href: "/dashboard/chat",
     icon: Sparkles,
-  },
-  {
-    tooltip: "Bookmarks",
-    href: "/dashboard/bookmarks",
-    icon: BookMarked,
   },
   {
     tooltip: "Courses",
@@ -63,14 +53,19 @@ export const dashboardLinks = [
     icon: Shield
   },
   {
+    tooltip: "Past Questions",
+    href: "/dashboard/past-questions",
+    icon: BookOpen,
+  },
+  {
+    tooltip: "Bookmarks",
+    href: "/dashboard/bookmarks",
+    icon: BookMarked,
+  },
+  {
     tooltip: "Search",
     href: "/dashboard/search",
     icon: Search,
-  },
-  {
-    tooltip: "Community",
-    href: "/dashboard/community",
-    icon: Users,
   },
   {
     tooltip: "Settings",
@@ -81,6 +76,11 @@ export const dashboardLinks = [
     tooltip: "Subscriptions",
     href: "/dashboard/subscriptions",
     icon: Crown,
+  },
+  {
+    tooltip: "Community",
+    href: "/dashboard/community",
+    icon: Users,
   },
 ]
 

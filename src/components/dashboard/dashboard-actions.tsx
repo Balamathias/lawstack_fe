@@ -21,6 +21,19 @@ import { useRouter } from 'nextjs-toploader/app';
 
 const actionItems = [
   {
+    title: 'Smart Assistant',
+    description: 'Chat with LawStack AI for personalized help.',
+    icon: Sparkles,
+    href: '/dashboard/chat',
+    color: 'bg-violet-500/10 text-violet-500 dark:bg-violet-500/20 dark:text-violet-400',
+    hoverGradient: 'hover:bg-gradient-to-br hover:from-violet-600/20 hover:to-violet-400/20',
+    pattern: 'radial-gradient(circle at center, currentColor 0, currentColor 1px, transparent 1px, transparent) 0 0/24px 24px',
+    patternColor: 'text-violet-500/[0.03] dark:text-violet-400/[0.03]',
+    delay: 0.3,
+    featured: true,
+    badge: 'New'
+  },
+  {
     title: 'Courses',
     description: 'Explore law courses and materials.',
     icon: BookOpen,
@@ -50,19 +63,7 @@ const actionItems = [
       label: 'CBT'
     }
   },
-  {
-    title: 'Smart Assistant',
-    description: 'Chat with LawStack AI for personalized help.',
-    icon: Sparkles,
-    href: '/dashboard/chat',
-    color: 'bg-violet-500/10 text-violet-500 dark:bg-violet-500/20 dark:text-violet-400',
-    hoverGradient: 'hover:bg-gradient-to-br hover:from-violet-600/20 hover:to-violet-400/20',
-    pattern: 'radial-gradient(circle at center, currentColor 0, currentColor 1px, transparent 1px, transparent) 0 0/24px 24px',
-    patternColor: 'text-violet-500/[0.03] dark:text-violet-400/[0.03]',
-    delay: 0.3,
-    featured: true,
-    badge: 'New'
-  },
+  
   {
     title: 'Past Questions',
     description: 'Access previous exam questions.',
