@@ -642,10 +642,10 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
 
     return (
       <div
-        className={`max-w-[90%] px-4 mt-2 backdrop-blur-sm ${
+        className={`px-4 mt-2 backdrop-blur-sm ${
           message.sender === 'user'
-            ? 'dark:bg-secondary/40 bg-primary/95 dark:text-foreground text-white rounded-2xl rounded-tr-sm shadow-sm py-2'
-            : 'text-card-foreground rounded-2xl border-none'
+            ? 'dark:bg-secondary/40 bg-primary/95 dark:text-foreground text-white rounded-2xl rounded-tr-sm shadow-sm py-2 max-w-[75%]'
+            : 'text-card-foreground rounded-2xl border-none w-full md:max-w-[90%] '
         } ${isStreaming ? 'relative overflow-hidden' : ''}`}
       >
         {message?.sender === 'user' ? (
