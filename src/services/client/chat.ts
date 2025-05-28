@@ -2,7 +2,7 @@ import { Chat, Message } from "@/@types/db"
 import { StackResponse } from "@/@types/generics"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
-import { API_URL } from "../utils"
+import { API_URL, API_URL_V2 } from "../utils"
 import { toast } from "sonner"
 import { getCookie } from 'cookies-next/client'
 import { getChats, deleteChat, getChatMessages } from "../server/chats"
@@ -60,7 +60,7 @@ export const useSendMessage = (chat_id: string) => {
             if (!token) {
                 throw new Error('Authorization token is missing.');
             }
-            const res = await axios.post(`${API_URL}/chats/${chat_id}/send-and-respond/`, data, {
+            const res = await axios.post(`${API_URL_V2}/chats/${chat_id}/send_and_respond/`, data, {
             // const res = await axios.post(`${API_URL}/agent/chats/${chat_id}/message/`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`
