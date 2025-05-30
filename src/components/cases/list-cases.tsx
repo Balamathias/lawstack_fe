@@ -6,6 +6,7 @@ import { Case } from '@/@types/cases'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CalendarIcon, MapPinIcon, ScaleIcon, FileTextIcon, TagIcon } from 'lucide-react'
+import { convertMarkdownToPlainText } from '@/lib/utils'
 
 const ListCases = async () => {
   const { data: cases, error } = await getCases()
@@ -113,7 +114,7 @@ const ListCases = async () => {
                 {caseItem.summary && (
                   <div className="space-y-2">
                     <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-                      {caseItem.summary}
+                      {convertMarkdownToPlainText(caseItem.summary)}
                     </p>
                   </div>
                 )}

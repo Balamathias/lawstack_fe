@@ -22,7 +22,7 @@ interface QuestionContentProps {
 
 const QuestionContent: React.FC<QuestionContentProps> = ({ question, fallbackComponent }) => {
   return (
-    <Card className="shadow-lg border-primary/10">
+    <Card className="shadow-lg md:border-primary/10 relative">
       <CardContent className="pb-8 relative z-10 px-4 md:px-6">
         <Tabs defaultValue="question" className="mt-2">
           <TabsList className="bg-background/80 backdrop-blur-sm border border-border/50 p-1 rounded-lg shadow-sm">
@@ -47,11 +47,11 @@ const QuestionContent: React.FC<QuestionContentProps> = ({ question, fallbackCom
             value="question" 
             className="py-4 focus-visible:outline-none focus-visible:ring-0 animate-in fade-in-50 duration-300"
           >
-            <Card className="border-primary/10 bg-card shadow-lg overflow-hidden relative">
+            <Card className="max-md:border-none md:border-primary/10 md:bg-card md:shadow-lg overflow-hidden">
               {/* Paper texture effect background */}
               <div className="absolute inset-0 bg-[url('/paper-texture.png')] opacity-[0.03] pointer-events-none"></div>
               
-              <CardContent className="p-4 md:p-8 relative">
+              <CardContent className="p-0 md:p-8 relative">
                 <div className="prose prose-lg md:prose-xl max-w-none">
                   <MarkdownPreview 
                     content={question?.text || ''} 
