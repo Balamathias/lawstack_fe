@@ -90,7 +90,7 @@ const ContributionInsights: React.FC<Props> = ({ trigger, contribution, question
             <div className="flex-1">
               <h3 className="font-semibold text-sm mb-1">Contribution Evaluation</h3>
               <p className="text-xs text-muted-foreground">
-                Get detailed analysis of this student contribution's quality, accuracy, and educational value
+                Get detailed analysis of this student {"contribution's"} quality, accuracy, and educational value
               </p>
             </div>
           </div>
