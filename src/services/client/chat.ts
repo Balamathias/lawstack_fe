@@ -60,7 +60,7 @@ export const useSendMessage = (chat_id: string) => {
             if (!token) {
                 throw new Error('Authorization token is missing.');
             }
-            const res = await axios.post(`${API_URL_V2}/chats/${chat_id}/send_and_respond/`, data, {
+            const res = await axios.post(`${API_URL}/chats/${chat_id}/send-and-respond/`, data, {
             // const res = await axios.post(`${API_URL}/agent/chats/${chat_id}/message/`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`
