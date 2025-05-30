@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getCase } from "@/services/server/cases";
 import { CaseDetailClient } from "./case-detail-client";
+import Loader from "@/components/loader";
 
 interface Params {
     params: Promise< {
@@ -45,7 +46,7 @@ export default async function CaseDetailPage({ params }: Params) {
   
   return (
     <div className='max-w-max mx-auto w-full px-4 pb-20 pt-4 md:pt-8 lg:pt-12 max-lg:mt-14 animate-fade-in'>
-      <Suspense fallback={<div>Loading case details...</div>}>
+      <Suspense fallback={<Loader variant="dots" />}>
         <CaseDetailClient caseData={caseData} />
       </Suspense>
     </div>
