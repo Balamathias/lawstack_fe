@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     }
     
     const response = await openai.chat.completions.create({
-      model: AIModels.expert,
+      model: AIModels.advanced,
       messages: [
         {
           role: 'system',

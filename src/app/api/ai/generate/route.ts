@@ -54,7 +54,7 @@ async function getQuestionInsights(prompt: string, question: Question, user: Use
   // If prompt is asking for question suggestions with emojis, handle specially
   if (prompt.includes("Generate") && prompt.includes("questions") && prompt.includes("emojis")) {
     const completion = await openai.chat.completions.create({
-      model: AIModels.expert,
+      model: AIModels.advanced,
       messages: [
         {"role": "system", "content": `You are "LawStack Assistant". Generate creative and relevant prompts with emojis for a legal question. Return only valid JSON array with each object having 'prompt' and 'emoji' fields.`},
         {"role": "user", "content": `${prompt}\n\nQuestion: "${question.text}"\n\nFormat response as a JSON array like: [{"prompt":"Question about the case?", "emoji":"⚖️"}, {"prompt":"What are the key legal principles?", "emoji":"📚"}]`},
@@ -69,7 +69,7 @@ async function getQuestionInsights(prompt: string, question: Question, user: Use
 
   // Otherwise, handle as regular question insight
   const completion = await openai.chat.completions.create({
-    model: AIModels.expert,
+    model: AIModels.advanced,
     messages: [
       {"role": "system", "content": `You are "LawStack Assistant", an advanced legal AI assistant specialized in Nigerian law and international legal principles. You analyze legal questions, explain concepts, and provide structured insights to law students and professionals.`},
       {"role": "system", "content": `When analyzing questions, try to identify: 1) Key legal concepts, 2) Relevant case law, 3) Applicable statutes, 4) Potential arguments, and 5) Common pitfalls.`},
@@ -88,7 +88,7 @@ async function getContributionInsights(prompt: string, question: Question, contr
   // If prompt is asking for question suggestions with emojis, handle specially
   if (prompt.includes("Generate") && prompt.includes("questions") && prompt.includes("emojis")) {
     const completion = await openai.chat.completions.create({
-      model: AIModels.expert,
+      model: AIModels.advanced,
       messages: [
         {"role": "system", "content": `You are "LawStack Assistant". Generate creative and relevant prompts with emojis for analyzing a legal answer/contribution. Return only valid JSON array with each object having 'prompt' and 'emoji' fields.`},
         {"role": "user", "content": `${prompt}\n\nQuestion: "${question.text}"\n\nContribution: "${contribution.text}"\n\nFormat response as a JSON array like: [{"prompt":"Evaluate legal reasoning", "emoji":"⚖️"}, {"prompt":"Check for missing citations", "emoji":"📚"}]`},
@@ -103,7 +103,7 @@ async function getContributionInsights(prompt: string, question: Question, contr
 
   // Otherwise, handle as regular contribution insight
   const completion = await openai.chat.completions.create({
-    model: AIModels.expert,
+    model: AIModels.advanced,
     messages: [
       {"role": "system", "content": `You are "LawStack Assistant", an advanced legal AI assistant specialized in analyzing legal answers and contributions. You can evaluate arguments, identify strengths and weaknesses, and suggest improvements.`},
       {"role": "system", "content": `When analyzing contributions, focus on: 1) Accuracy of legal principles, 2) Strength of arguments, 3) Use of relevant cases, 4) Structure and clarity, and 5) Overall persuasiveness.`},
@@ -128,7 +128,7 @@ async function getContextualInsights(messages: OpenAI.Chat.Completions.ChatCompl
   ];
 
   const completion = await openai.chat.completions.create({
-    model: AIModels.expert,
+    model: AIModels.advanced,
     messages: allMessages as any,
     temperature: 0.7,
     // max_tokens: 1000,
