@@ -1,3 +1,5 @@
+'use server'
+
 import { Case, CaseNote, CaseAttachment, CaseCitation, CaseAnalytics, CaseBulkStatusUpdate } from '@/@types/cases'
 import { PaginatedStackResponse, StackResponse } from '@/@types/generics'
 import { stackbase } from '../server.entry'

@@ -17,7 +17,8 @@ import {
   Shield,
   LucideScale,
   ArrowRight,
-  Crown
+  Crown,
+  Scale
 } from "lucide-react"
 import Logo from '../logo'
 import { Button } from '../ui/button'
@@ -61,6 +62,11 @@ export const dashboardLinks = [
     tooltip: "Bookmarks",
     href: "/dashboard/bookmarks",
     icon: BookMarked,
+  },
+  {
+    tooltip: "Cases",
+    href: "/dashboard/cases",
+    icon: Scale,
   },
   {
     tooltip: "Search",
@@ -273,7 +279,7 @@ const DashboardSidebar = ({ user }: Props) => {
             )}
             variant="default"
             size={isCollapsed ? "icon" : "sm"}
-            onClick={handleLogout}
+            onClick={() => router.push('/login?next=' + pathname)}
             disabled={loggingOut}
             title="Login"
           >
