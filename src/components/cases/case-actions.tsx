@@ -134,7 +134,7 @@ export function CaseActions({ caseData, onAction }: CaseActionsProps) {
                 )}
                 <span className="font-medium">{action.label}</span>
               </div>
-              <span className="text-xs text-muted-foreground whitespace-pre-wrap">
+              <span className="text-xs whitespace-pre-wrap">
                 {action.description}
               </span>
             </Button>

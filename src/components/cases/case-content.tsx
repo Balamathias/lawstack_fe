@@ -152,7 +152,7 @@ const CaseContent: React.FC<CaseContentProps> = ({ case: caseData }) => {
                 <Button
                   variant="ghost"
                   onClick={() => toggleSection(section.id)}
-                  className="w-full justify-between p-0 h-auto hover:bg-transparent"
+                  className="w-full justify-between p-0 h-auto hover:bg-transparent flex flex-wrap"
                 >
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-primary/10">
@@ -162,11 +162,12 @@ const CaseContent: React.FC<CaseContentProps> = ({ case: caseData }) => {
                       <CardTitle className="text-lg font-semibold text-foreground">
                         {section.title}
                       </CardTitle>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground whitespace-pre-wrap truncate">
                         {section.description}
                       </p>
                     </div>
                   </div>
+
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="backdrop-blur-sm text-xs">
                       {section.content?.length || 0}

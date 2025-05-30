@@ -277,8 +277,8 @@ export function CaseDetailClient({ caseData }: CaseDetailClientProps) {
 
       {/* Quick Access Footer */}
       <Card className="p-4 bg-gradient-to-r from-primary/5 to-secondary/5 border border-border/50">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4 text-sm">
+        <div className="flex items-center justify-between flex-wrap space-y-2 md:space-y-0 md:space-x-4">
+          <div className="flex items-center space-4 text-sm">
             <span className="text-muted-foreground">Quick Actions:</span>
             <Button
               variant="ghost"
