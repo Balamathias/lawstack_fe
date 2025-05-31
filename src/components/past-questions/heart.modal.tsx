@@ -91,18 +91,6 @@ const HeartModal: React.FC<Props> = ({ question, user, trigger }) => {
           className="w-full"
         >
           <DialogTitle className="flex items-center gap-3 text-xl font-semibold">
-            <motion.div 
-              className="relative bg-gradient-to-br from-pink-500/20 to-rose-500/20 p-3 rounded-xl border border-pink-500/30"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-              <Heart className="h-5 w-5 text-pink-500" />
-              <motion.div
-                className="absolute inset-0 bg-pink-500/10 rounded-xl"
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-            </motion.div>
             <div className="flex flex-col">
               <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
                 Share Your Insights
@@ -123,7 +111,7 @@ const HeartModal: React.FC<Props> = ({ question, user, trigger }) => {
         className="space-y-6"
       >
         {/* Header Section */}
-        <div className="relative overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-card/80 to-card/40 p-6">
+        <div className="hidden md:block relative overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-card/80 to-card/40 p-6">
           <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-rose-500/5" />
           <div className="relative space-y-4">
             <div className="flex items-start gap-4">
@@ -180,12 +168,12 @@ const HeartModal: React.FC<Props> = ({ question, user, trigger }) => {
                   <Textarea
                     placeholder="Share your interpretation, approach, or insights about this question... 
 
-Examples:
-• Alternative solution methods
-• Key legal principles to consider  
-• Common mistakes to avoid
-• Real-world applications
-• Study tips for similar questions"
+                                Examples:
+                                • Alternative solution methods
+                                • Key legal principles to consider  
+                                • Common mistakes to avoid
+                                • Real-world applications
+                                • Study tips for similar questions"
                     className={cn(
                       "min-h-[180px] resize-none border-border/40 focus-visible:ring-pink-500/50",
                       "bg-background/70 backdrop-blur-sm transition-all duration-200",
