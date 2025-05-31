@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { Button } from '../ui/button';
 import ScrollToBottomButton from '../ui/scroll-to-bottom-button';
 import { AIModels, convertMarkdownToPlainText } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 import Image from 'next/image';
@@ -106,6 +106,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
   const { mutate: sendMessage, isPending: isLoading } = useSendMessage(chatId!);
 
   const router = useRouter();
+  const pathname = usePathname();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -984,7 +985,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
             </span>
 
             {!user && (
-              <Link href="/login" passHref>
+              <Link href={"/login?next=" + pathname} passHref>
                 <Button className="flex items-center mt-4 " variant={'secondary'}>
                   <span className="text-sm font-medium">Sign in to chat with LawStack AI</span>
                 </Button>
