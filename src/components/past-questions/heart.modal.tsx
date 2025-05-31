@@ -92,10 +92,10 @@ const HeartModal: React.FC<Props> = ({ question, user, trigger }) => {
         >
           <DialogTitle className="flex items-center gap-3 text-xl font-semibold">
             <div className="flex flex-col">
-              <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r bg-clip-text text-transparent">
                 Share Your Insights
               </span>
-              <span className="text-sm text-muted-foreground font-normal">
+              <span className="text-xs text-muted-foreground font-normal">
                 Help fellow students understand better
               </span>
             </div>
@@ -203,7 +203,7 @@ const HeartModal: React.FC<Props> = ({ question, user, trigger }) => {
             </CardContent>
             
             <CardFooter className="border-t border-border/30 bg-card/20 backdrop-blur-sm flex justify-between items-center px-6 py-4">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="md:flex items-center gap-2 text-xs text-muted-foreground hidden">
                 <Heart className="h-3.5 w-3.5 text-pink-500" />
                 <span>Your contribution helps build a stronger learning community</span>
               </div>
@@ -223,9 +223,7 @@ const HeartModal: React.FC<Props> = ({ question, user, trigger }) => {
                   type="submit" 
                   disabled={isSubmitting || !thought.trim() || thought.trim().length < 10}
                   className={cn(
-                    "gap-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700",
-                    "text-white shadow-lg hover:shadow-xl transition-all duration-200",
-                    "disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px]"
+                    "rounded-xl",
                   )}
                 >
                   <AnimatePresence mode="wait">
