@@ -344,7 +344,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
 
     setIsUploading(true);
 
-    return toast.info('File uploads are not currently supported.')
+    // return toast.info('File uploads are not currently supported.')
     
     // Upload files in parallel
     const uploadPromises = newUploadedFiles.map(async (fileObj) => {
@@ -449,7 +449,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
             }
 
             // Clear uploaded files after successful send
-            clearUploadedFiles();
+            // clearUploadedFiles();
           },
           onError: () => {
             toast.error('Failed to send message. Please try again.');
@@ -778,10 +778,10 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
     return (
       <div className="mt-2 space-y-2">
         {attachments.map((attachment, index) => {
-          const isImage = attachment.file_type?.startsWith('image/');
+          const isImage = attachment.file_type?.startsWith('image/') || (attachment.url && attachment.url.match(/\.(jpg|jpeg|png|gif|webp|svg)(\?|$)/i));
 
           return (
-            <div key={index} className="flex items-center gap-2 p-2 rounded-md border border-border/40 backdrop-blur-sm">
+            <div key={index} className="flex items-center gap-2 p-2 rounded-md backdrop-blur-sm">
               {isImage ? (
                 <div className="relative">
                   <a href={attachment.url} target="_blank" rel="noopener noreferrer" className="block">
@@ -789,7 +789,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
                       src={attachment.url}
                       alt={attachment.filename || 'Image'}
                       width={200}
-                      height={120}
+                      height={400}
                       className="rounded-xl object-cover max-h-44"
                       style={{ objectFit: 'contain' }}
                     />
