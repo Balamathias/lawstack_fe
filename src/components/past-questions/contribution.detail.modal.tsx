@@ -35,18 +35,6 @@ const ContributionDetailModal = ({ contribution, question }: Props) => {
                 >
                   <DialogTitle className="flex items-center justify-between w-full">
                     <div className='flex items-center gap-3'>
-                      <motion.div 
-                        className="relative bg-gradient-to-br from-pink-500/20 to-rose-500/20 p-3 rounded-xl border border-pink-500/30"
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                      >
-                        <LucideHeart className="h-5 w-5 text-pink-500" />
-                        <motion.div
-                          className="absolute inset-0 bg-pink-500/10 rounded-xl"
-                          animate={{ opacity: [0.3, 0.8, 0.3] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        />
-                      </motion.div>
                       <div className="flex flex-col">
                         <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent text-lg font-semibold">
                           Student Contribution
@@ -59,18 +47,7 @@ const ContributionDetailModal = ({ contribution, question }: Props) => {
 
                     <ContributionInsights 
                       trigger={
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className={cn(
-                            'flex items-center cursor-pointer justify-center w-10 h-10 rounded-xl',
-                            'bg-gradient-to-br from-sky-500/10 to-blue-500/10 border border-sky-500/20',
-                            'text-sky-500 hover:from-sky-500/20 hover:to-blue-500/20',
-                            'transition-all duration-200 shadow-sm hover:shadow-md'
-                          )}
-                        >
-                          <LucideSparkle size={16} />
-                        </motion.button>
+                        <LucideSparkle size={16} />
                       }
                       contribution={contribution}
                       question={question}

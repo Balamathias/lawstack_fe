@@ -83,18 +83,6 @@ const ContributionList: React.FC<Props> = async ({ past_question }) => {
       <Empty
       title='No contributions yet'
       content='Be the first to contribute to this question and help fellow students understand better'
-      icon={
-        <span 
-        className={cn(
-          'flex items-center cursor-pointer justify-center w-16 h-16 rounded-full',
-          'bg-gradient-to-br from-pink-500/10 to-rose-500/10 border-2 border-pink-500/20',
-          'text-pink-500 hover:from-pink-500/20 hover:to-rose-500/20',
-          'transition-all duration-300 shadow-lg'
-        )}
-        >
-        <LucideHeart size={24} />
-        </span>
-      }
       color='blue'
       />
     </div>
