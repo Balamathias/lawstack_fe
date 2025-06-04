@@ -228,10 +228,13 @@ const DashboardSidebar = ({ user }: Props) => {
   // User profile and logout
   const UserProfile = () => (
     <div className="flex flex-col gap-2">
-      <div className={cn(
-        "rounded-lg p-2.5 bg-accent/50",
-        isCollapsed ? "items-center justify-center" : "flex items-center gap-3"
-      )}>
+      <Link 
+        className={cn(
+          "rounded-lg p-2.5 bg-accent/50",
+          isCollapsed ? "items-center justify-center" : "flex items-center gap-3"
+        )}
+        href={user ? '/dashboard/profile' : '/login?next=' + pathname}
+      >
         {isCollapsed ? (
           <Avatar className="h-8 w-8 border border-border">
             <AvatarImage src={user?.avatar || ''} />
@@ -255,7 +258,7 @@ const DashboardSidebar = ({ user }: Props) => {
             </div>
           </>
         )}
-      </div>
+      </Link>
       
       {
         user ? (
