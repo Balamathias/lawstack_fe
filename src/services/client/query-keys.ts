@@ -6,6 +6,12 @@ export const QUERY_KEYS = {
   update_user: "update_user",
   delete_user: "delete_user",
   
+  // Profile keys
+  get_user_profile: "get_user_profile",
+  get_profile_by_username: "get_profile_by_username",
+  update_user_profile: "update_user_profile",
+  update_profile: "update_profile",
+  
   // Question keys
   get_questions: "get_questions",
   get_question: "get_question",

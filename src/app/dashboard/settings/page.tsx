@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Palette, User, Bell, Shield, Lock } from 'lucide-react';
 import ThemeSettings from '@/components/settings/theme-settings';
+import { UserProfilePage } from '@/components/profile/user-profile-page';
 
 export const metadata: Metadata = {
   title: 'Settings | Law Stack',
@@ -24,7 +25,7 @@ const SettingsPage = async () => {
           </p>
         </div>
 
-        <Tabs defaultValue="appearance" className="w-full">
+        <Tabs defaultValue="account" className="w-full">
           <div className="border-b border-border mb-8">
             <TabsList className="bg-transparent p-0 h-auto flex w-full justify-start -mb-px space-x-1 gap-2.5 flex-wrap">
               <TabsTrigger 
@@ -75,27 +76,8 @@ const SettingsPage = async () => {
                 <ThemeSettings />
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="account" className="mt-0">
-            <Card className="border border-border rounded-xl shadow-md hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                  <div className="bg-primary/10 p-2 rounded-xl">
-                    <User className="h-5 w-5 text-primary" />
-                  </div>
-                  <CardTitle>Account Settings</CardTitle>
-                </div>
-                <CardDescription className="pt-1.5">
-                  Manage your account details and preferences.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-10 text-muted-foreground">
-                  Account settings coming soon
-                </div>
-              </CardContent>
-            </Card>
+          </TabsContent>          <TabsContent value="account" className="mt-0">
+            <UserProfilePage currentUser={user} />
           </TabsContent>
 
           <TabsContent value="notifications" className="mt-0">
