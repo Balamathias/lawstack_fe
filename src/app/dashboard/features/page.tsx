@@ -4,8 +4,8 @@ import { getUser } from '@/services/server/auth';
 import FeaturesGrid from '@/components/dashboard/features/features-grid';
 
 export const metadata: Metadata = {
-  title: 'All Features | LegalX',
-  description: 'Explore all the powerful features and tools available in LegalX for your legal education journey.'
+  title: 'All Features | lawstack',
+  description: 'Explore all the powerful features and tools available in lawstack for your legal education journey.'
 };
 
 interface Props {
