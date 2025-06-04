@@ -19,7 +19,8 @@ import {
   Brain,
   ChevronRight,
   Play,
-  Award
+  Award,
+  Shield
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -563,8 +564,17 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                       </h3>
                       <div className="flex items-center gap-2">
                         <Badge variant="secondary" className="text-xs px-2 py-0.5">
-                          <Star className="h-2.5 w-2.5 mr-1" />
-                          Pro Student
+                          {user?.is_subscribed ? (
+                            <>
+                              <Shield className="h-2.5 w-2.5 mr-1 text-[goldenrod]" />
+                              Pro Student
+                            </>
+                          ): (
+                              <>
+                                <Star className="h-2.5 w-2.5 mr-1" />
+                                <span>Student</span>
+                              </>
+                          )}
                         </Badge>
                       </div>
                     </div>
