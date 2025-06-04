@@ -342,9 +342,11 @@ const ListNotes = (props: ListNotesProps) => {
               : 'Create your first note to get started.'}
           </p>
           {!searchQuery && !selectedLabel && (
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Your First Note
+            <Button asChild>
+              <Link href="/dashboard/notes/create">
+                <Plus className="h-4 w-4 mr-2" />
+                Create Note
+              </Link>
             </Button>
           )}
         </div>
