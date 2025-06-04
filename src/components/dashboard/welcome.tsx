@@ -539,7 +539,7 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                     <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-primary/60 via-primary/40 to-primary/20 blur-md opacity-80 animate-pulse-glow" />
                     <div className="relative">
                       <Avatar className="h-16 w-16 border-2 border-background shadow-xl">
-                        <AvatarImage src={user?.avatar || ''} />
+                        <AvatarImage src={user?.avatar || ''} className="object-cover" />
                         <AvatarFallback className="bg-primary/20 text-primary font-bold text-lg">
                           {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
                         </AvatarFallback>

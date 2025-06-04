@@ -76,7 +76,7 @@ const MobileSidebar = ({ user }: { user: User | null }) => {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>
       <Avatar className="h-10 w-10 border border-border">
-        <AvatarImage src={user?.avatar || ''} />
+        <AvatarImage src={user?.avatar || ''} className='object-cover' />
         <AvatarFallback className="bg-primary/10 text-primary">
           {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
         </AvatarFallback>
@@ -100,7 +100,7 @@ const MobileSidebar = ({ user }: { user: User | null }) => {
             {user && (
               <div className="flex items-center gap-3 mt-5 pb-2">
                 <Avatar className="h-10 w-10 border border-border">
-                  <AvatarImage src={user?.avatar || ''} />
+                  <AvatarImage src={user?.avatar || ''} className='object-cover' />
                   <AvatarFallback className="bg-primary/10 text-primary">
                     {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
                   </AvatarFallback>
