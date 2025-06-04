@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { 
   BookOpen, 
   BrainCircuit,
@@ -147,15 +148,16 @@ const DashboardAction = () => {
           <div className="h-7 w-1 bg-gradient-to-b from-primary via-primary/80 to-primary/30 rounded-full"></div>
           <h2 className="text-2xl font-bold tracking-tight text-foreground">Features & Tools</h2>
         </div>
-        
-        <motion.button 
-          className="text-sm text-primary flex items-center gap-1 hover:gap-2 transition-all px-2 py-1 rounded-md hover:bg-primary/5"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <span>View all</span>
-          <ArrowRight className="h-4 w-4" />
-        </motion.button>
+          <Link href="/dashboard/features">
+          <motion.button 
+            className="text-sm text-primary flex items-center gap-1 hover:gap-2 transition-all px-2 py-1 rounded-md hover:bg-primary/5"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <span>View all</span>
+            <ArrowRight className="h-4 w-4" />
+          </motion.button>
+        </Link>
       </div>
       
       <motion.div 
