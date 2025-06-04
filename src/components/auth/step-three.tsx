@@ -7,10 +7,12 @@ import { User } from '@/@types/db'
 import { useUpdateUser } from '@/services/client/auth'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { CheckCircle2, Loader2, ImageIcon, ChevronRight } from 'lucide-react'
+import { CheckCircle2, Loader2, ImageIcon, ChevronRight, Upload, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import LoadingOverlay from '../loading-overlay'
 import { Card } from '../ui/card'
+import ProfilePictureUpload from '../ui/profile-picture-upload'
+import { Separator } from '../ui/separator'
 
 interface Props {
     user: User | null
@@ -34,10 +36,17 @@ const avatars = [
 const StepThree = ({ user }: Props) => {
     const { mutate: updateUser, isPending } = useUpdateUser()
     const [avatar, setAvatar] = React.useState('')
+    const [uploadType, setUploadType] = React.useState<'preset' | 'custom'>('custom')
     const router = useRouter()
 
     const handleSelectAvatar = (avatar: string) => {
         setAvatar(avatar)
+        setUploadType('preset')
+    }
+
+    const handleCustomAvatar = (url: string) => {
+        setAvatar(url)
+        setUploadType('custom')
     }
   
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -77,55 +86,115 @@ const StepThree = ({ user }: Props) => {
                         <span>Choose your avatar,</span>
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">@{user?.username}</span>
                     </h2>
-                    
-                    <p className='text-muted-foreground text-base'>
-                        Select an avatar that represents you best. Your profile picture will help others recognize you.
+                      <p className='text-muted-foreground text-base'>
+                        Choose a professional avatar or upload your own photo. Your profile picture helps build trust and recognition.
                     </p>
                 </div>
 
-                <div className='grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 md:gap-4 mt-2 animate-slide-in-up'>
-                    {avatars.map((_avatar, index) => (
-                        <div 
-                            key={index} 
-                            className={cn(
-                                'relative group cursor-pointer transition-all duration-300 hover:z-10',
-                                _avatar === avatar && 'scale-105 z-10'
-                            )}
-                        >
-                            <div className={cn(
-                                'absolute inset-0 rounded-full bg-gradient-to-r from-primary/80 to-primary/60 opacity-0 transition-all duration-300 -z-10 blur-sm',
-                                _avatar === avatar && 'opacity-100'
-                            )} />
-                            
-                            <div className="relative flex items-center justify-center">
-                                <div className={cn(
-                                    'absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 -m-1',
-                                    _avatar === avatar ? 'opacity-100 animate-pulse-custom bg-primary/20' : 'group-hover:opacity-50 bg-secondary/50'
-                                )} />
-                                
-                                <img 
-                                    src={_avatar}
-                                    alt={`Avatar option ${index + 1}`}
-                                    className={cn(
-                                        'w-16 h-16 md:w-20 md:h-20 rounded-full object-cover transition-all duration-300 border-2',
-                                        _avatar === avatar 
-                                            ? 'border-primary shadow-lg shadow-primary/25 scale-110' 
-                                            : 'border-transparent grayscale-[30%] group-hover:grayscale-0 group-hover:border-primary/30 group-hover:shadow-md'
-                                    )}
-                                    onClick={() => handleSelectAvatar(_avatar)}
-                                />
-                                
-                                {_avatar === avatar && (
-                                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-background rounded-full border border-primary/20 shadow-sm flex items-center justify-center animate-fade-in">
-                                        <CheckCircle2 className="w-5 h-5 text-primary" />
-                                    </div>
-                                )}
-                            </div>
+                {/* Upload Options Tabs */}
+                <div className="flex items-center justify-center gap-1 p-1 bg-muted rounded-lg">
+                    <button
+                        onClick={() => setUploadType('custom')}
+                        className={cn(
+                            'flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                            uploadType === 'custom'
+                                ? 'bg-background text-foreground shadow-sm'
+                                : 'text-muted-foreground hover:text-foreground'
+                        )}
+                    >
+                        <div className="flex items-center justify-center gap-2">
+                            <Upload className="w-4 h-4" />
+                            Upload Photo
                         </div>
-                    ))}
+                    </button>
+                    <button
+                        onClick={() => setUploadType('preset')}
+                        className={cn(
+                            'flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                            uploadType === 'preset'
+                                ? 'bg-background text-foreground shadow-sm'
+                                : 'text-muted-foreground hover:text-foreground'
+                        )}
+                    >
+                        <div className="flex items-center justify-center gap-2">
+                            <Sparkles className="w-4 h-4" />
+                            Quick Select
+                        </div>
+                    </button>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 mt-4 sm:mt-8 justify-between items-center">
+                {/* Content based on selected type */}
+                {uploadType === 'preset' ? (
+                    <div className='space-y-6'>
+                        <div className="text-center space-y-2">
+                            <h3 className="text-lg font-semibold">Choose from our collection</h3>
+                            <p className="text-sm text-muted-foreground">
+                                Professional avatars ready to use
+                            </p>
+                        </div>
+
+                        <div className='grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 md:gap-4 animate-slide-in-up'>
+                            {avatars.map((_avatar, index) => (
+                                <div 
+                                    key={index} 
+                                    className={cn(
+                                        'relative group cursor-pointer transition-all duration-300 hover:z-10',
+                                        _avatar === avatar && uploadType === 'preset' && 'scale-105 z-10'
+                                    )}
+                                >
+                                    <div className={cn(
+                                        'absolute inset-0 rounded-full bg-gradient-to-r from-primary/80 to-primary/60 opacity-0 transition-all duration-300 -z-10 blur-sm',
+                                        _avatar === avatar && uploadType === 'preset' && 'opacity-100'
+                                    )} />
+                                    
+                                    <div className="relative flex items-center justify-center">
+                                        <div className={cn(
+                                            'absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 -m-1',
+                                            _avatar === avatar && uploadType === 'preset' ? 'opacity-100 animate-pulse-custom bg-primary/20' : 'group-hover:opacity-50 bg-secondary/50'
+                                        )} />
+                                        
+                                        <img 
+                                            src={_avatar}
+                                            alt={`Avatar option ${index + 1}`}
+                                            className={cn(
+                                                'w-16 h-16 md:w-20 md:h-20 rounded-full object-cover transition-all duration-300 border-2',
+                                                _avatar === avatar && uploadType === 'preset'
+                                                    ? 'border-primary shadow-lg shadow-primary/25 scale-110' 
+                                                    : 'border-transparent grayscale-[30%] group-hover:grayscale-0 group-hover:border-primary/30 group-hover:shadow-md'
+                                            )}
+                                            onClick={() => handleSelectAvatar(_avatar)}
+                                        />
+                                        
+                                        {_avatar === avatar && uploadType === 'preset' && (
+                                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-background rounded-full border border-primary/20 shadow-sm flex items-center justify-center animate-fade-in">
+                                                <CheckCircle2 className="w-5 h-5 text-primary" />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <ProfilePictureUpload
+                        userId={user?.id || ''}
+                        currentAvatar={uploadType === 'custom' ? avatar : undefined}
+                        onAvatarChange={handleCustomAvatar}
+                        className="animate-fade-in"
+                    />
+                )}
+
+                {/* Divider */}
+                {uploadType === 'preset' && (
+                    <div className="relative">
+                        <Separator />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="bg-background px-4 text-xs text-muted-foreground">
+                                OR UPLOAD YOUR OWN
+                            </span>
+                        </div>
+                    </div>
+                )}                <div className="flex flex-col sm:flex-row gap-4 mt-4 sm:mt-8 justify-between items-center">
                     <div className="flex items-center gap-2">
                         {avatar && (
                             <>
@@ -134,9 +203,17 @@ const StepThree = ({ user }: Props) => {
                                     alt="Selected avatar" 
                                     className="w-10 h-10 rounded-full border-2 border-primary/30 shadow-sm animate-fade-in" 
                                 />
-                                <span className="text-sm text-muted-foreground">
-                                    Avatar selected
-                                </span>
+                                <div className="text-sm">
+                                    <span className="text-muted-foreground">
+                                        {uploadType === 'custom' ? 'Custom photo selected' : 'Avatar selected'}
+                                    </span>
+                                    {uploadType === 'custom' && (
+                                        <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
+                                            <CheckCircle2 className="w-3 h-3" />
+                                            <span className="text-xs">Professional upload</span>
+                                        </div>
+                                    )}
+                                </div>
                             </>
                         )}
                     </div>
