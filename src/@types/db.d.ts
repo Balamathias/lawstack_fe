@@ -125,6 +125,7 @@ export interface Message {
     updated_at: string | null,
     feedback: string | null,
     sender: 'user' | 'ai',
+    file_urls?: string[] | null,
     attachments?: MessageAttachment[] | null
 }
 

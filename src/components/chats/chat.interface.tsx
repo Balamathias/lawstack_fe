@@ -1034,7 +1034,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
                         <div className="flex-shrink-0 ml-2 mt-2">
                           {user?.avatar ? (
                             <Avatar>
-                              <AvatarImage src={user?.avatar} alt={user?.username!} />
+                              <AvatarImage className='object-cover' src={user?.avatar} alt={user?.username!} />
                               <AvatarFallback>{user?.username?.[0].toUpperCase()!}</AvatarFallback>
                             </Avatar>
                           ) : (
