@@ -54,6 +54,20 @@ export const createNote = async (payload: Partial<Note>): Promise<StackResponse<
     }
 }
 
+export const updateNote = async (id: string, payload: Partial<Note>): Promise<StackResponse<Note | null>> => {
+    try {
+        const { data } = await stackbase.put(`/notes/${id}/`, payload)
+        return data
+    } catch (error: any) {
+        return {
+            message: error?.response?.data?.message || error.response?.data?.detail,
+            error: error?.response?.data,
+            data: null,
+            status: error?.response?.status
+        }
+    }
+}
+
 export const deleteNote = async (id: string): Promise<StackResponse<Note | null>> => {
     try {
         const { data } = await stackbase.delete(`/notes/${id}/`)

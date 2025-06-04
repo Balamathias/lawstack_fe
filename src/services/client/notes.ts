@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "./query-keys";
-import { createNote, deleteNote, getNote, getNotes } from "../server/notes";
+import { createNote, deleteNote, getNote, getNotes, updateNote } from "../server/notes";
 import { Note } from "@/@types/db";
 
 interface NotePayload {
@@ -43,11 +43,11 @@ export const useDeleteNote = () => {
     });
 };
 
-// export const useUpdateNote = () => {
-//     return useMutation({
-//         mutationKey: [QUERY_KEYS.update_note],
-//         mutationFn: ({ id, payload }: { id: string; payload: Partial<Note> }) => {
-//             return updateNote(id, payload);
-//         },
-//     });
-// };
+export const useUpdateNote = () => {
+    return useMutation({
+        mutationKey: [QUERY_KEYS.update_note],
+        mutationFn: ({ id, payload }: { id: string; payload: Partial<Note> }) => {
+            return updateNote(id, payload);
+        },
+    });
+};

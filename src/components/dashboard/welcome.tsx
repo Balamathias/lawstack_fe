@@ -154,8 +154,8 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
     >      {/* Beautiful Starry Night Sky Background */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Deep space gradient foundation */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-indigo-950/80 via-purple-950/40 to-blue-950/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-slate-900 to-secondary" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-background via-card to-secondary" />
         <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-primary/5 to-primary/10" />
         
         {/* Animated aurora effects */}
@@ -504,7 +504,7 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
               <div className="flex flex-col items-end gap-4 relative">
                 {/* User Achievement Stats */}
                 <motion.div
-                  className="grid grid-cols-3 gap-3 mb-3"
+                  className="grid grid-cols-3 gap-3 mb-3 hidden"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5, duration: 0.6 }}

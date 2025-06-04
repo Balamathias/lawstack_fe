@@ -18,7 +18,8 @@ import {
   LucideScale,
   ArrowRight,
   Crown,
-  Scale
+  Scale,
+  Notebook
 } from "lucide-react"
 import Logo from '../logo'
 import { Button } from '../ui/button'
@@ -62,6 +63,11 @@ export const dashboardLinks = [
     tooltip: "Bookmarks",
     href: "/dashboard/bookmarks",
     icon: BookMarked,
+  },
+  {
+    tooltip: "Notes",
+    href: "/dashboard/notes",
+    icon: Notebook
   },
   {
     tooltip: "Cases",
