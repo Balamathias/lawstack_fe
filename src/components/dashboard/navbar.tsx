@@ -98,7 +98,7 @@ const MobileSidebar = ({ user }: { user: User | null }) => {
             </div>
             
             {user && (
-              <div className="flex items-center gap-3 mt-5 pb-2">
+              <Link className="flex items-center gap-3 mt-5 pb-2" href={user ? '/dashboard/profile' : ('/login?next=' + pathname)}>
                 <Avatar className="h-10 w-10 border border-border">
                   <AvatarImage src={user?.avatar || ''} className='object-cover' />
                   <AvatarFallback className="bg-primary/10 text-primary">
@@ -111,7 +111,7 @@ const MobileSidebar = ({ user }: { user: User | null }) => {
                   </SheetTitle>
                   <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
                 </div>
-              </div>
+              </Link>
             )}
           </SheetHeader>
           
@@ -249,19 +249,6 @@ const Navbar = ({ user }: NavbarProps) => {
         <Logo />
         
         <div className="items-center gap-2">
-          {/* Account button - optional */}
-          {/* {user && (
-            <Button 
-              variant="outline"
-              size="sm"
-              className="text-xs h-8 px-3 border-border/70 text-muted-foreground"
-              onClick={() => window.location.href = '/dashboard/account'}
-            >
-              Account
-            </Button>
-          )} */}
-          
-          {/* Mobile menu trigger */}
           <MobileSidebar user={user} />
         </div>
       </div>

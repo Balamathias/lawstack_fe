@@ -18,12 +18,16 @@ import {
     LayoutDashboard,
     Menu, 
     Sparkles,
-    ChevronRight
+    ChevronRight,
+    User,
+    Settings
 } from 'lucide-react'
 import Logo from '../logo'
 import { Button } from '../ui/button'
-import { User } from '@/@types/db'
+import { User as UserType } from '@/@types/db'
 import Link from 'next/link'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Badge } from '../ui/badge'
 
 const features = [
     {
@@ -59,53 +63,108 @@ const features = [
 ]
 
 interface Props {
-    user: User | null
+    user: UserType | null
 }
 
 const MobileSidebar = ({ user }: Props) => {
+  const getInitials = (firstName?: string | null, lastName?: string | null, email?: string) => {
+    if (firstName && lastName) {
+      return `${firstName[0]}${lastName[0]}`.toUpperCase();
+    }
+    if (firstName) return firstName[0].toUpperCase();
+    if (email) return email[0].toUpperCase();
+    return "U";
+  };
+
   return (
     <div>
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative h-10 w-10 rounded-full">
-                    <Menu size={20} className='text-foreground/80' />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="relative h-10 w-10 rounded-xl hover:bg-white/20 dark:hover:bg-black/20 backdrop-blur-sm border border-white/20 dark:border-gray-800/30 transition-all duration-300"
+                >
+                    <Menu size={20} className='text-foreground transition-colors' />
                 </Button>
             </SheetTrigger>
 
-            <SheetContent side="left" className='bg-white dark:bg-gray-950 border-0 shadow-lg p-0'>
-                <SheetHeader className='border-b border-gray-100 dark:border-gray-800 p-4'>
+            <SheetContent 
+              side="left" 
+              className='w-80 bg-background/95 backdrop-blur-xl border-r border-border/50 p-0 shadow-2xl'
+            >
+                <SheetHeader className='border-b border-border/50 p-6 bg-gradient-to-r from-primary/5 to-primary/10'>
                     <SheetTitle className="flex justify-start">
                         <Logo />
                     </SheetTitle>
                 </SheetHeader>
 
-                <div className='flex flex-col'>
+                {/* User Profile Section */}
+                {user && (
+                  <div className="px-6 py-4 border-b border-border/30 bg-gradient-to-r from-primary/5 to-transparent">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-12 w-12 border-2 border-primary/20">
+                        <AvatarImage 
+                          src={user.avatar || ''} 
+                          alt={`${user.first_name || ''} ${user.last_name || ''}`}
+                        />
+                        <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                          {getInitials(user.first_name, user.last_name, user.email)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-foreground truncate">
+                          {user.first_name && user.last_name 
+                            ? `${user.first_name} ${user.last_name}`
+                            : user.username || user.email.split('@')[0]
+                          }
+                        </h3>
+                        <p className="text-sm text-muted-foreground truncate">
+                          {user.email}
+                        </p>                        <Badge variant="secondary" className="text-xs mt-1">
+                          {user.is_subscribed ? 'Premium' : 'Free Plan'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Navigation Features */}
+                <div className='flex flex-col py-2'>
                     {features.map((feature, index) => (
                         <SheetClose key={index} asChild>
                             <Link 
                                 href={feature.href} 
-                                className='flex items-center justify-between px-4 py-3.5 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900/50'
+                                className='group flex items-center justify-between px-6 py-4 text-foreground hover:bg-primary/5 transition-all duration-200 border-l-4 border-transparent hover:border-primary/30 hover:pl-8'
                             >
-                                <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 flex items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-900/20">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors duration-200 group-hover:scale-110 transform">
                                         {feature.icon}
                                     </div>
                                     <div>
-                                        <h4 className='font-medium'>{feature.title}</h4>
-                                        <p className='text-xs text-muted-foreground mt-0.5'>{feature.description}</p>
+                                        <h4 className='font-medium text-sm group-hover:text-primary transition-colors'>
+                                          {feature.title}
+                                        </h4>
+                                        <p className='text-xs text-muted-foreground mt-0.5 group-hover:text-muted-foreground/80'>
+                                          {feature.description}
+                                        </p>
                                     </div>
                                 </div>
-                                <ChevronRight size={16} className="text-gray-400" />
+                                <ChevronRight 
+                                  size={16} 
+                                  className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" 
+                                />
                             </Link>
                         </SheetClose>
                     ))}
                 </div>
 
-                <SheetFooter className='flex flex-col gap-y-2 border-t border-gray-100 dark:border-gray-800 px-4 py-4 mt-auto'>
+                {/* Action Buttons Footer */}
+                <SheetFooter className='flex flex-col gap-y-3 border-t border-border/50 px-6 py-6 mt-auto bg-gradient-to-t from-primary/5 to-transparent'>
                     {user ? (
                         <>
                             <Button
-                                className='w-full justify-start gap-3 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white h-11'
+                                className='w-full justify-start gap-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground h-12 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]'
                                 asChild
                             >
                                 <Link href={'/dashboard'}>
@@ -113,10 +172,32 @@ const MobileSidebar = ({ user }: Props) => {
                                     Dashboard
                                 </Link>
                             </Button>
+
+                            <Button
+                                variant="outline"
+                                className='w-full justify-start gap-3 h-11 rounded-xl border-border/50 hover:bg-secondary/50 transition-all duration-300'
+                                asChild
+                            >
+                                <Link href={'/dashboard/profile'}>
+                                    <User className="h-4 w-4" />
+                                    My Profile
+                                </Link>
+                            </Button>
+
+                            <Button
+                                variant="outline"
+                                className='w-full justify-start gap-3 h-11 rounded-xl border-border/50 hover:bg-secondary/50 transition-all duration-300'
+                                asChild
+                            >
+                                <Link href={'/dashboard/settings'}>
+                                    <Settings className="h-4 w-4" />
+                                    Settings
+                                </Link>
+                            </Button>
                             
                             <Button
                                 variant={'ghost'}
-                                className='w-full justify-start gap-3 text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 h-11'
+                                className='w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10 h-11 rounded-xl transition-all duration-300'
                             >
                                 <LogOutIcon className="h-4 w-4" />
                                 Sign Out
@@ -125,7 +206,7 @@ const MobileSidebar = ({ user }: Props) => {
                     ) : (
                         <>
                             <Button
-                                className='w-full justify-start gap-3 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white h-11'
+                                className='w-full justify-start gap-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground h-12 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]'
                                 asChild
                             >
                                 <Link href={'/login'}>
@@ -136,7 +217,7 @@ const MobileSidebar = ({ user }: Props) => {
                             
                             <Button
                                 variant={'outline'}
-                                className='w-full justify-start gap-3 border-gray-200 dark:border-gray-800 h-11'
+                                className='w-full justify-start gap-3 border-border/50 h-11 rounded-xl hover:bg-secondary/50 transition-all duration-300'
                                 asChild
                             >
                                 <Link href={'/pricing'}>
