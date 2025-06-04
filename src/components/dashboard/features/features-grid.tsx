@@ -325,7 +325,7 @@ const FeaturesGrid = ({ user, searchParams }: FeaturesGridProps) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'popularity' | 'category'>('popularity');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // Filter and sort features
