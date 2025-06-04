@@ -45,7 +45,7 @@ const Navbar = async () => {
                 asChild
                 className='border-gray-300/60 dark:border-gray-700/60 hover:border-emerald-500/50 text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl bg-white/20 dark:bg-black/20 backdrop-blur-sm hover:bg-white/30 dark:hover:bg-black/30 transition-all duration-300'
               >
-                <Link href='/dashboard/account'>
+                <Link href='/dashboard/profile'>
                   My Account
                 </Link>
               </Button>

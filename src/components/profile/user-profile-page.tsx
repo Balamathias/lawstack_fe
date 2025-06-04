@@ -24,9 +24,9 @@ import {
 } from "lucide-react";
 import { useUserProfile, useUpdateUserProfile } from "@/services/client/profile";
 import { getUser } from "@/services/server/auth";
-import { ProfileEditForm } from "./profile-edit-form";
 import ProfilePictureUpload from "@/components/ui/profile-picture-upload";
 import { motion, AnimatePresence } from "framer-motion";
+import { ProfileEditForm } from './profile-edit-form';
 
 interface UserProfilePageProps {
   userId?: string;
@@ -61,13 +61,16 @@ export const UserProfilePage = ({ userId, currentUser }: UserProfilePageProps) =
       day: 'numeric'
     });
   };
-
   const handleAvatarUpload = async (avatarUrl: string) => {
-    await updateProfileMutation.mutateAsync({
-      userId: profileUserId,
-      payload: { avatar: avatarUrl }
-    });
-    setShowAvatarUpload(false);
+    try {
+      await updateProfileMutation.mutateAsync({
+        userId: profileUserId,
+        payload: { avatar: avatarUrl }
+      });
+      setShowAvatarUpload(false);
+    } catch (error) {
+      console.error('Failed to update profile avatar:', error);
+    }
   };
 
   if (isLoading) {
@@ -296,13 +299,20 @@ export const UserProfilePage = ({ userId, currentUser }: UserProfilePageProps) =
           <Card className="w-full max-w-md mx-4">
             <CardHeader>
               <CardTitle>Update Profile Picture</CardTitle>
-            </CardHeader>
-            <CardContent>              
-            <ProfilePictureUpload
-                onImageUpload={handleAvatarUpload}
-                onCancel={() => setShowAvatarUpload(false)}
+            </CardHeader>            <CardContent>              
+              <ProfilePictureUpload
+                userId={profileUserId}
                 currentAvatar={profile.avatar || undefined}
+                onAvatarChange={handleAvatarUpload}
               />
+              <div className="flex justify-end mt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowAvatarUpload(false)}
+                >
+                  Close
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
