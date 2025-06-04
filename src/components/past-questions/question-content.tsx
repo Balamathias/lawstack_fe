@@ -70,7 +70,7 @@ const QuestionContent: React.FC<QuestionContentProps> = ({ question, fallbackCom
                       [&>pre]:bg-muted [&>pre]:p-4 [&>pre]:rounded-md [&>pre]:shadow-inner [&>pre]:my-4
                       [&>blockquote]:border-l-4 [&>blockquote]:border-primary/20 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-foreground/70
                       [&>img]:max-w-full [&>img]:rounded-lg [&>img]:shadow-md [&>img]:my-6 [&>img:hover]:shadow-lg [&>img]:transition-shadow
-                    `, spectral.className, 'font-serif')}
+                    `, spectral.variable, 'font-serif')}
                   />
                 </div>
               </CardContent>
