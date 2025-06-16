@@ -369,7 +369,7 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
               </div>
             </div>
             
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-1">
+            <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-1">
               {greeting.text},{' '}
               <span className="relative">
                 <span className={cn(
@@ -408,8 +408,9 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 0.6 }}
+                className="hidden"
               >
-                <div className="grid grid-cols-2 gap-3 mb-6">
+                <div className="grid grid-cols-2 gap-3 mb-6 hidden">
                   <AnimatePresence mode="wait">
                     {features.slice(0, 4).map((feature, index) => (
                       <motion.div
@@ -607,10 +608,10 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
                 <div className="text-right mb-3">
                   <div className="flex items-center justify-end gap-2 mb-2">
                     <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                    <span className="text-xs font-medium text-primary">Today's Focus</span>
+                    <span className="text-xs font-medium text-primary">{"Today's"} Focus</span>
                   </div>
                   <p className="text-sm font-semibold text-foreground max-w-xs">
-                    "Legal excellence through consistent practice"
+                    {"\"Legal excellence through consistent practice\""}
                   </p>
                 </div>
 
