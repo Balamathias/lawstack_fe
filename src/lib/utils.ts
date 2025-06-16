@@ -197,7 +197,7 @@ export const convertMarkdownToPlainText = (markdown: string): string => {
 const AIModelMap = {
   default: 'gemini-1.5-pro',
   advanced: 'gemini-2.0-flash',
-  expert: 'gemini-2.5-flash-preview-04-17',
+  expert: 'gemini-2.5-flash-preview-native-audio-dialog',
 } as const;
 
 type AIModelKey = keyof typeof AIModelMap;

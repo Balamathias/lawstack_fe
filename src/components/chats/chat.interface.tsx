@@ -666,7 +666,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
         )}
 
         <div className="flex items-center justify-between mt-1">
-          <span className="text-xs opacity-70">
+          <span className="text-xs opacity-70 hidden">
             {message?.created_at ? formatTime(message.created_at) : ''}
           </span>
 
