@@ -404,13 +404,12 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
             {/* Enhanced feature highlights for guests */}
             {isGuest && (
               <motion.div
-                className="mt-6"
+                className="mt-6 hidden"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 0.6 }}
-                className="hidden"
               >
-                <div className="grid grid-cols-2 gap-3 mb-6 hidden">
+                <div className="grid_ grid-cols-2 gap-3 mb-6 hidden">
                   <AnimatePresence mode="wait">
                     {features.slice(0, 4).map((feature, index) => (
                       <motion.div
@@ -506,7 +505,7 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
               <div className="flex flex-col items-end gap-4 relative">
                 {/* User Achievement Stats */}
                 <motion.div
-                  className="grid grid-cols-3 gap-3 mb-3 hidden"
+                  className="grid_ grid-cols-3 gap-3 mb-3 hidden"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5, duration: 0.6 }}
