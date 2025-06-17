@@ -237,7 +237,7 @@ const DashboardSidebar = ({ user }: Props) => {
       >
         {isCollapsed ? (
           <Avatar className="h-8 w-8 border border-border">
-            <AvatarImage src={user?.avatar || ''} />
+            <AvatarImage src={user?.avatar || ''} className='object-cover' />
             <AvatarFallback className="text-xs bg-primary/10 text-primary">
               {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
             </AvatarFallback>
@@ -245,7 +245,7 @@ const DashboardSidebar = ({ user }: Props) => {
         ) : (
           <>
             <Avatar className="h-9 w-9 border border-border shrink-0">
-              <AvatarImage src={user?.avatar || ''} />
+              <AvatarImage src={user?.avatar || ''} className='object-cover' />
               <AvatarFallback className="bg-primary/10 text-primary">
                 {user?.first_name?.charAt(0) || user?.username?.charAt(0) || 'U'}
               </AvatarFallback>
