@@ -394,16 +394,16 @@ const PlanCard = ({
         
         {/* Features */}
         <ul className="space-y-2 sm:space-y-3 mb-5 sm:mb-6">
-          {plan.features.split(',').slice(0, 4).map((feature, idx) => (
+          {plan.features.split(',').slice(0, 8).map((feature, idx) => (
             <li key={idx} className="flex items-start">
               <Check className="h-4 w-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
               <span className="text-xs sm:text-sm">{feature.trim()}</span>
             </li>
           ))}
           
-          {plan.features.split(',').length > 4 && (
+          {plan.features.split(',').length > 8 && (
             <li className="text-xs text-muted-foreground pl-6">
-              +{plan.features.split(',').length - 4} more features
+              +{plan.features.split(',').length - 8} more features
             </li>
           )}
         </ul>
