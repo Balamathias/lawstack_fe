@@ -124,10 +124,9 @@ const DashboardSidebar = ({ user }: Props) => {
         toast.error(error.message)
       }
     })
-  }
-  // Sidebar navigation links
+  }  // Sidebar navigation links
   const NavLinks = () => (
-    <nav className='flex flex-col gap-1.5 overflow-y-auto'>
+    <nav className='flex flex-col gap-1.5 overflow-y-auto overflow-x-hidden'>
       {dashboardLinks.map((link, index) => {
         // Fix isActive logic to avoid marking parent routes as active
         const isActive = 
@@ -140,6 +139,7 @@ const DashboardSidebar = ({ user }: Props) => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05, duration: 0.3 }}
+            style={{ overflow: 'hidden' }}
           >
             <Link 
               href={link.href}
@@ -174,7 +174,7 @@ const DashboardSidebar = ({ user }: Props) => {
                 animate={{ scale: isActive ? 1.1 : 1 }}
                 whileHover={{ scale: 1.05 }}
                 className={cn(
-                  "flex items-center justify-center relative z-10 p-1 rounded-lg transition-all", 
+                  "flex items-center justify-center relative z-10 p-1 rounded-lg transition-all shrink-0", 
                   isActive ? "text-primary bg-primary/10" : "group-hover:bg-background/50"
                 )}
               >
@@ -188,7 +188,7 @@ const DashboardSidebar = ({ user }: Props) => {
                     animate={{ opacity: 1, width: "auto" }}
                     exit={{ opacity: 0, width: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="text-sm whitespace-nowrap overflow-hidden relative z-10 font-medium"
+                    className="text-sm whitespace-nowrap overflow-hidden relative z-10 font-medium min-w-0"
                   >
                     {link.tooltip}
                   </motion.span>
@@ -199,7 +199,7 @@ const DashboardSidebar = ({ user }: Props) => {
                 <motion.div 
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="ml-auto w-2 h-2 rounded-full bg-primary relative z-10 shadow-sm"
+                  className="ml-auto w-2 h-2 rounded-full bg-primary relative z-10 shadow-sm shrink-0"
                 />
               )}
             </Link>
@@ -214,6 +214,7 @@ const DashboardSidebar = ({ user }: Props) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: dashboardLinks.length * 0.05 + 0.2 }}
           className="mt-4 pt-4 border-t border-border/20"
+          style={{ overflow: 'hidden' }}
         >
           <Link 
             href="/admin"
@@ -248,7 +249,7 @@ const DashboardSidebar = ({ user }: Props) => {
               animate={{ scale: pathname.startsWith('/admin') ? 1.1 : 1 }}
               whileHover={{ scale: 1.05 }}
               className={cn(
-                "flex items-center justify-center relative z-10 p-1 rounded-lg transition-all",
+                "flex items-center justify-center relative z-10 p-1 rounded-lg transition-all shrink-0",
                 pathname.startsWith('/admin') ? "text-red-500 bg-red-500/10" : "group-hover:bg-background/50"
               )}
             >
@@ -265,7 +266,7 @@ const DashboardSidebar = ({ user }: Props) => {
                   animate={{ opacity: 1, width: "auto" }}
                   exit={{ opacity: 0, width: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="text-sm whitespace-nowrap overflow-hidden relative z-10 font-medium"
+                  className="text-sm whitespace-nowrap overflow-hidden relative z-10 font-medium min-w-0"
                 >
                   Admin Dashboard
                 </motion.span>
@@ -276,7 +277,7 @@ const DashboardSidebar = ({ user }: Props) => {
               <motion.div 
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="ml-auto w-2 h-2 rounded-full bg-red-500 relative z-10 shadow-sm"
+                className="ml-auto w-2 h-2 rounded-full bg-red-500 relative z-10 shadow-sm shrink-0"
               />
             )}
           </Link>
@@ -402,9 +403,7 @@ const DashboardSidebar = ({ user }: Props) => {
             onClick={() => setIsMobileOpen(false)}
           />
         )}
-      </AnimatePresence>
-
-      {/* Mobile Sidebar */}
+      </AnimatePresence>      {/* Mobile Sidebar */}
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div
@@ -412,11 +411,11 @@ const DashboardSidebar = ({ user }: Props) => {
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed left-0 top-0 bottom-0 w-[280px] bg-background/95 backdrop-blur-xl border-r border-border/20 shadow-2xl z-50 lg:hidden"
+            className="fixed left-0 top-0 bottom-0 w-[280px] bg-background/95 backdrop-blur-xl border-r border-border/20 shadow-2xl z-50 lg:hidden overflow-hidden"
           >
-            <div className="flex flex-col h-full p-4">
+            <div className="flex flex-col h-full p-4 overflow-hidden">
               {/* Mobile Header */}
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-border/20">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-border/20 shrink-0">
                 <Logo />
                 <Button
                   variant="ghost"
@@ -434,13 +433,13 @@ const DashboardSidebar = ({ user }: Props) => {
               </div>
 
               {/* Mobile User Profile */}
-              <div className="mt-6 pt-4 border-t border-border/20">
+              <div className="mt-6 pt-4 border-t border-border/20 shrink-0">
                 <UserProfile />
               </div>
             </div>
           </motion.div>
         )}
-      </AnimatePresence>      {/* Mobile Toggle Button */}
+      </AnimatePresence>{/* Mobile Toggle Button */}
       {/* <Button
         variant="outline"
         size="icon"
@@ -448,26 +447,25 @@ const DashboardSidebar = ({ user }: Props) => {
         onClick={() => setIsMobileOpen(true)}
       >
         <Menu className="h-4 w-4" />
-      </Button> */}
-
-      {/* Desktop Sidebar */}
+      </Button> */}      {/* Desktop Sidebar */}
       <motion.div 
         layout
         className={cn(
-          'h-screen flex-col bg-background/60 dark:bg-background/40 backdrop-blur-xl p-3 hidden lg:flex fixed left-0 bottom-0 top-0 border-r border-border/20 shadow-xl z-30 transition-all',
+          'h-screen flex-col bg-background/60 dark:bg-background/40 backdrop-blur-xl p-3 hidden lg:flex fixed left-0 bottom-0 top-0 border-r border-border/20 shadow-xl z-30 transition-all sidebar-transition',
           isCollapsed ? 'w-[100px]' : 'w-[280px]'
         )}
         animate={{ width: isCollapsed ? 100 : 280 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
+        style={{ overflow: 'hidden' }}
       >
         {/* Glassmorphic background overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-background/30 via-background/20 to-background/10 rounded-r-2xl" />
         
-        <div className="flex flex-col flex-1 min-h-0 relative z-10">
+        <div className="flex flex-col flex-1 min-h-0 relative z-10 overflow-hidden">
           {/* Logo and Collapse button */}
           <motion.div 
             className={cn(
-              "flex items-center py-4 px-2 mb-6",
+              "flex items-center py-4 px-2 mb-6 shrink-0",
               isCollapsed ? "justify-center" : "justify-between"
             )}
             layout
@@ -504,7 +502,7 @@ const DashboardSidebar = ({ user }: Props) => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-xl border border-border/30 bg-background/40 backdrop-blur-sm hover:bg-background/60 hover:border-border/50 transition-all duration-300 shadow-sm"
+                className="h-8 w-8 rounded-xl border border-border/30 bg-background/40 backdrop-blur-sm hover:bg-background/60 hover:border-border/50 transition-all duration-300 shadow-sm shrink-0"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 title={isCollapsed ? "Expand" : "Collapse"}
               >
@@ -519,12 +517,15 @@ const DashboardSidebar = ({ user }: Props) => {
           </motion.div>
           
           {/* Navigation */}
-          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-1 custom-scrollbar">
+          <div className={cn(
+            "flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-1",
+            isCollapsed ? "scrollbar-hidden" : "custom-scrollbar"
+          )}>
             <NavLinks />
           </div>
           
           {/* User Profile and Logout */}
-          <div className="mt-6 pt-4 border-t border-border/20 px-1">
+          <div className="mt-6 pt-4 border-t border-border/20 px-1 shrink-0">
             <UserProfile />
           </div>
         </div>
