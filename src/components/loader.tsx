@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 type LoaderVariant = 'pulse' | 'spin' | 'dots' | 'orbital' | 'wave' | 'morphic' | 'particles';
-type LoaderSize = 'sm' | 'md' | 'lg' | 'xl';
+type LoaderSize = 'sm' | 'md' | 'lg' | 'xl' | number;
 
 interface LoaderProps {
     variant?: LoaderVariant;
@@ -30,7 +30,8 @@ const Loader: React.FC<LoaderProps> = ({
     };
 
     // Ensure we always have a valid config, fallback to 'md' if size is invalid
-    const config = sizeConfig[size] || sizeConfig.md;const renderLoader = () => {
+    const config = sizeConfig[size] || sizeConfig.md;
+    const renderLoader = () => {
         // Safety check - ensure config is valid
         if (!config || typeof config.container !== 'number' || typeof config.dot !== 'number') {
             console.warn('Loader: Invalid size configuration, falling back to default');
