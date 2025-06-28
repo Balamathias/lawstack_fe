@@ -44,7 +44,7 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
         <div className="absolute bottom-40 left-1/3 w-28 h-28 bg-muted/6 rounded-full blur-3xl animate-pulse-glow"></div>
       </div>
       
-      <div className='flex flex-col gap-4 sm:gap-6 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700 px-4 sm:px-6 lg:px-8 pb-24 sm:pb-28'>
+      <div className='flex flex-col gap-4 sm:gap-6 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700 px-2.5 sm:px-6 lg:px-8 pb-24 sm:pb-28'>
         {/* Question Header */}
         <div className="w-full max-w-none">
           <QuestionHeader

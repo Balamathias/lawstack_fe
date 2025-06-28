@@ -29,7 +29,7 @@ const QuestionContent: React.FC<QuestionContentProps> = ({ question, fallbackCom
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       </div>
       
-      <CardContent className="pb-8 relative z-10 px-4 md:px-8">
+      <CardContent className="pb-8 relative z-10 px-2.5 md:px-8">
         <Tabs defaultValue="question" className="mt-4">
           {/* Enhanced tabs with glassmorphic styling */}
           <TabsList className="bg-background/60 backdrop-blur-md border border-border/40 p-1.5 rounded-xl shadow-lg shadow-primary/5 mb-6">

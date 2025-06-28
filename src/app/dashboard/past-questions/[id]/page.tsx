@@ -37,7 +37,7 @@ const Page: React.FC<Props> = async ({ params: _params, searchParams: _searchPar
 
 
   return (
-    <div className='w-full flex flex-col gap-y-10 max-w-full mx-auto p-4 sm:p-10 relative'>
+    <div className='w-full flex flex-col gap-y-10 max-w-full p-2.5 sm:p-10 relative'>
         <div className='flex flex-col gap-y-5'>
             {/* <ModeToggle /> */}
             
