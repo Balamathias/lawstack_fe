@@ -45,7 +45,7 @@ const QuestionActions: React.FC<QuestionActionsProps> = ({
         {/* Liquid glass effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 rounded-full"></div>
         
-        <CardContent className="relative flex items-center justify-center px-2 py-2 sm:px-4 sm:py-3 gap-1 sm:gap-2">
+        <CardContent className="relative flex items-center justify-center px-2 py-2 sm:px-4 sm:py-3 gap-4">
             {/* Heart/Star button */}
           {user ? (
             <HeartModal

@@ -55,7 +55,7 @@ const OpenChatButton = ({ question, user }: Props) => {
         type="button"
         onClick={handleClick}
         disabled={isPending}
-        className="relative bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white shadow-xl hover:shadow-2xl gap-2 transition-all duration-300 ease-out hover:scale-105 active:scale-95 rounded-xl overflow-hidden group"
+        className="relative bg-white/10 dark:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/20 hover:bg-white/20 dark:hover:bg-white/20 text-white dark:text-white shadow-xl hover:shadow-2xl gap-2 transition-all duration-300 ease-out hover:scale-105 active:scale-95 rounded-xl overflow-hidden group w-full"
     >
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <div className="relative z-10 flex items-center gap-2">

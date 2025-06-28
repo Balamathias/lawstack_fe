@@ -502,7 +502,7 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
             transition={{ delay: 0.1 }}
             className="flex-shrink-0"
           >            {!isGuest ? (
-              <div className="flex flex-col items-end gap-4 relative">
+              <div className="flex-col items-end gap-4 relative">
                 {/* User Achievement Stats */}
                 <motion.div
                   className="grid_ grid-cols-3 gap-3 mb-3 hidden"
@@ -653,7 +653,7 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
               <Button
                 size="lg"
                 className="w-full gap-3 relative bg-gradient-to-r from-primary via-primary/95 to-primary hover:from-primary/95 hover:to-primary font-semibold text-base py-4 h-auto rounded-xl shadow-2xl border-0 overflow-hidden group"
-                onClick={() => router.push('/dashboard/courses')}
+                onClick={() => router.push('/dashboard/chat')}
               >
                 {/* Button background effects */}
                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 group-active:opacity-100 transition-opacity duration-200" />
@@ -685,51 +685,6 @@ const DashboardWelcome = ({ user }: WelcomeProps) => {
           </motion.div>
         )}
 
-        {/* Enhanced quick stats for authenticated users (mobile) */}
-        {!isGuest && (
-          <motion.div
-            className="mt-8 grid grid-cols-3 gap-3 sm:hidden"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-          >
-            <motion.div 
-              className="text-center p-4 rounded-2xl bg-gradient-to-br from-primary/15 to-primary/8 border border-primary/25 backdrop-blur-sm relative overflow-hidden"
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {/* Starry accent */}
-              <div className="absolute top-1 right-2 w-1 h-1 bg-primary/60 rounded-full animate-pulse" />
-              <Award className="h-6 w-6 mx-auto mb-2 text-primary drop-shadow-sm" />
-              <p className="text-lg font-bold text-foreground">47</p>
-              <p className="text-xs text-muted-foreground font-medium">Cases Solved</p>
-            </motion.div>
-            
-            <motion.div 
-              className="text-center p-4 rounded-2xl bg-gradient-to-br from-emerald-500/15 to-emerald-600/8 border border-emerald-500/25 backdrop-blur-sm relative overflow-hidden"
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {/* Starry accent */}
-              <div className="absolute top-1 left-2 w-0.5 h-0.5 bg-emerald-400/60 rounded-full animate-pulse delay-500" />
-              <TrendingUp className="h-6 w-6 mx-auto mb-2 text-emerald-600 drop-shadow-sm" />
-              <p className="text-lg font-bold text-emerald-600">92%</p>
-              <p className="text-xs text-muted-foreground font-medium">Success Rate</p>
-            </motion.div>
-            
-            <motion.div 
-              className="text-center p-4 rounded-2xl bg-gradient-to-br from-blue-500/15 to-blue-600/8 border border-blue-500/25 backdrop-blur-sm relative overflow-hidden"
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {/* Starry accent */}
-              <div className="absolute bottom-2 right-1 w-0.5 h-0.5 bg-blue-400/60 rounded-full animate-pulse delay-1000" />
-              <Zap className="h-6 w-6 mx-auto mb-2 text-blue-600 drop-shadow-sm" />
-              <p className="text-lg font-bold text-blue-600">12</p>
-              <p className="text-xs text-muted-foreground font-medium">Day Streak</p>
-            </motion.div>
-          </motion.div>
-        )}
       </div>
       
       {/* Decorative corner accents */}

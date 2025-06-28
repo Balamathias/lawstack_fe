@@ -128,7 +128,7 @@ const GlassModal: React.FC<GlassModalProps> = ({
           >
             {/* Header */}
             {(title || showCloseButton) && (
-              <div className="flex items-start justify-between p-6 pb-4">
+              <div className="flex items-start justify-between p-2.5 md:p-6 pb-4">
                 <div className="flex-1">
                   {title && (
                     <h2 className="text-xl font-semibold text-foreground leading-6">
@@ -156,7 +156,7 @@ const GlassModal: React.FC<GlassModalProps> = ({
 
             {/* Content */}
             <div className={cn(
-              "px-6",
+              "px-2.5 md:px-6",
               title || showCloseButton ? "pb-6" : "py-6"
             )}>
               {children}

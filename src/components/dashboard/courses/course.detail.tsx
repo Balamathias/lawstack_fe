@@ -43,10 +43,10 @@ const CourseDetail = ({ promisedCourse, searchParams }: Props) => {
   ]
 
   return (
-    <div className="flex items-center justify-center mb-8 animate-fade-in">
-    <div className="relative p-1 bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 rounded-2xl blur-sm"></div>
-      <div className="relative flex space-x-1">
+    <div className="flex items-center justify-center mb-6 md:mb-8 px-4 animate-fade-in">
+    <div className="relative p-0.5 md:p-1 bg-black/20 backdrop-blur-xl border border-white/10 rounded-xl md:rounded-2xl shadow-2xl w-full max-w-lg">
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 rounded-xl md:rounded-2xl blur-sm"></div>
+      <div className="relative flex space-x-0.5 md:space-x-1">
       {semesters.map((semester) => {
         const isActive = currentSemester === semester.value
         const href = new URLSearchParams(searchParams)
@@ -56,7 +56,7 @@ const CourseDetail = ({ promisedCourse, searchParams }: Props) => {
         <Link
           key={semester.value}
           href={`?${href.toString()}`}
-          className={`relative px-6 py-3 rounded-xl font-medium text-sm transition-all duration-500 ease-out group overflow-hidden ${
+          className={`relative flex-1 px-3 py-2 md:px-6 md:py-3 rounded-lg md:rounded-xl font-medium text-xs md:text-sm transition-all duration-500 ease-out group overflow-hidden text-center ${
           isActive
             ? 'text-white shadow-lg'
             : 'text-white/60 hover:text-white/80'
@@ -64,21 +64,22 @@ const CourseDetail = ({ promisedCourse, searchParams }: Props) => {
         >
           {/* Active background */}
           {isActive && (
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-cyan-500/30 backdrop-blur-sm border border-white/20 rounded-xl transition-all duration-500">
-            <div className="absolute inset-0 bg-white/5 rounded-xl"></div>
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400/40 via-purple-400/40 to-cyan-400/40 rounded-xl blur opacity-75"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-cyan-500/30 backdrop-blur-sm border border-white/20 rounded-lg md:rounded-xl transition-all duration-500">
+            <div className="absolute inset-0 bg-white/5 rounded-lg md:rounded-xl"></div>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400/40 via-purple-400/40 to-cyan-400/40 rounded-lg md:rounded-xl blur opacity-75"></div>
           </div>
           )}
           
           {/* Hover effect */}
-          <div className={`absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 ${isActive ? 'hidden' : ''}`}></div>
+          <div className={`absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 rounded-lg md:rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 ${isActive ? 'hidden' : ''}`}></div>
           
           {/* Shimmer effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
           
-          <span className="relative z-10 flex items-center gap-2">
-          <Calendar className="h-4 w-4" />
-          {semester.label}
+          <span className="relative z-10 flex items-center justify-center gap-1 md:gap-2">
+          <Calendar className="h-3 w-3 md:h-4 md:w-4" />
+          <span className="hidden sm:inline">{semester.label}</span>
+          <span className="sm:hidden">{semester.value === '1' ? '1st Sem' : '2nd Sem'}</span>
           </span>
         </Link>
         )
@@ -97,9 +98,9 @@ const CourseDetail = ({ promisedCourse, searchParams }: Props) => {
 
     <Card className="border-secondary/40 bg-card/50 backdrop-blur-sm overflow-hidden border shadow-lg relative">
     {/* Decorative elements */}
-    <div className="absolute top-0 right-0 w-10 md:w-64 h-64 bg-gradient-to-br from-primary/5 to-primary/10 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl"></div>
-    <div className="absolute bottom-0 left-0 w-12 md:w-48 h-48 bg-gradient-to-tr from-primary/10 to-primary/5 rounded-full -translate-x-1/3 translate-y-1/3 blur-2xl"></div>
-    <div className="absolute top-1/2 left-1/4 w-12 md:w-24 h-24 bg-blue-500/5 rounded-full blur-xl"></div>
+    <div className="absolute top-0 right-0 w-6 md:w-64 h-64 bg-gradient-to-br from-primary/5 to-primary/10 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl"></div>
+    <div className="absolute bottom-0 left-0 w-8 md:w-48 h-48 bg-gradient-to-tr from-primary/10 to-primary/5 rounded-full -translate-x-1/3 translate-y-1/3 blur-2xl"></div>
+    <div className="absolute top-1/2 left-1/4 w-8 md:w-24 h-24 bg-blue-500/5 rounded-full blur-xl"></div>
     
     <CardHeader className="pb-3 relative z-10">
       <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 relative'>

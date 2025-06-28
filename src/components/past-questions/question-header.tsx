@@ -98,24 +98,24 @@ const QuestionHeader: React.FC<QuestionHeaderProps> = ({ question, course, user 
           </div>
 
           {/* Enhanced action buttons */}
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
             <Button 
               asChild
-              className="w-full sm:w-auto bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-cyan-500/20 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white shadow-2xl hover:shadow-cyan-500/25 gap-2 transition-all duration-300 group relative overflow-hidden rounded-xl"
+              className="flex-1 sm:flex-none sm:w-auto bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-cyan-500/20 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white shadow-2xl hover:shadow-cyan-500/25 gap-2 transition-all duration-300 group relative overflow-hidden rounded-xl"
             >
               <Link href={`/dashboard/quizzes?course=${course?.id}`} className="flex items-center justify-center">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-purple-400/10 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-cyan-500/50 rounded-xl blur opacity-0 group-hover:opacity-75 transition-all duration-500 -z-10"></div>
-                <Brain className="h-4 w-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 relative z-10" />
-                <span className="ml-2 font-medium relative z-10">Practice Quiz</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-purple-400/10 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-cyan-500/50 rounded-xl blur opacity-0 group-hover:opacity-75 transition-all duration-500 -z-10"></div>
+              <Brain className="h-4 w-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 relative z-10" />
+              <span className="ml-0.5 font-medium relative z-10">Practice CBT</span>
               </Link>
             </Button>
             
-            <div className="transition-all duration-300 hover:scale-105">
+            <div className="flex-1 sm:flex-none transition-all duration-300 hover:scale-105">
               <OpenChatButton question={question} user={user} />
             </div>
-          </div>
+            </div>
         </div>
       </CardHeader>
     </Card>

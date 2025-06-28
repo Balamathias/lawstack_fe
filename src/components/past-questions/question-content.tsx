@@ -29,7 +29,7 @@ const QuestionContent: React.FC<QuestionContentProps> = ({ question, fallbackCom
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       </div>
       
-      <CardContent className="pb-8 relative z-10 px-2.5 md:px-8">
+      <CardContent className="pb-8 relative z-10 px-2.5 md:px-8 border-none">
         <Tabs defaultValue="question" className="mt-4">
           {/* Enhanced tabs with glassmorphic styling */}
           <TabsList className="bg-background/60 backdrop-blur-md border border-border/40 p-1.5 rounded-xl shadow-lg shadow-primary/5 mb-6">
@@ -52,9 +52,9 @@ const QuestionContent: React.FC<QuestionContentProps> = ({ question, fallbackCom
           {/* Enhanced Question Content Area */}
           <TabsContent 
             value="question" 
-            className="focus-visible:outline-none focus-visible:ring-0 animate-in fade-in-50 duration-500"
+            className="focus-visible:outline-none focus-visible:ring-0 animate-in fade-in-50 duration-500 border-none outline-none"
           >
-            <Card className="border-0 glass-effect bg-background/40 backdrop-blur-lg shadow-xl overflow-hidden">
+            <div className="!border-none glass-effect bg-background/40 backdrop-blur-lg shadow-xl overflow-hidden rounded-xl">
               {/* Paper texture effect background with enhanced styling */}
               <div className="absolute inset-0 bg-[url('/paper-texture.png')] opacity-[0.02] pointer-events-none" />
               <div className="absolute inset-0 bg-gradient-to-br from-background/60 via-background/40 to-background/30" />
@@ -85,7 +85,7 @@ const QuestionContent: React.FC<QuestionContentProps> = ({ question, fallbackCom
                   />
                 </div>
               </div>
-            </Card>
+            </div>
           </TabsContent>
           
           <TabsContent 

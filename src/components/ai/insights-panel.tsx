@@ -323,10 +323,10 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
     
     return (
       <div className={cn(
-        "rounded-2xl px-3 sm:px-5 py-3 w-full max-w-[85%] backdrop-blur-xl border border-white/10 shadow-lg",
+        "rounded-2xl px-2.5 sm:px-5 py-3 w-full max-w-[95%] backdrop-blur-xl border border-white/10 shadow-lg",
         message.role === 'user' 
-          ? "bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-indigo-500/10 rounded-tr-none w-fit ml-auto border-blue-200/20" 
-          : "bg-gradient-to-br from-emerald-500/5 via-cyan-500/5 to-blue-500/5 rounded-tl-none border-emerald-200/20"
+          ? "bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-indigo-500/10 w-fit ml-auto border-blue-200/20" 
+          : "bg-gradient-to-br from-emerald-500/5 via-cyan-500/5 to-blue-500/5 border-emerald-200/20"
       )}>
         {message.role === 'ai' ? (
           <div className={cn(
@@ -379,19 +379,16 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
   return (
     <div className={cn(
       "flex flex-col h-full overflow-hidden w-full relative",
-      // "bg-gradient-to-br from-slate-50/80 via-white/60 to-blue-50/80 dark:from-slate-900/80 dark:via-slate-800/60 dark:to-indigo-900/80",
-      "backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-2xl",
+      "backdrop-blur-xl border-none rounded-2xl shadow-2xl",
       className
     )}>
-      {/* Animated background gradients */}
       <div className="absolute inset-0 overflow-hidden rounded-2xl">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-radial from-blue-400/20 via-purple-400/10 to-transparent rounded-full blur-3xl animate-pulse" />
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-radial from-emerald-400/20 via-cyan-400/10 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
-      {/* Messages header with actions */}
       {messages.length > 0 && (
-        <div className="p-4 border-b border-white/10 backdrop-blur-sm bg-white/5 dark:bg-white/5 flex justify-between items-center relative z-10">
+        <div className="hidden md:flex p-4 border-b border-white/10 backdrop-blur-sm bg-white/5 dark:bg-white/5 justify-between items-center relative z-10">
           <div className="flex items-center gap-3">
             <div className="relative">
               {contentType === 'question' ? (
@@ -504,8 +501,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
         </div>
       )}
 
-      {/* Messages area */}
-      <ScrollArea className="flex-1 p-4 overflow-y-auto max-h-[400px] relative z-10" style={{ height: 'calc(100% - 140px)' }}>
+      <ScrollArea className="flex-1 p-2.5 md:p-4 overflow-y-auto md:max-h-[60vh] max-h-[75vh] relative z-10" style={{ height: 'calc(100% - 5px)' }}>
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center space-y-4 py-12">
             <div className="relative">
@@ -541,29 +537,8 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
                     message.role === 'user' ? "justify-end" : "justify-start"
                   )}
                 >
-                  {message.role === 'ai' && message.emoji && (
-                    <div className="bg-gradient-to-br from-emerald-400/20 to-cyan-500/20 p-3 rounded-2xl backdrop-blur-sm border border-emerald-200/20 h-12 w-12 flex items-center justify-center flex-shrink-0 shadow-lg">
-                      <span className="text-xl filter drop-shadow-sm">{message.emoji}</span>
-                    </div>
-                  )}
-                  
                   <AnimatedMessage message={message} />
                   
-                  {message.role === 'user' && (
-                    <div className="bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-2xl backdrop-blur-sm border border-blue-200/20 h-12 w-12 flex items-center justify-center flex-shrink-0 shadow-lg overflow-hidden">
-                      {user?.avatar ? (
-                        <img 
-                          src={user.avatar} 
-                          alt={user.username || 'User'} 
-                          className="rounded-2xl h-full w-full object-cover" 
-                        />
-                      ) : (
-                        <span className="font-semibold text-sm bg-gradient-to-br from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                          {user?.first_name?.[0] || user?.username?.[0] || 'U'}
-                        </span>
-                      )}
-                    </div>
-                  )}
                 </motion.div>
               </AnimatePresence>
             ))}
@@ -574,7 +549,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 className="flex items-start gap-4"
               >
-                <div className="bg-gradient-to-br from-emerald-400/20 to-cyan-500/20 p-3 rounded-2xl backdrop-blur-sm border border-emerald-200/20 h-12 w-12 flex items-center justify-center flex-shrink-0">
+                <div className="bg-gradient-to-br from-emerald-400/20 to-cyan-500/20 p-3 rounded-2xl backdrop-blur-sm border border-emerald-200/20 h-7 w-7 md:h-12 md:w-12 flex items-center justify-center flex-shrink-0">
                   <Loader2 className="h-5 w-5 text-emerald-400 animate-spin" />
                 </div>
                 <div className="bg-gradient-to-br from-emerald-500/5 via-cyan-500/5 to-blue-500/5 backdrop-blur-xl border border-emerald-200/20 rounded-2xl rounded-tl-none px-5 py-4 shadow-lg">
@@ -619,12 +594,12 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
                 <Button
                   key={index}
                   variant="outline"
-                  className="justify-start gap-3 h-auto p-3 hover:bg-white/10 transition-all duration-300 bg-white/5 backdrop-blur-sm border-white/20 hover:border-white/30 rounded-xl group hover:shadow-lg hover:scale-[1.02]"
+                  className="justify-start gap-3 h-auto p-1.5 sm:p-3 hover:bg-white/10 transition-all duration-300 bg-white/5 backdrop-blur-sm border-white/20 hover:border-white/30 rounded-xl group hover:shadow-lg hover:scale-[1.02]"
                   onClick={() => handleSendMessage(item.prompt)}
                   disabled={isLoading}
                 >
                   <span className="text-lg filter drop-shadow-sm">{item.emoji}</span>
-                  <span className="text-sm text-left flex-1 text-foreground/90 line-clamp-1">{item.prompt}</span>
+                  <span className="text-sm text-left flex-1 text-foreground/90 line-clamp-1" title={item.prompt}>{item.prompt}</span>
                   <ArrowRight className="h-3 w-3 opacity-50 group-hover:opacity-100 transition-all duration-200 group-hover:translate-x-1" />
                 </Button>
               ))}
@@ -634,7 +609,7 @@ const InsightsPanel: React.FC<InsightsPanelProps> = ({
       )}
 
       {/* Input area */}
-      <div className="border-t border-white/10 p-4 bg-white/5 dark:bg-white/5 backdrop-blur-sm mt-auto relative z-10">
+      <div className="border-t border-white/10 p-4 bg-white/5 dark:bg-white/5 backdrop-blur-sm mt-auto relative z-10 rounded-2xl">
         <form 
           className="flex items-end gap-3 bg-white/10 dark:bg-white/5 backdrop-blur-xl rounded-2xl p-2 shadow-inner border border-white/20"
           onSubmit={(e) => {

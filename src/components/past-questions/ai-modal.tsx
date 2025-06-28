@@ -33,9 +33,9 @@ const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
         }
         subtitle="Get expert-level insights and guidance"
         size="xl"
-        className="min-h-[70vh]"
+        className="md:min-h-[70vh] min-h-[95vh]"
       >
-        <div className="h-[60vh] flex flex-col">
+        <div className="flex flex-col md:min-h-[60vh] min-h-[85vh]">
           <InsightsPanel
             user={user}
             contentType="question"
