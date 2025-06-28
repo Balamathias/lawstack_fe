@@ -52,19 +52,22 @@ const OpenChatButton = ({ course, user }: Props) => {
         type="button"
         onClick={handleClick}
         disabled={isPending}
-        className="bg-indigo-500/90 hover:bg-indigo-500 text-white shadow-md border border-indigo-500/10 gap-2 transition-all"
+        className="relative bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white shadow-xl hover:shadow-2xl gap-2 transition-all duration-300 ease-out hover:scale-105 active:scale-95 rounded-xl overflow-hidden group"
     >
-        {isPending ? (
-            <>
-                <Loader className="h-4 w-4 animate-spin" />
-                <span>Opening...</span>
-            </>
-        ) : (
-            <>
-                <MessagesSquare className="h-4 w-4" />
-                <span>Open Chat</span>
-            </>
-        )}
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="relative z-10 flex items-center gap-2">
+            {isPending ? (
+                <>
+                    <Loader className="h-4 w-4 animate-spin" />
+                    <span className="font-medium">Opening...</span>
+                </>
+            ) : (
+                <>
+                    <MessagesSquare className="h-4 w-4" />
+                    <span className="font-medium">Open Chat</span>
+                </>
+            )}
+        </div>
     </Button>
   )
 }

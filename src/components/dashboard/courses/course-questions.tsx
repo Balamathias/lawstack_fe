@@ -64,10 +64,10 @@ const CourseQuestions = async ({ courseId, searchParams }: Props) => {
   className, 
   style 
   }: { 
-  question: Question; 
-  number: number; 
-  className?: string; 
-  style?: React.CSSProperties 
+    question: Question; 
+    number: number; 
+    className?: string; 
+    style?: React.CSSProperties 
   }) => {
   return (
     <Link 
