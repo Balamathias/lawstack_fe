@@ -59,7 +59,7 @@ const QuestionContent: React.FC<QuestionContentProps> = ({ question, fallbackCom
               <div className="absolute inset-0 bg-[url('/paper-texture.png')] opacity-[0.02] pointer-events-none" />
               <div className="absolute inset-0 bg-gradient-to-br from-background/60 via-background/40 to-background/30" />
               
-              <CardContent className="p-6 md:p-10 lg:p-12 relative z-10">
+              <div className="md:p-10 lg:p-12 relative z-10">
                 <div className="prose prose-lg md:prose-xl max-w-none">
                   <MarkdownPreview 
                     content={question?.text || ''} 
@@ -84,7 +84,7 @@ const QuestionContent: React.FC<QuestionContentProps> = ({ question, fallbackCom
                     `, spectral.variable, 'font-serif')}
                   />
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </TabsContent>
           
