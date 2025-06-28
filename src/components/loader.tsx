@@ -22,15 +22,22 @@ const Loader: React.FC<LoaderProps> = ({
     className = '',
     overlay = false,
 }) => {    // Size mappings for consistent scaling
-    const sizeConfig: Record<LoaderSize, { container: number; dot: number; spacing: number }> = {
+    const sizeConfig: Record<Exclude<LoaderSize, number>, { container: number; dot: number; spacing: number }> = {
         sm: { container: 40, dot: 6, spacing: 2 },
         md: { container: 60, dot: 8, spacing: 3 },
         lg: { container: 80, dot: 10, spacing: 4 },
         xl: { container: 100, dot: 12, spacing: 5 },
     };
 
-    // Ensure we always have a valid config, fallback to 'md' if size is invalid
-    const config = sizeConfig[size] || sizeConfig.md;
+    // Handle both predefined sizes and custom numeric sizes
+    const config = typeof size === 'number' 
+        ? { 
+            container: size, 
+            dot: Math.max(4, Math.floor(size * 0.15)), 
+            spacing: Math.max(2, Math.floor(size * 0.05)) 
+          }
+        : sizeConfig?.[size] || sizeConfig.md;
+        
     const renderLoader = () => {
         // Safety check - ensure config is valid
         if (!config || typeof config.container !== 'number' || typeof config.dot !== 'number') {
