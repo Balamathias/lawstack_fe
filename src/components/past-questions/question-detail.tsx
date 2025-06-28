@@ -35,41 +35,46 @@ const QuestionDetail: React.FC<Props> = async ({ id }) => {
       </div>
     );
   }
-
-  // Helper function to create chat context
-  async function createQuestionChat(e: FormData) {
-    'use server';
-    if (!user) return;
-    
-    const chatData = await createChat({
-      title: `${course?.name} (${data?.year}) - Question Discussion`,
-      chat_type: 'past_question',
-      past_question: data?.id,
-      course: course?.id
-    });
-    
-    redirect(`/dashboard/chat/${chatData?.data?.id}`);
-  }
-
   return (
-    <div className='flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700'>      {/* Question Header */}
-      <QuestionHeader
-        question={data}
-        course={course}
-        user={user}
-      />
+    <div className='relative min-h-screen'>
+      {/* Background elements for enhanced glassmorphic effect */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-accent/8 rounded-full blur-2xl animate-float-delayed"></div>
+        <div className="absolute bottom-40 left-1/3 w-28 h-28 bg-muted/6 rounded-full blur-3xl animate-pulse-glow"></div>
+      </div>
+      
+      <div className='flex flex-col gap-4 sm:gap-6 lg:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700 px-4 sm:px-6 lg:px-8 pb-24 sm:pb-28'>
+        {/* Question Header */}
+        <div className="w-full max-w-none">
+          <QuestionHeader
+            question={data}
+            course={course}
+            user={user}
+          />
+        </div>
 
-      {/* Question Content */}
-      <QuestionContent
-        question={data}
-        fallbackComponent={<ContributionListSkeleton />}
-      />
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+          {/* Question Content - Takes full width on mobile, 2/3 on desktop */}
+          <div className="xl:col-span-2 space-y-4 sm:space-y-6">
+            <QuestionContent
+              question={data}
+              fallbackComponent={<ContributionListSkeleton />}
+            />
+          </div>
 
-      {/* Question Metadata */}
-      <QuestionMetadata
-        question={data}
-        course={course}
-      />
+          {/* Question Metadata - Full width on mobile, 1/3 on desktop */}
+          <div className="xl:col-span-1">
+            <div className="sticky top-4">
+              <QuestionMetadata
+                question={data}
+                course={course}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Floating Action Panel */}
       <QuestionActions

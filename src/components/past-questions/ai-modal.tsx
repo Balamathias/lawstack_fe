@@ -1,13 +1,11 @@
 'use client'
 
-import React from 'react'
-import DynamicModal from '../dynamic-modal';
-import { Brain, LucideStar, Sparkles, Zap, MessageCircle, BookOpen, Target } from 'lucide-react';
-import { Question, User } from '@/@types/db';
-import { DialogTitle } from '../ui/dialog';
-import InsightsPanel from '../ai/insights-panel';
-import { getQuestionInsights } from '@/services/client/ai';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react'
+import GlassModal from '../ui/glass-modal'
+import { Brain } from 'lucide-react'
+import { Question, User } from '@/@types/db'
+import InsightsPanel from '../ai/insights-panel'
+import { getQuestionInsights } from '@/services/client/ai'
 
 interface Props {
     trigger: React.ReactNode;
@@ -16,84 +14,44 @@ interface Props {
 }
 
 const AIModal: React.FC<Props> = ({ trigger, user, question }) => {
-  // Define our initial question-specific prompts with emojis
-  const initialPrompts = [
-    { prompt: 'Analyze this question for me', emoji: '🔍' },
-    { prompt: 'Explain the legal principles involved', emoji: '⚖️' },
-    { prompt: 'What are the key issues to consider?', emoji: '🧩' },
-    { prompt: 'How would an expert approach this?', emoji: '👨‍⚖️' },
-    // { prompt: 'Suggest a framework for answering', emoji: '📋' },
-  ];
+  const [open, setOpen] = useState(false)
 
   return (
-    <DynamicModal
-      trigger={trigger}
-      title={
-        <motion.div 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="w-full"
-        >
-          <DialogTitle className="flex items-center gap-3 text-xl font-semibold">
-            <div className="flex flex-col">
-              <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                AI Legal Analysis
-              </span>
-              <span className="text-sm text-muted-foreground font-normal">
-                Get expert-level insights and guidance
-              </span>
-            </div>
-          </DialogTitle>
-        </motion.div>
-      }
-      dialogClassName="sm:max-w-4xl max-h-[calc(100vh-40px)] h-auto overflow-hidden"
-    >
-      <motion.div 
-        className="flex-1 overflow-hidden flex flex-col min-h-0"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.1 }}
-      >
-        {/* Header Banner */}
-        <div className="hidden md:block relative overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 p-4 mb-4">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/5" />
-          <div className="relative flex items-center gap-4">
-            <div className="flex gap-2">
-              <div className="bg-blue-500/10 p-2 rounded-lg border border-blue-500/20">
-                <Brain className="h-4 w-4 text-blue-500" />
-              </div>
-              <div className="bg-cyan-500/10 p-2 rounded-lg border border-cyan-500/20">
-                <Target className="h-4 w-4 text-cyan-500" />
-              </div>
-              <div className="bg-purple-500/10 p-2 rounded-lg border border-purple-500/20">
-                <BookOpen className="h-4 w-4 text-purple-500" />
-              </div>
-            </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-sm mb-1">AI-Powered Legal Assistant</h3>
-              <p className="text-xs text-muted-foreground">
-                Ask specific questions about legal concepts, case analysis, or problem-solving approaches
-              </p>
-            </div>
+    <>
+      <div onClick={() => setOpen(true)}>
+        {trigger}
+      </div>
+      
+      <GlassModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title={
+          <div className="flex items-center gap-2">
+            <Brain className="h-5 w-5 text-primary" />
+            <span>AI Legal Analysis</span>
           </div>
+        }
+        subtitle="Get expert-level insights and guidance"
+        size="xl"
+        className="min-h-[70vh]"
+      >
+        <div className="h-[60vh] flex flex-col">
+          <InsightsPanel
+            user={user}
+            contentType="question"
+            contentId={question.id}
+            content={question.text}
+            getInsights={async (params) => getQuestionInsights({
+              prompt: params.prompt,
+              question,
+              user
+            })}
+            initialPrompts={[]}
+            className="flex-1 overflow-hidden flex flex-col min-h-0"
+          />
         </div>
-
-        <InsightsPanel
-          user={user}
-          contentType="question"
-          contentId={question.id}
-          content={question.text}
-          getInsights={async (params) => getQuestionInsights({
-            prompt: params.prompt,
-            question,
-            user
-          })}
-          initialPrompts={[]}
-          className="flex-1 overflow-hidden flex flex-col min-h-0"
-        />
-      </motion.div>
-    </DynamicModal>
+      </GlassModal>
+    </>
   )
 }
 

@@ -597,6 +597,10 @@ input[type="range"]::-moz-range-thumb {
   animation: float 3s ease-in-out infinite;
 }
 
+.animate-float-delayed {
+  animation: float 3s ease-in-out infinite 1.5s;
+}
+
 .animate-pulse-glow {
   animation: pulse-glow 4s ease-in-out infinite;
 }
@@ -702,9 +706,12 @@ input[type="range"]::-moz-range-thumb {
   .animate-pulse-glow {
     animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
-  
-  .animate-float {
+    .animate-float {
     animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: float 3s ease-in-out infinite 1.5s;
   }
   
   .animate-fade-in {
