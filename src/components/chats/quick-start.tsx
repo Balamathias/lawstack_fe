@@ -6,7 +6,6 @@ import {
   MessageSquare, 
   BookOpen, 
   FileQuestion, 
-  Lightbulb, 
   Scale, 
   Info, 
   ArrowRight, 
@@ -14,8 +13,6 @@ import {
   UserPlus,
   Sparkles,
   Brain,
-  GraduationCap,
-  Wand2
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Delius } from 'next/font/google'
@@ -31,6 +28,7 @@ import { Chat, User } from '@/@types/db'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import ChatHistory from './chat-history'
+import Loader from '../loader'
 
 const delius = Delius({weight: ['400'], subsets: ['latin'], variable: '--font-delius'})
 
@@ -329,13 +327,14 @@ const QuickStart = ({ user, chat_id, chats }: Props) => {
 
   return (
     <TooltipProvider delayDuration={300}>
-      {isPending && 
-        <div className="fixed inset-0 z-50">
-          <LoadingOverlay />
-        </div>
-      }
       
-      <div className={cn("w-full max-w-5xl mx-auto py-6 px-4 sm:py-10 relative min-h-[80vh] flex flex-col gap-8", delius.variable)}>
+      <div className={cn("w-full max-w-5xl mx-auto py-6 px-4 sm:py-10 relative min-h-[80vh] flex flex-col gap-8", delius?.variable)}>
+        {isPending && 
+          <div className="absolute inset-0 z-50 w-full min-h-screen">
+            <Loader overlay />
+          </div>
+        }
+
         {/* Top section with history button */}
         <div className="flex justify-end">
           <ChatHistory 

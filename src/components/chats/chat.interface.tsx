@@ -852,10 +852,10 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
           <Popover>
             <PopoverTrigger asChild>
               <Button 
-          variant="ghost" 
-          size="sm" 
-          className="h-9 px-3 gap-2.5 border border-border/40 hover:bg-accent/70 rounded-xl backdrop-blur-sm transition-all"
-          title="Select AI model"
+                variant="ghost" 
+                size="sm" 
+                className="h-9 px-3 gap-2.5 border border-border/40 hover:bg-accent/70 rounded-xl backdrop-blur-sm transition-all"
+                title="Select AI model"
               >
           <div className="relative flex items-center justify-center w-5 h-5">
             {selectedModel.isPremium && (
@@ -875,61 +875,62 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
           <ChevronDown className="h-3.5 w-3.5 opacity-70 ml-0.5 text-muted-foreground" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 p-0 bg-card/95 backdrop-blur-md border border-border/50 shadow-lg rounded-xl" align="end">
+            <PopoverContent className="w-80 p-0 bg-black/15 backdrop-blur-lg border border-border/20 shadow-lg rounded-xl" align="end">
               <div className="px-4 pt-3.5 pb-2.5 border-b border-border/30">
-          <h4 className="font-medium text-sm flex items-center gap-1.5">
-            <Zap className="h-3.5 w-3.5 text-primary" />
-            Select AI Model
-          </h4>
-          <p className="text-xs text-muted-foreground mt-1.5">
-            Choose the model that best fits your legal research needs
-          </p>
+                  <h4 className="font-medium text-sm flex items-center gap-1.5">
+                    <Zap className="h-3.5 w-3.5 text-primary" />
+                    Select AI Model
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-1.5">
+                    Choose the model that best fits your legal research needs
+                  </p>
               </div>
               
               <div className="px-1.5 py-2.5 max-h-[280px] overflow-y-auto">
-          {AI_MODELS.map((model) => (
-            <div
-              key={model.id}
-              className={cn(
-                "flex items-start gap-3 px-3.5 py-3 rounded-lg m-1 cursor-pointer hover:bg-secondary/70 transition-all relative group",
-                selectedModel.id === model.id ? "bg-secondary/80 shadow-sm" : "bg-transparent"
-              )}
-              onClick={() => updateSelectedModel(model)}
-              role="button"
-              tabIndex={0}
-              aria-label={`Select ${model.name} model`}
-            >
+                {AI_MODELS.map((model) => (
+                  <div
+                    key={model.id}
+                    className={cn(
+                      "flex items-start gap-3 px-3.5 py-3 rounded-lg m-1 cursor-pointer hover:bg-secondary/70 transition-all relative group",
+                      selectedModel.id === model.id ? "bg-secondary/25 shadow-sm" : "bg-transparent"
+                    )}
+                    onClick={() => updateSelectedModel(model)}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Select ${model.name} model`}
+                  >
               <div className="relative mt-0.5">
                 {model.isPremium && (
-            <div className="absolute -right-1 -top-1 w-2.5 h-2.5 rounded-full bg-gradient-to-r from-primary to-violet-500 ring-1 ring-background" />
-                )}
-                <div className={cn(
-            "p-1.5 rounded-md transition-colors",
-            selectedModel.id === model.id ? "bg-primary/15" : "bg-secondary/50 group-hover:bg-primary/10"
-                )}>
-            {model.icon || <Command className="h-4 w-4" />}
+                  <div className="absolute -right-1 -top-1 w-2.5 h-2.5 rounded-full bg-gradient-to-r from-primary to-violet-500 ring-1 ring-background" />
+                      )}
+                      <div className={cn(
+                  "p-1.5 rounded-md transition-colors",
+                  selectedModel.id === model.id ? "bg-primary/15" : "bg-secondary/50 group-hover:bg-primary/10"
+                      )}>
+                  {model.icon || <Command className="h-4 w-4" />}
+                  <span className="sr-only">{model.name}</span>
                 </div>
               </div>
-              
+
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
-            <div className={cn(
-              "font-medium text-sm",
-              model.isPremium && "text-transparent bg-clip-text bg-gradient-to-r from-primary/90 to-violet-500"
-            )}>
-              {model.name}
-              {model.isPremium && (
-                <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-primary/15 text-primary">PRO</span>
-              )}
-            </div>
+                  <div className={cn(
+                    "font-medium text-sm",
+                    model.isPremium && "text-transparent bg-clip-text bg-gradient-to-r from-primary/90 to-violet-500"
+                  )}>
+                    {model.name}
+                    {model.isPremium && (
+                      <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-primary/15 text-primary">PRO</span>
+                    )}
+                  </div>
             
-            {selectedModel.id === model.id && (
-              <Check className="h-3.5 w-3.5 text-primary animate-in fade-in" />
-            )}
-                </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-            {model.description}
-                </p>
+                  {selectedModel.id === model.id && (
+                    <Check className="h-3.5 w-3.5 text-primary animate-in fade-in" />
+                  )}
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                  {model.description}
+                  </p>
               </div>
             </div>
           ))}
@@ -937,23 +938,23 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
               </div>
               
               <div className="border-t border-border/30 px-4 py-2.5 bg-muted/30">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <BadgeInfo className="h-3 w-3" />
-              <span>Models updated with latest legal knowledge</span>
-            </div>
-            
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-7 text-xs gap-1 hover:bg-secondary/70"
-              title="Reset to default model"
-              onClick={() => updateSelectedModel(AI_MODELS[1])}
-            >
-              <RotateCw className="h-3 w-3" />
-              Reset
-            </Button>
-          </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <BadgeInfo className="h-3 w-3" />
+                    <span>Models updated with latest legal knowledge</span>
+                  </div>
+                  
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-7 text-xs gap-1 hover:bg-secondary/70"
+                    title="Reset to default model"
+                    onClick={() => updateSelectedModel(AI_MODELS[1])}
+                  >
+                    <RotateCw className="h-3 w-3" />
+                    Reset
+                  </Button>
+                </div>
               </div>
             </PopoverContent>
           </Popover>
@@ -1105,7 +1106,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
       />
 
       {/* Improved chat input area with integrated file upload UI */}
-      <div className="p-3 bg-card/70 backdrop-blur-md border border-border/50 shadow-[0_-1px_10px_rgba(0,0,0,0.03)] rounded-xl mt-auto sticky bottom-0">
+      <div className="p-3 bg-card/75 backdrop-blur-xl border border-border/50 shadow-[0_-1px_10px_rgba(0,0,0,0.03)] rounded-2xl mt-auto sticky bottom-0">
         {/* File preview area - only shown when files are selected */}
         {uploadedFiles.length > 0 && (
           <div className="mb-2 py-1.5 px-2 rounded-lg bg-background/50 border border-border/30 backdrop-blur-sm">
@@ -1209,7 +1210,7 @@ const ChatInterface = ({ chatId, initialMessages = [], onSendMessage, user, chat
         )}
 
         {/* Input area */}
-        <div className="flex items-end space-x-2 backdrop-blur-sm rounded-xl p-1.5 shadow-inner bg-transparent">
+        <div className="flex items-end space-x-2 backdrop-blur-xl rounded-xl p-1.5 shadow-inner bg-black/10 border-border/20">
           <input
             type="file"
             ref={fileInputRef}
