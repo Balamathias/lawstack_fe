@@ -126,7 +126,7 @@ const DashboardSidebar = ({ user }: Props) => {
     })
   }  // Sidebar navigation links
   const NavLinks = () => (
-    <nav className='flex flex-col gap-1.5 overflow-y-auto overflow-x-hidden'>
+    <nav className='flex flex-col gap-1.5 overflow-y-auto scrollbar-hidden overflow-x-hidden'>
       {dashboardLinks.map((link, index) => {
         // Fix isActive logic to avoid marking parent routes as active
         const isActive = 
@@ -518,7 +518,7 @@ const DashboardSidebar = ({ user }: Props) => {
           
           {/* Navigation */}
           <div className={cn(
-            "flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-1",
+            "flex-1 min-h-0 overflow-y-auto scrollbar-hidden overflow-x-hidden px-1",
             isCollapsed ? "scrollbar-hidden" : "custom-scrollbar"
           )}>
             <NavLinks />
