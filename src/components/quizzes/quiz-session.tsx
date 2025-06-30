@@ -377,114 +377,193 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
   // Show start screen if quiz is pending
   if (quiz.status === 'pending') {
     return (
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-2.5 md:px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Card className="border overflow-hidden shadow-lg bg-gradient-to-b from-card to-background">
-            <div className="md:grid md:grid-cols-5 items-stretch">
-              <div className="relative md:col-span-2 bg-gradient-to-br from-primary/5 to-primary/10 p-6 sm:p-8 md:p-10 flex flex-col justify-center overflow-hidden">
-                {/* Animated background wave effect */}
-                <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(56,189,248,0)_0%,rgba(56,189,248,.075)_20%,rgba(56,189,248,.15)_67%,rgba(56,189,248,0)_100%)] -translate-x-[100%] animate-[shimmer_2.5s_infinite]"></div>
-                
-                <div className="mb-8 text-center md:text-left relative z-10">
-                  <div className="inline-flex items-center justify-center p-2.5 mb-4 rounded-lg bg-primary/10 border border-primary/20">
-                    <GraduationCap className="h-6 w-6 text-primary" />
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight">{quiz.title}</h2>
-                  <p className="text-muted-foreground text-sm sm:text-base">{quiz.course_name}</p>
-                </div>
-                
-                <div className="space-y-5 relative z-10">
-                  <div className="flex items-start sm:items-center gap-3 bg-white/5 rounded-lg p-3 transition-all">
-                    <div className="p-2 rounded-full bg-primary/10 text-primary shrink-0">
-                      <ListTodo className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <div className="font-medium">{quiz.total_questions} Questions</div>
-                      <div className="text-sm text-muted-foreground">Multiple choice format</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start sm:items-center gap-3 bg-white/5 rounded-lg p-3 transition-all">
-                    <div className="p-2 rounded-full bg-primary/10 text-primary shrink-0">
-                      <Timer className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <div className="font-medium">{quiz.duration} Minutes</div>
-                      <div className="text-sm text-muted-foreground">Timed assessment</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start sm:items-center gap-3 bg-white/5 rounded-lg p-3 transition-all">
-                    <div className="p-2 rounded-full bg-primary/10 text-primary shrink-0">
-                      <Award className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <div className="font-medium">60% Pass Rate</div>
-                      <div className="text-sm text-muted-foreground">Benchmark for success</div>
-                    </div>
-                  </div>
-                </div>
+          <Card className="border-0 shadow-2xl bg-gradient-to-br from-background via-background/95 to-muted/20 overflow-hidden">
+            <div className="relative">
+              {/* Subtle animated background pattern */}
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(59,130,246,0.15)_1px,transparent_0)] [background-size:24px_24px]"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5"></div>
               </div>
               
-              <div className="md:col-span-3 p-6 sm:p-8">
-                <CardHeader className="px-0 pt-0">
-                  <CardTitle className="flex items-center gap-2 text-xl sm:text-2xl mb-2">
-                    Quiz Instructions
-                  </CardTitle>
-                  <CardDescription className="text-base">
-                    Please review before starting your assessment
-                  </CardDescription>
-                </CardHeader>
-                
-                <CardContent className="space-y-6 px-0">
-                  <div className="space-y-4">
-                    <div className="border-l-2 border-primary/50 pl-4 py-1">
-                      <h3 className="font-medium text-base">Time Management</h3>
-                      <p className="text-sm text-muted-foreground">The timer starts once you begin. You cannot pause once started.</p>
+              <div className="relative z-10 lg:grid lg:grid-cols-12 min-h-[500px]">
+                {/* Left Panel - Quiz Overview */}
+                <div className="lg:col-span-5 bg-gradient-to-br from-primary/8 via-primary/5 to-background/80 backdrop-blur-sm border-r p-8 lg:p-12 flex flex-col justify-center">
+                  <div className="space-y-8">
+                    {/* Header */}
+                    <div className="text-center lg:text-left">
+                      <div className="inline-flex items-center justify-center p-3 mb-6 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/20 shadow-lg">
+                        <GraduationCap className="h-8 w-8 text-primary" />
+                      </div>
+                      <h1 className="text-3xl lg:text-4xl font-bold mb-3 tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+                        {quiz.title}
+                      </h1>
+                      <div className="flex items-center justify-center lg:justify-start gap-2 text-muted-foreground">
+                        <BookOpen className="h-4 w-4" />
+                        <span className="text-base font-medium">{quiz.course_name}</span>
+                      </div>
                     </div>
                     
-                    <div className="border-l-2 border-primary/50 pl-4 py-1">
-                      <h3 className="font-medium text-base">Navigation</h3>
-                      <p className="text-sm text-muted-foreground">Use the navigation buttons or swipe left/right on mobile to move between questions.</p>
-                    </div>
-                    
-                    <div className="border-l-2 border-primary/50 pl-4 py-1">
-                      <h3 className="font-medium text-base">Answering</h3>
-                      <p className="text-sm text-muted-foreground">Select one correct answer for each question. Your answers save automatically.</p>
-                    </div>
-                    
-                    <div className="border-l-2 border-primary/50 pl-4 py-1">
-                      <h3 className="font-medium text-base">Completion</h3>
-                      <p className="text-sm text-muted-foreground">Submit when done. You'll see your results immediately after completion.</p>
+                    {/* Statistics Cards */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
+                      <motion.div 
+                        className="group p-4 rounded-xl bg-background/60 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="p-2.5 rounded-lg bg-blue-500/10 text-blue-600 group-hover:bg-blue-500/20 transition-colors">
+                            <ListTodo className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <div className="font-semibold text-lg">{quiz.total_questions} Questions</div>
+                            <div className="text-sm text-muted-foreground">Multiple choice format</div>
+                          </div>
+                        </div>
+                      </motion.div>
+                      
+                      <motion.div 
+                        className="group p-4 rounded-xl bg-background/60 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-600 group-hover:bg-amber-500/20 transition-colors">
+                            <Timer className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <div className="font-semibold text-lg">{quiz.duration} Minutes</div>
+                            <div className="text-sm text-muted-foreground">Timed assessment</div>
+                          </div>
+                        </div>
+                      </motion.div>
+                      
+                      <motion.div 
+                        className="group p-4 rounded-xl bg-background/60 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="p-2.5 rounded-lg bg-green-500/10 text-green-600 group-hover:bg-green-500/20 transition-colors">
+                            <Award className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <div className="font-semibold text-lg">60% to Pass</div>
+                            <div className="text-sm text-muted-foreground">Success benchmark</div>
+                          </div>
+                        </div>
+                      </motion.div>
                     </div>
                   </div>
-                  
-                  <motion.div 
-                    className="pt-2"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
-                  >
-                    <Button 
-                      onClick={handleStartQuiz} 
-                      disabled={isStarting} 
-                      className="w-full relative overflow-hidden group"
-                      size="lg"
-                    >
-                      {isStarting ? (
-                        <RefreshCw className="h-5 w-5 mr-2 animate-spin" />
-                      ) : (
-                        <Brain className="h-5 w-5 mr-2 transition-transform group-hover:scale-110" />
-                      )}
-                      <span className="font-medium">{isStarting ? 'Starting Quiz...' : 'Begin Quiz'}</span>
-                      <div className="absolute inset-0 w-full h-full bg-white/10 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
-                    </Button>
-                  </motion.div>
-                </CardContent>
+                </div>
+                
+                {/* Right Panel - Instructions */}
+                <div className="lg:col-span-7 p-8 lg:p-12 flex flex-col justify-center">
+                  <div className="max-w-2xl">
+                    <CardHeader className="px-0 pt-0 pb-8">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="h-1 w-12 bg-gradient-to-r from-primary to-primary/50 rounded-full"></div>
+                        <Badge variant="outline" className="px-3 py-1 bg-primary/5 text-primary border-primary/20">
+                          Instructions
+                        </Badge>
+                      </div>
+                      <CardTitle className="text-2xl lg:text-3xl font-bold mb-3">
+                        Ready to Test Your Knowledge?
+                      </CardTitle>
+                      <CardDescription className="text-base text-muted-foreground leading-relaxed">
+                        Please review these important guidelines before starting your assessment
+                      </CardDescription>
+                    </CardHeader>
+                    
+                    <CardContent className="px-0 space-y-6">
+                      <div className="grid gap-4">
+                        {[
+                          {
+                            icon: Clock,
+                            title: "Time Management",
+                            description: "Timer starts immediately when you begin. You cannot pause or restart once started.",
+                            color: "text-red-600 bg-red-500/10"
+                          },
+                          {
+                            icon: ChevronRight,
+                            title: "Navigation",
+                            description: "Move between questions using buttons or swipe gestures on mobile devices.",
+                            color: "text-blue-600 bg-blue-500/10"
+                          },
+                          {
+                            icon: CheckCircle,
+                            title: "Answer Selection",
+                            description: "Choose one correct answer per question. All answers are automatically saved.",
+                            color: "text-green-600 bg-green-500/10"
+                          },
+                          {
+                            icon: Flag,
+                            title: "Submission",
+                            description: "Review your answers and submit when complete. Results are shown immediately.",
+                            color: "text-purple-600 bg-purple-500/10"
+                          }
+                        ].map((item, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.1 * index, duration: 0.5 }}
+                            className="group flex items-start gap-4 p-4 rounded-xl hover:bg-muted/30 transition-all duration-300"
+                          >
+                            <div className={cn("p-2.5 rounded-lg shrink-0 transition-all duration-300 group-hover:scale-110", item.color)}>
+                              <item.icon className="h-5 w-5" />
+                            </div>
+                            <div className="space-y-1">
+                              <h3 className="font-semibold text-base group-hover:text-primary transition-colors">
+                                {item.title}
+                              </h3>
+                              <p className="text-sm text-muted-foreground leading-relaxed">
+                                {item.description}
+                              </p>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                      
+                      <motion.div 
+                        className="pt-6 border-t border-border/50"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6, duration: 0.5 }}
+                      >
+                        <Button 
+                          onClick={handleStartQuiz} 
+                          disabled={isStarting} 
+                          className="w-full relative overflow-hidden group bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300"
+                          size="lg"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                          {isStarting ? (
+                            <>
+                              <RefreshCw className="h-5 w-5 mr-3 animate-spin" />
+                              <span className="font-semibold">Initializing Quiz...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Brain className="h-5 w-5 mr-3 transition-transform group-hover:scale-110" />
+                              <span className="font-semibold">Begin Assessment</span>
+                              <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" />
+                            </>
+                          )}
+                        </Button>
+                        
+                        <p className="text-xs text-muted-foreground text-center mt-3">
+                          By starting this quiz, you acknowledge that you have read and understood the instructions above.
+                        </p>
+                      </motion.div>
+                    </CardContent>
+                  </div>
+                </div>
               </div>
             </div>
           </Card>
@@ -493,7 +572,6 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
     )
   }
   
-  // If quiz is completed, redirect to results
   if (quiz.status === 'completed') {
     router.push(`/dashboard/quizzes/${quiz.id}/results`)
     return null
@@ -503,7 +581,7 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
     <>
       {(isCompleting || isAutoSubmitting) && (<Loader variant="spin" />)}
       
-      <div className="max-w-4xl mx-auto mb-20 sm:mb-8">
+      <div className="max-w-7xl mx-auto mb-20 sm:mb-8 ">
         {/* Header section with timer and progress */}
         <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm pt-2 pb-4">
           <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-2 mb-2">
@@ -557,10 +635,10 @@ export default function QuizSession({ initialQuiz }: QuizSessionProps) {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
               >
-                <Card className="mb-6 border shadow-sm hover:shadow-md transition-all duration-300">
+                <Card className="mb-6 border shadow-sm hover:shadow-md transition-all duration-300 bg-background">
                   <CardHeader className="px-4 sm:px-6 py-4 sm:py-5">
                     <CardTitle className="text-lg sm:text-xl">
-                      <MarkdownPreview content={currentQuestion.question_text} />
+                      <MarkdownPreview content={currentQuestion.question_text} className="text-lg sm:text-xl" />
                     </CardTitle>
                   </CardHeader>
                   
